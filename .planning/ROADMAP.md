@@ -45,7 +45,10 @@ Plans:
   3. Page loads with #2563EB as the default colour, both panels populated
   4. Each panel shows a heading and paragraph in the chosen colour, and the user can edit that text directly
   5. Each panel shows live contrast ratio, AA/AAA badges for normal and large text, updating as the colour changes
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
 **UI hint**: yes
 
 ### Phase 3: Variant Search
@@ -58,7 +61,10 @@ Plans:
   3. Variants are perceptually close to the original — not near-black or near-white unless unavoidable
   4. Clicking a swatch updates both preview panels to show that variant
   5. When no nearby accessible variant exists, the tool says so clearly rather than returning distant colours
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
 
 ### Phase 4: Modes and Configuration
 **Goal**: Users can switch between single and dual-colour modes and customise background colours, with results shareable via URL
@@ -70,7 +76,10 @@ Plans:
   3. User can toggle between modes and the results update accordingly
   4. User can change the light background colour (default #ffffff) and dark background colour (default #000000) via inline hex inputs
   5. The current hex colour is stored in the URL and the page state restores correctly when loading that URL
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
 
 ### Phase 5: Design and Accessibility
 **Goal**: The tool looks polished, matches the intended minimal aesthetic, and passes its own WCAG AA standard
@@ -82,7 +91,10 @@ Plans:
   3. The tool passes WCAG AA for all its own text and interactive elements
   4. Pass/fail status is communicated with text labels or icons, not colour alone
   5. All interactive elements have visible focus states when navigated by keyboard
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
 **UI hint**: yes
 
 ## Progress
