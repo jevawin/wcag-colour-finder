@@ -60,11 +60,13 @@ Exceptions: none.
 
 Project baseline — applied from Phase 2. Based on colourcontrast.cc-style minimal aesthetic.
 
+Two weights only: 400 (regular) and 700 (bold). Size differentiates heading from display.
+
 | Role | Size | Weight | Line Height | Source |
 |------|------|--------|-------------|--------|
 | Body | 16px | 400 | 1.5 | Default — readable body text at standard web scale |
-| Label | 13px | 500 | 1.4 | Compact labels: contrast ratio values, AA/AAA badges |
-| Heading | 24px | 600 | 1.2 | Panel headings, section titles |
+| Label | 13px | 400 | 1.4 | Compact labels: contrast ratio values, AA/AAA badges |
+| Heading | 24px | 700 | 1.2 | Panel headings, section titles |
 | Display | 36px | 700 | 1.1 | Page title only |
 
 Font stack (Phase 2 implementation): `system-ui, -apple-system, "Segoe UI", sans-serif` — no web font download, zero latency, matches the minimal aesthetic.
