@@ -9,6 +9,7 @@
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check
 
 import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js';
+import { findVariants, DISTANCE_WARNING_THRESHOLD } from './variant-search.js';
 
 // --- Pure functions (exported for testing) ---
 
@@ -68,6 +69,10 @@ if (typeof document !== 'undefined') {
   const errorMsg  = document.querySelector('#hex-error');
   const lightPanel = document.querySelector('.panel--light');
   const darkPanel  = document.querySelector('.panel--dark');
+  const findBtn     = document.querySelector('#find-btn');
+  const swatchRow   = document.querySelector('#swatch-row');
+  const swatchList  = document.querySelector('.swatch-list');
+  const distWarning = document.querySelector('#distance-warning');
 
   let lastValidHex = HEX_DEFAULT;
 
@@ -135,8 +140,76 @@ if (typeof document !== 'undefined') {
     errorMsg.hidden = !isError;
   }
 
+  /**
+   * Remove the selected ring from whichever swatch is currently active.
+   */
+  function clearSelectedSwatch() {
+    const prev = swatchList.querySelector('.swatch-btn--selected');
+    if (prev) prev.classList.remove('swatch-btn--selected');
+  }
+
+  /**
+   * Render the swatch row from an array of { hex, distance } objects.
+   * Shows the distance warning if the closest variant exceeds the threshold.
+   *
+   * @param {Array<{ hex: string, distance: number }>} variants
+   */
+  function renderSwatches(variants) {
+    swatchList.innerHTML = '';
+    for (const v of variants) {
+      const li = document.createElement('li');
+      li.className = 'swatch-item';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'swatch-btn';
+      btn.style.background = v.hex;
+      btn.setAttribute('aria-label', 'Variant ' + v.hex + ' \u2014 click to preview');
+
+      btn.addEventListener('click', () => {
+        // D-08: update panels but NOT hex input
+        const hexNoHash = v.hex.slice(1); // render() expects no # prefix
+        render(hexNoHash);
+        // D-09: highlight selected swatch
+        clearSelectedSwatch();
+        btn.classList.add('swatch-btn--selected');
+      });
+
+      const span = document.createElement('span');
+      span.className = 'swatch-hex';
+      span.setAttribute('aria-hidden', 'true');
+      span.textContent = v.hex;
+
+      li.appendChild(btn);
+      li.appendChild(span);
+      swatchList.appendChild(li);
+    }
+
+    // D-05/D-06: distance warning when closest variant > 0.12
+    const showWarning = variants.length > 0 && variants[0].distance > DISTANCE_WARNING_THRESHOLD;
+    distWarning.hidden = !showWarning;
+
+    swatchRow.hidden = false;
+  }
+
+  // Find button click handler — D-01: manual button press only
+  findBtn.addEventListener('click', () => {
+    findBtn.disabled = true;
+    findBtn.textContent = 'Finding\u2026';
+
+    const results = findVariants('#' + lastValidHex);
+
+    findBtn.disabled = false;
+    findBtn.textContent = 'Find accessible colour';
+
+    if (results && results.length > 0) {
+      renderSwatches(results);
+    }
+  });
+
   // Input event handler — fires on every keystroke
   hexInput.addEventListener('input', () => {
+    clearSelectedSwatch();
     const raw = hexInput.value.trim();
     const parsed = parseHex(raw);
 
