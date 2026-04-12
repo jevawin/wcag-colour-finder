@@ -56,17 +56,19 @@ All sizes already established in `style.css`. No new sizes introduced in Phase 3
 | Body | 16px | 400 | 1.5 |
 | Label | 14px | 400 | 1.4 |
 | Heading / Input / Ratio | 20px | 600 | 1.2 |
-| Sample heading | 24px | 600 | 1.2 |
+| Sample heading | 20px | 600 | 1.2 |
 
 Phase 3 additions:
 
 | Role | Size | Weight | Line Height | Notes |
 |------|------|--------|-------------|-------|
-| Swatch hex label | 12px | 400 | 1.2 | Below each swatch. Smallest text in the UI — only acceptable use of 12px. |
+| Swatch hex label | 14px | 400 | 1.4 | Below each swatch. Uses existing label size. 14px fits within a 48px swatch width. |
 | Button label | 16px | 600 | 1.2 | "Find accessible colour" button, matches input weight for visual pairing. |
 | Distance warning | 14px | 400 | 1.5 | Uses existing label size. |
 
-Source: `style.css` body/label/heading roles confirmed. Swatch hex label (12px) is the sole new size — justified by space constraint within a 48px swatch width.
+Font sizes in use: 14px, 16px, 20px (3 sizes, within the 4-size maximum).
+
+Source: `style.css` body/label/heading roles confirmed. No new sizes added in Phase 3 — swatch hex label uses the existing `--label` size (14px).
 
 ---
 
