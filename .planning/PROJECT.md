@@ -59,7 +59,7 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Vanilla JS, no framework | Simplicity, no build step, fast load | — Pending |
+| Vanilla JS, no framework | Simplicity, no build step, fast load | Validated (Phase 1) |
 | 5 colour variants per search | Enough choice without overwhelming | — Pending |
 | Colour swatches for cycling | Click to preview, visual and direct | — Pending |
 | URL state for sharing | Shareable links without accounts | — Pending |
@@ -84,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 after initialization*
+*Last updated: 2026-04-12 — Phase 1 (Colour Engine) complete*
