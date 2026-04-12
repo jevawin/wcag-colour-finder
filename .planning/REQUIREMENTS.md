@@ -7,24 +7,24 @@
 
 ### Colour Input
 
-- [ ] **INP-01**: User can enter a hex colour code (3 or 6 digit, with or without #)
-- [ ] **INP-02**: Hex input validates strictly — rejects invalid characters, shows error state
-- [ ] **INP-03**: Default colour #2563EB loads on first visit
-- [ ] **INP-04**: User's hex becomes the text colour on both light and dark panels
+- [x] **INP-01**: User can enter a hex colour code (3 or 6 digit, with or without #)
+- [x] **INP-02**: Hex input validates strictly — rejects invalid characters, shows error state
+- [x] **INP-03**: Default colour #2563EB loads on first visit
+- [x] **INP-04**: User's hex becomes the text colour on both light and dark panels
 
 ### Contrast Display
 
-- [ ] **CON-01**: Live contrast ratio displayed per panel (e.g. "4.52:1"), updates as colour changes
-- [ ] **CON-02**: AA pass/fail badge for normal text (4.5:1 threshold) per panel
-- [ ] **CON-03**: AAA pass/fail badge for normal text (7:1 threshold) per panel
-- [ ] **CON-04**: AA pass/fail badge for large text (3:1 threshold) per panel
-- [ ] **CON-05**: AAA pass/fail badge for large text (4.5:1 threshold) per panel
+- [x] **CON-01**: Live contrast ratio displayed per panel (e.g. "4.52:1"), updates as colour changes
+- [x] **CON-02**: AA pass/fail badge for normal text (4.5:1 threshold) per panel
+- [x] **CON-03**: AAA pass/fail badge for normal text (7:1 threshold) per panel
+- [x] **CON-04**: AA pass/fail badge for large text (3:1 threshold) per panel
+- [x] **CON-05**: AAA pass/fail badge for large text (4.5:1 threshold) per panel
 
 ### Preview Panels
 
-- [ ] **PNL-01**: Split-screen layout — light background (left), dark background (right)
-- [ ] **PNL-02**: Real UI text samples shown in the chosen colour (heading + paragraph)
-- [ ] **PNL-03**: User can click to edit the text sample content directly
+- [x] **PNL-01**: Split-screen layout — light background (left), dark background (right)
+- [x] **PNL-02**: Real UI text samples shown in the chosen colour (heading + paragraph)
+- [x] **PNL-03**: User can click to edit the text sample content directly
 
 ### Variant Search
 
@@ -83,18 +83,18 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INP-01 | Phase 2 | Pending |
-| INP-02 | Phase 2 | Pending |
-| INP-03 | Phase 2 | Pending |
-| INP-04 | Phase 2 | Pending |
-| CON-01 | Phase 2 | Pending |
-| CON-02 | Phase 2 | Pending |
-| CON-03 | Phase 2 | Pending |
-| CON-04 | Phase 2 | Pending |
-| CON-05 | Phase 2 | Pending |
-| PNL-01 | Phase 2 | Pending |
-| PNL-02 | Phase 2 | Pending |
-| PNL-03 | Phase 2 | Pending |
+| INP-01 | Phase 2 | Complete |
+| INP-02 | Phase 2 | Complete |
+| INP-03 | Phase 2 | Complete |
+| INP-04 | Phase 2 | Complete |
+| CON-01 | Phase 2 | Complete |
+| CON-02 | Phase 2 | Complete |
+| CON-03 | Phase 2 | Complete |
+| CON-04 | Phase 2 | Complete |
+| CON-05 | Phase 2 | Complete |
+| PNL-01 | Phase 2 | Complete |
+| PNL-02 | Phase 2 | Complete |
+| PNL-03 | Phase 2 | Complete |
 | VAR-01 | Phase 3 | Pending |
 | VAR-02 | Phase 3 | Pending |
 | VAR-03 | Phase 3 | Pending |

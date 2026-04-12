@@ -13,7 +13,7 @@ Start with the colour maths (the most failure-prone part), layer on the live pre
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Colour Engine** - Pure JS colour maths — luminance, contrast ratio, hex parsing, OKLab distance
-- [ ] **Phase 2: Live Preview UI** - Hex input, split-screen panels, contrast ratios, AA/AAA badges
+- [x] **Phase 2: Live Preview UI** - Hex input, split-screen panels, contrast ratios, AA/AAA badges (completed 2026-04-12)
 - [ ] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches
 - [ ] **Phase 4: Modes and Configuration** - Dual-colour mode, custom background inputs, URL sharing
 - [ ] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard
@@ -45,10 +45,10 @@ Plans:
   3. Page loads with #2563EB as the default colour, both panels populated
   4. Each panel shows a heading and paragraph in the chosen colour, and the user can edit that text directly
   5. Each panel shows live contrast ratio, AA/AAA badges for normal and large text, updating as the colour changes
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
+- [x] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
 **UI hint**: yes
 
 ### Phase 3: Variant Search
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Colour Engine | 0/1 | Not started | - |
-| 2. Live Preview UI | 0/? | Not started | - |
+| 2. Live Preview UI | 1/1 | Complete   | 2026-04-12 |
 | 3. Variant Search | 0/? | Not started | - |
 | 4. Modes and Configuration | 0/? | Not started | - |
 | 5. Design and Accessibility | 0/? | Not started | - |
