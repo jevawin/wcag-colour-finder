@@ -83,13 +83,41 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| INP-01 | Phase 2 | Pending |
+| INP-02 | Phase 2 | Pending |
+| INP-03 | Phase 2 | Pending |
+| INP-04 | Phase 2 | Pending |
+| CON-01 | Phase 2 | Pending |
+| CON-02 | Phase 2 | Pending |
+| CON-03 | Phase 2 | Pending |
+| CON-04 | Phase 2 | Pending |
+| CON-05 | Phase 2 | Pending |
+| PNL-01 | Phase 2 | Pending |
+| PNL-02 | Phase 2 | Pending |
+| PNL-03 | Phase 2 | Pending |
+| VAR-01 | Phase 3 | Pending |
+| VAR-02 | Phase 3 | Pending |
+| VAR-03 | Phase 3 | Pending |
+| VAR-04 | Phase 3 | Pending |
+| VAR-05 | Phase 3 | Pending |
+| MODE-01 | Phase 4 | Pending |
+| MODE-02 | Phase 4 | Pending |
+| MODE-03 | Phase 4 | Pending |
+| CFG-01 | Phase 4 | Pending |
+| CFG-02 | Phase 4 | Pending |
+| CFG-03 | Phase 4 | Pending |
+| UI-01 | Phase 5 | Pending |
+| UI-02 | Phase 5 | Pending |
+| UI-03 | Phase 5 | Pending |
+| A11Y-01 | Phase 5 | Pending |
+| A11Y-02 | Phase 5 | Pending |
+| A11Y-03 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22 (pending roadmap)
+- v1 requirements: 22 total (+ Phase 1 engine foundation with no explicit req IDs)
+- Mapped to phases: 22
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-12*
-*Last updated: 2026-04-12 after initial definition*
+*Last updated: 2026-04-12 after roadmap creation*
