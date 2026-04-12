@@ -10,18 +10,13 @@
 <body>
   <main class="container">
     <div class="input-area">
-      <label class="hex-label">
-        <span class="hex-prefix">#</span>
-        <input
-          id="hex-input"
-          type="text"
-          maxlength="6"
-          spellcheck="false"
-          autocomplete="off"
-          aria-label="Hex colour code"
-          value="2563EB"
-        >
-      </label>
+      <div class="input-row">
+        <label class="hex-label">
+          <span class="hex-prefix">#</span>
+          <input id="hex-input" type="text" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code" value="2563EB">
+        </label>
+        <button type="button" id="find-btn" class="find-btn">Find accessible colour</button>
+      </div>
       <span id="hex-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
     </div>
 
@@ -63,6 +58,15 @@
         </div>
       </section>
 
+    </div>
+
+    <div id="swatch-row" class="swatch-row" hidden>
+      <ul class="swatch-list" role="list" aria-label="Accessible colour variants">
+      </ul>
+      <p id="distance-warning" class="distance-warning" hidden>
+        <span class="distance-warning__prefix" aria-hidden="true">&#x26A0;</span>
+        These variants are a long way from your original colour — no closer accessible shade exists.
+      </p>
     </div>
   </main>
 </body>

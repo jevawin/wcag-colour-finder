@@ -226,6 +226,113 @@ body {
   border: 0;
 }
 
+/* --- Input row (button beside hex input) --- */
+
+.input-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* --- Find button --- */
+
+.find-btn {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--chrome-dark);
+  color: var(--chrome-light);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.find-btn:hover {
+  background: #333333;
+}
+
+.find-btn:focus {
+  outline: 2px solid var(--user-colour);
+  outline-offset: 1px;
+}
+
+.find-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Swatch row --- */
+
+.swatch-row {
+  margin-top: var(--space-2xl);
+}
+
+.swatch-row[hidden] {
+  display: none;
+}
+
+.swatch-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.swatch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swatch-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch-btn:focus {
+  outline: 2px solid var(--chrome-dark);
+  outline-offset: 2px;
+}
+
+.swatch-btn--selected {
+  outline: 3px solid var(--user-colour);
+  outline-offset: 2px;
+}
+
+.swatch-hex {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: var(--space-xs);
+  color: var(--chrome-dark);
+}
+
+/* --- Distance warning --- */
+
+.distance-warning {
+  margin-top: var(--space-md);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--chrome-dark);
+}
+
+.distance-warning[hidden] {
+  display: none;
+}
+
+.distance-warning__prefix {
+  color: var(--error);
+  margin-right: var(--space-xs);
+}
+
 /* --- Responsive --- */
 
 @media (max-width: 768px) {
