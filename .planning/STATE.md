@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-04-12T20:45:16.018Z"
+status: executing
+stopped_at: Completed 03-01-PLAN.md (variant search algorithm)
+last_updated: "2026-04-12T21:33:41.371Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** Phase 02 — live-preview-ui
+**Current focus:** Phase 03 — variant-search
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 03 (variant-search) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-04-12
 
 Progress: [░░░░░░░░░░] 0%
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-colour-engine P01 | 2 | 2 tasks | 2 files |
 | Phase 02-live-preview-ui P01 | 2 | 3 tasks | 4 files |
+| Phase 03-variant-search P01 | 85 | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 01-colour-engine]: contrastRatio returns raw float — rounding before passesAA makes #777777 falsely pass AA
 - [Phase 01-colour-engine]: oklabToSrgb included in Phase 1 so Phase 3 search loop can import rather than duplicate matrix maths
 - [Phase 02-live-preview-ui]: Pure function extraction pattern: buildBadgeState/expandHex/formatRatio exported from app.js above DOM guard so node:test can test them without JSDOM
+- [Phase 03-variant-search]: DARK_BG hardcoded as #111111 in variant-search.js to match app.js constant
+- [Phase 03-variant-search]: DISTANCE_WARNING_THRESHOLD exported from variant-search.js (0.12); UI layer applies it, not the result objects
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T20:45:16.016Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-variant-search/03-UI-SPEC.md
+Last session: 2026-04-12T21:33:41.369Z
+Stopped at: Completed 03-01-PLAN.md (variant search algorithm)
+Resume file: None

@@ -29,10 +29,10 @@
 ### Variant Search
 
 - [ ] **VAR-01**: "Find accessible colour" button triggers search for closest accessible variants
-- [ ] **VAR-02**: Returns ~5 accessible colour variants displayed as clickable swatches
+- [x] **VAR-02**: Returns ~5 accessible colour variants displayed as clickable swatches
 - [ ] **VAR-03**: Clicking a swatch updates both panels to preview that variant
-- [ ] **VAR-04**: Variants are as close to the original colour as possible (perceptual distance)
-- [ ] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input
+- [x] **VAR-04**: Variants are as close to the original colour as possible (perceptual distance)
+- [x] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input
 
 ### Colour Modes
 
@@ -96,10 +96,10 @@
 | PNL-02 | Phase 2 | Complete |
 | PNL-03 | Phase 2 | Complete |
 | VAR-01 | Phase 3 | Pending |
-| VAR-02 | Phase 3 | Pending |
+| VAR-02 | Phase 3 | Complete |
 | VAR-03 | Phase 3 | Pending |
-| VAR-04 | Phase 3 | Pending |
-| VAR-05 | Phase 3 | Pending |
+| VAR-04 | Phase 3 | Complete |
+| VAR-05 | Phase 3 | Complete |
 | MODE-01 | Phase 4 | Pending |
 | MODE-02 | Phase 4 | Pending |
 | MODE-03 | Phase 4 | Pending |
