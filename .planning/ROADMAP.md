@@ -30,7 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Contrast ratio calculation is correct — #777777 on white produces 4.48:1 (a fail, not a pass)
   4. OKLab/OKLCH conversion functions exist and return perceptually uniform distance values
   5. All engine functions are pure (no DOM) and pass unit tests
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — TDD: colour engine (hex parsing, luminance, contrast, OKLab, distance)
 
 ### Phase 2: Live Preview UI
 **Goal**: Users can enter a hex colour and immediately see it previewed on light and dark backgrounds with accurate contrast badges
@@ -89,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Colour Engine | 0/? | Not started | - |
+| 1. Colour Engine | 0/1 | Not started | - |
 | 2. Live Preview UI | 0/? | Not started | - |
 | 3. Variant Search | 0/? | Not started | - |
 | 4. Modes and Configuration | 0/? | Not started | - |
