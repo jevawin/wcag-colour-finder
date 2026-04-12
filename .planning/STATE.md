@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01-PLAN.md (variant search algorithm)
-last_updated: "2026-04-12T21:33:41.371Z"
+stopped_at: "Checkpoint: 03-02-PLAN.md task 3 awaiting human verify"
+last_updated: "2026-04-12T21:37:08.959Z"
 last_activity: 2026-04-12
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -71,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 02-live-preview-ui]: Pure function extraction pattern: buildBadgeState/expandHex/formatRatio exported from app.js above DOM guard so node:test can test them without JSDOM
 - [Phase 03-variant-search]: DARK_BG hardcoded as #111111 in variant-search.js to match app.js constant
 - [Phase 03-variant-search]: DISTANCE_WARNING_THRESHOLD exported from variant-search.js (0.12); UI layer applies it, not the result objects
+- [Phase 03-variant-search]: Swatch click calls render(hexNoHash) — reuses existing panel update path, does not set hexInput.value (D-08)
+- [Phase 03-variant-search]: Distance warning shown when variants[0].distance > DISTANCE_WARNING_THRESHOLD (0.12) — threshold exported from variant-search.js
 
 ### Pending Todos
 
@@ -83,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T21:33:41.369Z
-Stopped at: Completed 03-01-PLAN.md (variant search algorithm)
+Last session: 2026-04-12T21:37:05.428Z
+Stopped at: Checkpoint: 03-02-PLAN.md task 3 awaiting human verify
 Resume file: None

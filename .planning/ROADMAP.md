@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Colour Engine** - Pure JS colour maths — luminance, contrast ratio, hex parsing, OKLab distance
 - [x] **Phase 2: Live Preview UI** - Hex input, split-screen panels, contrast ratios, AA/AAA badges (completed 2026-04-12)
-- [ ] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches
+- [x] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches (completed 2026-04-12)
 - [ ] **Phase 4: Modes and Configuration** - Dual-colour mode, custom background inputs, URL sharing
 - [ ] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard
 
@@ -61,11 +61,11 @@ Plans:
   3. Variants are perceptually close to the original — not near-black or near-white unless unavoidable
   4. Clicking a swatch updates both preview panels to show that variant
   5. When no nearby accessible variant exists, the tool says so clearly rather than returning distant colours
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 03-01-PLAN.md — TDD: variant search algorithm (OKLCH lightness binary search, findVariants)
-- [ ] 03-02-PLAN.md — UI wiring (button, swatch row, swatch click, distance warning)
+- [x] 03-02-PLAN.md — UI wiring (button, swatch row, swatch click, distance warning)
 
 ### Phase 4: Modes and Configuration
 **Goal**: Users can switch between single and dual-colour modes and customise background colours, with results shareable via URL
@@ -107,6 +107,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Colour Engine | 0/1 | Not started | - |
 | 2. Live Preview UI | 1/1 | Complete   | 2026-04-12 |
-| 3. Variant Search | 1/2 | In Progress|  |
+| 3. Variant Search | 2/2 | Complete   | 2026-04-12 |
 | 4. Modes and Configuration | 0/? | Not started | - |
 | 5. Design and Accessibility | 0/? | Not started | - |
