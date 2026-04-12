@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — TDD: colour engine (hex parsing, luminance, contrast, OKLab, distance)
+- [x] 01-01-PLAN.md — TDD: colour engine (hex parsing, luminance, contrast, OKLab, distance)
 
 ### Phase 2: Live Preview UI
 **Goal**: Users can enter a hex colour and immediately see it previewed on light and dark backgrounds with accurate contrast badges
