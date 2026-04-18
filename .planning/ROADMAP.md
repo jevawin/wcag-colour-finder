@@ -94,10 +94,12 @@ Plans:
   3. The tool passes WCAG AA for all its own text and interactive elements
   4. Pass/fail status is communicated with text labels or icons, not colour alone
   5. All interactive elements have visible focus states when navigated by keyboard
-**Plans:** 1 plan
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
+- [ ] 05-01-pure-helpers-and-wave-0-PLAN.md — Wave 0: extract buildBadgeHTML, chooseChromeForeground, deriveBadgeColors + test stubs (british-spelling, badge-markup, ui-chrome-contrast)
+- [ ] 05-02-two-zone-layout-and-badges-PLAN.md — Two-zone HTML, typography/spacing CSS, derived pass-badge tint, British copy sweep, setBadge rewire
+- [ ] 05-03-focus-responsive-a11y-audit-PLAN.md — Unified focus styles, mobile tabs ARIA, axe-core + keyboard + VoiceOver audit in VERIFICATION.md
 **UI hint**: yes
 
 ## Progress
@@ -111,4 +113,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Live Preview UI | 1/1 | Complete   | 2026-04-12 |
 | 3. Variant Search | 2/2 | Complete   | 2026-04-12 |
 | 4. Modes and Configuration | 0/? | Not started | - |
-| 5. Design and Accessibility | 0/? | Not started | - |
+| 5. Design and Accessibility | 0/3 | Not started | - |
