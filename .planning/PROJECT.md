@@ -12,7 +12,9 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Dual-colour mode: finds two close shades — one for light BG, one for dark BG — each passing AA — Validated in Phase 4
+- [x] Inline hex inputs to set custom light/dark background colours (defaults: #ffffff, #000000) — Validated in Phase 4
+- [x] Hex colour stored in URL for shareable links — Validated in Phase 4
 
 ### Active
 
@@ -24,16 +26,13 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 - [ ] "Find accessible colour" button triggers search for closest accessible variants
 - [ ] Returns ~5 accessible colour variants, shown as clickable swatches
 - [ ] Clicking a swatch updates both panels to preview that variant
-- [ ] Single-colour / dual-colour toggle
-- [ ] Single-colour mode: finds one colour that passes AA on both light and dark backgrounds
-- [ ] Dual-colour mode: finds two close shades — one for light BG, one for dark BG — each passing AA
-- [ ] Inline hex inputs to set custom light/dark background colours (defaults: #ffffff, #000000)
 - [ ] Default colour on load: #2563EB
-- [ ] Hex colour stored in URL for shareable links
 - [ ] Minimal monochrome UI — black/white chrome, colour only from user input
 
 ### Out of Scope
 
+- Single-colour mode — dropped in Phase 4 (D-01): dual-only is the product
+- Single/dual mode toggle — dropped in Phase 4 (D-01): no toggle, dual-only
 - Colour blindness simulation — different tool, different scope
 - Colour palette generation — we find accessible variants, not full palettes
 - Framework or build step — vanilla HTML/CSS/JS only
@@ -62,9 +61,10 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 | Vanilla JS, no framework | Simplicity, no build step, fast load | Validated (Phase 1) |
 | 5 colour variants per search | Enough choice without overwhelming | — Pending |
 | Colour swatches for cycling | Click to preview, visual and direct | — Pending |
-| URL state for sharing | Shareable links without accounts | — Pending |
+| URL state for sharing | Shareable links without accounts | Validated (Phase 4) |
 | Both normal + large text ratios | More useful for real decisions | — Pending |
-| Inline BG colour inputs | Quick access without hiding in settings | — Pending |
+| Inline BG colour inputs | Quick access without hiding in settings | Validated (Phase 4) |
+| Dual-only, no single mode (D-01) | Simpler UX; single-mode rarely finds a match | Validated (Phase 4) |
 
 ## Evolution
 
@@ -84,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 — Phase 3 (Variant Search) complete*
+*Last updated: 2026-04-18 — Phase 4 (Modes and Configuration) complete*
