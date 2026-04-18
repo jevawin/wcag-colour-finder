@@ -36,9 +36,9 @@
 
 ### Colour Modes
 
-- [ ] **MODE-01**: Single-colour mode — finds one colour that passes AA on both light and dark backgrounds simultaneously
+- [~] **MODE-01**: ~~Single-colour mode~~ — DROPPED in Phase 4 per D-01 (user pivoted to dual-only)
 - [x] **MODE-02**: Dual-colour mode — finds two close shades, one for light BG, one for dark BG, each passing AA
-- [ ] **MODE-03**: Toggle between single-colour and dual-colour modes
+- [~] **MODE-03**: ~~Toggle between modes~~ — DROPPED in Phase 4 per D-01 (no toggle; dual-only)
 
 ### Configuration
 
@@ -100,12 +100,12 @@
 | VAR-03 | Phase 3 | Complete |
 | VAR-04 | Phase 3 | Complete |
 | VAR-05 | Phase 3 | Complete |
-| MODE-01 | Phase 4 | Pending |
+| MODE-01 | Phase 4 | DROPPED |
 | MODE-02 | Phase 4 | Complete |
-| MODE-03 | Phase 4 | Pending |
-| CFG-01 | Phase 4 | Complete |
-| CFG-02 | Phase 4 | Complete |
-| CFG-03 | Phase 4 | Complete |
+| MODE-03 | Phase 4 | DROPPED |
+| CFG-01  | Phase 4 | Complete |
+| CFG-02  | Phase 4 | Complete |
+| CFG-03  | Phase 4 | Complete |
 | UI-01 | Phase 5 | Pending |
 | UI-02 | Phase 5 | Pending |
 | UI-03 | Phase 5 | Pending |
@@ -115,9 +115,9 @@
 
 **Coverage:**
 - v1 requirements: 22 total (+ Phase 1 engine foundation with no explicit req IDs)
-- Mapped to phases: 22
+- Mapped to phases: 22 (20 active, 2 DROPPED in Phase 4)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-12*
-*Last updated: 2026-04-12 after roadmap creation*
+*Last updated: 2026-04-18 — Phase 4 closeout — MODE-01/MODE-03 dropped per D-01.*
