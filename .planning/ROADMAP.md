@@ -77,10 +77,12 @@ Plans:
   3. User can toggle between modes and the results update accordingly
   4. User can change the light background colour (default #ffffff) and dark background colour (default #000000) via inline hex inputs
   5. The current hex colour is stored in the URL and the page state restores correctly when loading that URL
-**Plans:** 1 plan
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — HTML/CSS/JS live preview (hex input, split panels, contrast badges, contenteditable text)
+- [ ] 04-01-PLAN.md — TDD: url-state module + findVariantPairs refactor (BG params, dual-pair output)
+- [ ] 04-02-PLAN.md — UI wiring (BG inputs, paired swatches, URL hydrate + debounced sync)
+- [ ] 04-03-PLAN.md — REQUIREMENTS.md cleanup + browser smoke checkpoint
 
 ### Phase 5: Design and Accessibility
 **Goal**: The tool looks polished, matches the intended minimal aesthetic, and passes its own WCAG AA standard
