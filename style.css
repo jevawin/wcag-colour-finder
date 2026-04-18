@@ -6,7 +6,7 @@
 :root {
   --user-colour: #2563eb;
   --light-bg: #ffffff;
-  --dark-bg: #111111;
+  --dark-bg: #000000;
   --surface: #f3f3f3;
   --error: #dc2626;
   --pass-bg: #16a34a;
@@ -331,6 +331,79 @@ body {
 .distance-warning__prefix {
   color: var(--error);
   margin-right: var(--space-xs);
+}
+
+/* --- BG input (per panel) --- */
+.bg-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+.bg-input-label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: inherit;
+}
+.bg-input {
+  width: 80px;
+  font-size: 14px;
+  font-weight: 400;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+  min-height: 44px;
+}
+.bg-input:focus {
+  outline: 2px solid var(--chrome-dark);
+  outline-offset: 1px;
+}
+.bg-input.input--error {
+  border: 2px solid var(--error);
+}
+.panel--dark .bg-input-label,
+.panel--dark .bg-input {
+  color: var(--chrome-light);
+}
+
+/* --- Swatch pair --- */
+.swatch-pair {
+  width: 96px;
+  height: 48px;
+  display: flex;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+}
+.swatch-pair__half {
+  flex: 1;
+  display: block;
+}
+.swatch-pair__half--light {
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+.swatch-pair:focus {
+  outline: 2px solid var(--chrome-dark);
+  outline-offset: 2px;
+}
+.swatch-pair--selected {
+  outline: 3px solid var(--user-colour);
+  outline-offset: 2px;
+}
+.swatch-pair-hex {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: var(--space-xs);
+  color: var(--chrome-dark);
+}
+.panel--dark .swatch-pair-hex {
+  color: var(--chrome-dark);
 }
 
 /* --- Responsive --- */

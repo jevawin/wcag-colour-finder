@@ -24,6 +24,16 @@
 
       <section class="panel panel--light">
         <h2 class="sr-only">Light background</h2>
+        <div class="bg-input-row">
+          <label class="bg-input-label" for="light-bg-input">Background</label>
+          <span class="hex-prefix" aria-hidden="true">#</span>
+          <input id="light-bg-input" class="bg-input" type="text" maxlength="6"
+                 spellcheck="false" autocomplete="off"
+                 aria-label="Light background hex colour"
+                 aria-invalid="false"
+                 value="ffffff">
+          <span id="light-bg-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
+        </div>
         <h3 contenteditable="true" aria-label="Editable heading — light panel" class="sample-heading sample-text">The quick brown fox</h3>
         <p contenteditable="true" aria-label="Editable paragraph — light panel" class="sample-para sample-text">Designers and developers use accessible colours so everyone can read content clearly, regardless of ability or context.</p>
         <div class="badge-area">
@@ -42,6 +52,16 @@
 
       <section class="panel panel--dark">
         <h2 class="sr-only">Dark background</h2>
+        <div class="bg-input-row">
+          <label class="bg-input-label" for="dark-bg-input">Background</label>
+          <span class="hex-prefix" aria-hidden="true">#</span>
+          <input id="dark-bg-input" class="bg-input" type="text" maxlength="6"
+                 spellcheck="false" autocomplete="off"
+                 aria-label="Dark background hex colour"
+                 aria-invalid="false"
+                 value="000000">
+          <span id="dark-bg-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
+        </div>
         <h3 contenteditable="true" aria-label="Editable heading — dark panel" class="sample-heading sample-text">The quick brown fox</h3>
         <p contenteditable="true" aria-label="Editable paragraph — dark panel" class="sample-para sample-text">Designers and developers use accessible colours so everyone can read content clearly, regardless of ability or context.</p>
         <div class="badge-area">
@@ -61,11 +81,11 @@
     </div>
 
     <div id="swatch-row" class="swatch-row" hidden>
-      <ul class="swatch-list" role="list" aria-label="Accessible colour variants">
+      <ul class="swatch-list" role="list" aria-label="Accessible colour pairs">
       </ul>
       <p id="distance-warning" class="distance-warning" hidden>
         <span class="distance-warning__prefix" aria-hidden="true">&#x26A0;</span>
-        These variants are a long way from your original colour — no closer accessible shade exists.
+        These pairs are a long way from your original colour — no closer accessible shades exist.
       </p>
     </div>
   </main>
