@@ -42,8 +42,8 @@
 
 ### Configuration
 
-- [ ] **CFG-01**: Inline hex inputs to set custom light background colour (default #ffffff)
-- [ ] **CFG-02**: Inline hex inputs to set custom dark background colour (default #000000)
+- [x] **CFG-01**: Inline hex inputs to set custom light background colour (default #ffffff)
+- [x] **CFG-02**: Inline hex inputs to set custom dark background colour (default #000000)
 - [x] **CFG-03**: Hex colour stored in URL for shareable links (updates on input change)
 
 ### Visual Design
@@ -103,8 +103,8 @@
 | MODE-01 | Phase 4 | Pending |
 | MODE-02 | Phase 4 | Complete |
 | MODE-03 | Phase 4 | Pending |
-| CFG-01 | Phase 4 | Pending |
-| CFG-02 | Phase 4 | Pending |
+| CFG-01 | Phase 4 | Complete |
+| CFG-02 | Phase 4 | Complete |
 | CFG-03 | Phase 4 | Complete |
 | UI-01 | Phase 5 | Pending |
 | UI-02 | Phase 5 | Pending |

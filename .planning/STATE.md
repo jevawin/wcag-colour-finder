@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-04-18T08:49:32.688Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-04-18T08:53:20.632Z"
 last_activity: 2026-04-18
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 04 (modes-and-configuration) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-18
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-live-preview-ui P01 | 2 | 3 tasks | 4 files |
 | Phase 03-variant-search P01 | 85 | 3 tasks | 2 files |
 | Phase 04-modes-and-configuration P01 | 15 | 2 tasks | 4 files |
+| Phase 04-modes-and-configuration P02 | 10 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 04-modes-and-configuration]: findVariantPairs uses max(distLight, distDark) as pair distance metric
 - [Phase 04-modes-and-configuration]: URL hash format is #/<fg>/<lightBg>/<darkBg>, all 6-digit lowercase
 - [Phase 04-modes-and-configuration]: Fixed pre-existing searchL gamut-boundary bug — on clamp, move interval back toward origin L not toward boundary
+- [Phase 04-modes-and-configuration]: Dark-panel pair preview uses inline style.color; main hex input handler clears it so --user-colour cascade reasserts
+- [Phase 04-modes-and-configuration]: URL hydrate falls back to defaults on invalid/missing hash without writing back
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-18T08:49:32.686Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-04-18T08:53:20.567Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None

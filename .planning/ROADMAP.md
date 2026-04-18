@@ -81,7 +81,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — TDD: url-state module + findVariantPairs refactor (BG params, dual-pair output)
-- [ ] 04-02-PLAN.md — UI wiring (BG inputs, paired swatches, URL hydrate + debounced sync)
+- [x] 04-02-PLAN.md — UI wiring (BG inputs, paired swatches, URL hydrate + debounced sync)
 - [ ] 04-03-PLAN.md — REQUIREMENTS.md cleanup + browser smoke checkpoint
 
 ### Phase 5: Design and Accessibility
