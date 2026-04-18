@@ -55,8 +55,23 @@ function formatRatio(ratio) {
   return ratio.toFixed(2) + ':1';
 }
 
+/**
+ * Build the inner HTML for a pass/fail badge.
+ * Returns a string with an aria-hidden icon span and a visible text label span,
+ * so screen readers read only the text (A11Y-02 text + icon cue).
+ *
+ * @param {boolean} passes - true for pass, false for fail
+ * @param {string} label - threshold label (e.g. 'AA', 'AAA', 'AA Large', 'AAA Large')
+ * @returns {string} HTML string
+ */
+function buildBadgeHTML(passes, label) {
+  const icon = passes ? '✓' : '✗';
+  const word = passes ? 'Pass' : 'Fail';
+  return `<span aria-hidden="true">${icon}</span><span>${word} ${label}</span>`;
+}
+
 // Named exports for testing — pure functions with no DOM dependency
-export { buildBadgeState, expandHex, formatRatio };
+export { buildBadgeState, expandHex, formatRatio, buildBadgeHTML };
 
 // --- DOM wiring (browser only) ---
 

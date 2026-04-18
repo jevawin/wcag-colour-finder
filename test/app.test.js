@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBadgeState, expandHex, formatRatio } from '../app.js';
+import { buildBadgeState, expandHex, formatRatio, buildBadgeHTML } from '../app.js';
 
 describe('buildBadgeState', () => {
   it('returns all true for ratio 8.0 (passes AA, AAA, AA large, AAA large)', () => {
@@ -61,5 +61,13 @@ describe('formatRatio', () => {
 
   it('formats 1.0 as "1.00:1"', () => {
     assert.equal(formatRatio(1.0), '1.00:1');
+  });
+});
+
+describe('buildBadgeHTML (smoke)', () => {
+  it('renders "Pass AAA Large" label variant', () => {
+    const html = buildBadgeHTML(true, 'AAA Large');
+    assert.ok(html.includes('Pass AAA Large'));
+    assert.ok(html.includes('aria-hidden="true"'));
   });
 });
