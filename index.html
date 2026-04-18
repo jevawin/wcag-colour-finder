@@ -52,9 +52,13 @@
   </div>
 
   <div class="preview-zone">
+    <div class="panel-tabs" role="tablist" aria-label="Preview panel">
+      <button type="button" class="tab-btn" role="tab" data-panel="light" aria-selected="true"  aria-controls="panel-light-content" id="tab-light">Light</button>
+      <button type="button" class="tab-btn" role="tab" data-panel="dark"  aria-selected="false" aria-controls="panel-dark-content"  id="tab-dark">Dark</button>
+    </div>
     <div class="panels">
 
-      <section class="panel panel--light">
+      <section class="panel panel--light" id="panel-light-content" role="tabpanel" aria-labelledby="tab-light">
         <h2 class="sr-only">Light background</h2>
 
         <div class="preview-field">
@@ -98,7 +102,7 @@
         <p class="numerals sample-text">0 1 2 3 4 5 6 7 8 9</p>
       </section>
 
-      <section class="panel panel--dark">
+      <section class="panel panel--dark" id="panel-dark-content" role="tabpanel" aria-labelledby="tab-dark">
         <h2 class="sr-only">Dark background</h2>
 
         <div class="preview-field">

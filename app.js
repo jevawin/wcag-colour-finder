@@ -435,6 +435,34 @@ if (typeof document !== 'undefined') {
     });
   });
 
+  // --- Mobile tabs (Light / Dark) — UI-02, A11Y-02 ---
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panelLight = document.querySelector('.panel--light');
+  const panelDark  = document.querySelector('.panel--dark');
+
+  function syncTabs(activePanel) {
+    tabBtns.forEach(b => b.setAttribute('aria-selected', String(b.dataset.panel === activePanel)));
+    if (panelLight) panelLight.hidden = (activePanel !== 'light');
+    if (panelDark)  panelDark.hidden  = (activePanel !== 'dark');
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => syncTabs(btn.dataset.panel));
+  });
+
+  function applyTabState() {
+    const isMobile = window.matchMedia('(max-width: 700px)').matches;
+    if (!isMobile) {
+      if (panelLight) panelLight.hidden = false;
+      if (panelDark)  panelDark.hidden  = false;
+    } else {
+      const active = document.querySelector('.tab-btn[aria-selected="true"]');
+      syncTabs(active ? active.dataset.panel : 'light');
+    }
+  }
+  window.addEventListener('resize', applyTabState);
+  applyTabState();
+
   // --- Page load hydration ---
   function hydrateFromUrl() {
     const parsed = parseHashState(window.location.hash);

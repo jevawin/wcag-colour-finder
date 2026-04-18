@@ -140,6 +140,16 @@ h1 {
   gap: 0;
 }
 
+/* --- Mobile tabs (hidden on desktop) --- */
+
+.panel-tabs {
+  display: none;
+}
+
+.tab-btn {
+  font-family: inherit;
+}
+
 .panel {
   flex: 1;
   padding: var(--space-lg);
@@ -203,11 +213,6 @@ h1 {
   width: 96px;
 }
 
-.hex-pill:focus-within {
-  outline: 2px solid var(--chrome-dark);
-  outline-offset: 2px;
-}
-
 .preview-pill {
   min-height: 44px;
   padding: 0 var(--space-sm) 0 var(--space-md);
@@ -245,9 +250,8 @@ h1 {
   padding: 4px;
 }
 
-.copy-btn:focus {
-  outline: 2px solid var(--chrome-dark);
-  outline-offset: 2px;
+.panel--dark .copy-btn {
+  color: var(--chrome-light);
 }
 
 /* --- Control row (input pill + Find button + AA/AAA toggle) --- */
@@ -279,11 +283,6 @@ h1 {
   background: #333333;
 }
 
-.find-btn:focus {
-  outline: 2px solid var(--chrome-dark);
-  outline-offset: 2px;
-}
-
 .find-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -311,11 +310,6 @@ h1 {
 .aa-toggle-btn[aria-pressed="true"] {
   background: var(--chrome-dark);
   color: var(--chrome-light);
-}
-
-.aa-toggle-btn:focus {
-  outline: 2px solid var(--chrome-dark);
-  outline-offset: 2px;
 }
 
 /* --- Error message --- */
@@ -354,6 +348,39 @@ h1 {
   color: var(--user-colour);
 }
 
+/* --- Unified focus — A11Y-03, D-09 --- */
+
+#hex-input:focus,
+#find-btn:focus,
+.bg-input:focus,
+.swatch-pair:focus,
+.tab-btn:focus,
+.aa-toggle-btn:focus,
+.copy-btn:focus,
+.attribution a:focus {
+  outline: 2px solid var(--chrome-dark);
+  outline-offset: 2px;
+}
+
+.hex-pill:focus-within {
+  outline: 2px solid var(--chrome-dark);
+  outline-offset: 2px;
+}
+
+/* Dark-panel override — Pitfall 2 */
+.panel--dark #hex-input:focus,
+.panel--dark .bg-input:focus,
+.panel--dark .swatch-pair:focus,
+.panel--dark .copy-btn:focus,
+.panel--dark .tab-btn:focus,
+.panel--dark .hex-pill:focus-within {
+  outline-color: var(--chrome-light);
+}
+
+/* Error-state outline overrides */
+.input--error:focus { outline-color: var(--error); }
+
+/* Exception — sample text (D-03) */
 .sample-text:focus {
   outline: 2px dashed;
   outline-color: color-mix(in srgb, var(--user-colour) 50%, transparent);
@@ -465,12 +492,9 @@ h1 {
   border-radius: 2px;
 }
 
-.swatch-pair:focus {
-  outline: 2px solid var(--chrome-dark);
-  outline-offset: 2px;
-}
-
 .swatch-pair--selected {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
   border-width: 3px;
   border-color: #000000;
 }
@@ -526,5 +550,38 @@ h1 {
 
   .aa-toggle-btn {
     flex: 1;
+  }
+
+  /* Mobile tabs — replace 50/50 split with tab-switched single panel */
+  .panel-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--chrome-dark);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: #ffffff;
+    color: var(--chrome-dark);
+    border: none;
+    padding: var(--space-md);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 44px;
+  }
+
+  .tab-btn[aria-selected="true"] {
+    background: var(--chrome-dark);
+    color: var(--chrome-light);
+  }
+
+  .panel--light[hidden],
+  .panel--dark[hidden] {
+    display: none;
+  }
+
+  .swatch-list {
+    flex-wrap: wrap;
   }
 }
