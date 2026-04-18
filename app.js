@@ -165,7 +165,8 @@ if (typeof document !== 'undefined') {
   function setBadge(root, selector, passes, label) {
     const el = root.querySelector(selector);
     if (!el) return;
-    el.textContent = (passes ? 'Pass ' : 'Fail ') + label;
+    // Delegates markup to buildBadgeHTML for A11Y-02 icon + text cue
+    el.innerHTML = buildBadgeHTML(passes, label);
     el.classList.toggle('badge--pass', passes);
     el.classList.toggle('badge--fail', !passes);
   }
@@ -174,13 +175,14 @@ if (typeof document !== 'undefined') {
    * Update all badge elements and the ratio display for a single panel.
    */
   function updatePanel(panelEl, ratio) {
-    panelEl.querySelector('.ratio').textContent = formatRatio(ratio);
+    // Large display shows the bare number (e.g. "4.57"); keep formatRatio-style rounding.
+    panelEl.querySelector('.ratio').textContent = ratio.toFixed(2);
 
     const state = buildBadgeState(ratio);
     setBadge(panelEl, '.badge-aa',     state.aa,       'AA');
     setBadge(panelEl, '.badge-aaa',    state.aaa,      'AAA');
-    setBadge(panelEl, '.badge-aa-lg',  state.aaLarge,  'AA');
-    setBadge(panelEl, '.badge-aaa-lg', state.aaaLarge, 'AAA');
+    setBadge(panelEl, '.badge-aa-lg',  state.aaLarge,  'AA Large');
+    setBadge(panelEl, '.badge-aaa-lg', state.aaaLarge, 'AAA Large');
   }
 
   /**
@@ -190,6 +192,22 @@ if (typeof document !== 'undefined') {
    */
   function render(hex) {
     applyColor(hex);
+
+    // Derive and apply pass-badge tokens for the current user colour.
+    const { passBg, passText } = deriveBadgeColors(hex);
+    document.documentElement.style.setProperty('--pass-bg',   passBg);
+    document.documentElement.style.setProperty('--pass-text', passText);
+
+    // Pick chrome foreground for the control zone and toggle the warning.
+    const chromeFg = chooseChromeForeground(hex);
+    document.documentElement.style.setProperty('--control-zone-text', chromeFg);
+    const warn = document.getElementById('top-zone-warning');
+    if (warn) warn.hidden = (chromeFg === '#000000');
+
+    // Mirror the current hex into the per-panel foreground pill labels.
+    const upper = hex.toUpperCase();
+    document.querySelectorAll('.fg-hex').forEach(el => { el.textContent = upper; });
+
     const ratioLight = contrastRatio('#' + hex, lastValidLightBg);
     const ratioDark  = contrastRatio('#' + hex, lastValidDarkBg);
     updatePanel(lightPanel, ratioLight);
@@ -363,13 +381,14 @@ if (typeof document !== 'undefined') {
 
   // --- Find button handler — D-01: manual trigger ---
   findBtn.addEventListener('click', () => {
+    const originalLabel = findBtn.textContent;
     findBtn.disabled = true;
     findBtn.textContent = 'Finding\u2026';
 
     const results = findVariantPairs('#' + lastValidHex, lastValidLightBg, lastValidDarkBg);
 
     findBtn.disabled = false;
-    findBtn.textContent = 'Find accessible colour';
+    findBtn.textContent = originalLabel;
 
     if (results && results.length > 0) {
       renderPairs(results);
@@ -380,6 +399,40 @@ if (typeof document !== 'undefined') {
       distWarning.textContent = 'No accessible pair found for this colour.';
       swatchRow.hidden = false;
     }
+  });
+
+  // --- AA/AAA segmented toggle ---
+  // currentThreshold is captured for future filtering (Plan 05-03 or later consumer).
+  const aaToggleBtns = document.querySelectorAll('.aa-toggle-btn');
+  let currentThreshold = 'AA'; // eslint-disable-line no-unused-vars
+  aaToggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentThreshold = btn.dataset.threshold;
+      aaToggleBtns.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    });
+  });
+
+  // --- Copy-to-clipboard buttons ---
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      // The hex value sits before the pill-divider, which sits before this button.
+      // Walk backwards to find the nearest .hex-value sibling in the pill.
+      const pill = btn.closest('.hex-pill');
+      const target = pill ? pill.querySelector('.hex-value') : null;
+      const raw = target ? (target.value !== undefined ? target.value : target.textContent).trim().replace(/^#/, '') : '';
+      if (!raw) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(raw);
+        }
+        const live = document.getElementById('copy-live');
+        if (live) {
+          live.textContent = '';
+          live.textContent = 'Copied';
+          setTimeout(() => { live.textContent = ''; }, 1500);
+        }
+      } catch (_e) { /* silent on unsupported environments */ }
+    });
   });
 
   // --- Page load hydration ---
