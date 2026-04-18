@@ -8,86 +8,142 @@
   <script type="module" src="app.js"></script>
 </head>
 <body>
-  <main class="container">
-    <div class="input-area">
-      <div class="input-row">
-        <label class="hex-label">
-          <span class="hex-prefix">#</span>
-          <input id="hex-input" type="text" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code" value="2563EB">
-        </label>
-        <button type="button" id="find-btn" class="find-btn">Find accessible colour</button>
-      </div>
-      <span id="hex-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
-    </div>
 
+  <div class="control-zone">
+    <div class="control-zone__inner">
+
+      <div class="control-zone__header">
+        <h1>WCAG colour finder</h1>
+        <p class="attribution">Inspired by <a href="https://colourcontrast.cc">colourcontrast.cc</a></p>
+      </div>
+
+      <p class="description">Enter a hex code then press "Find 5" to find close pairs accessible on light and dark backgrounds.</p>
+
+      <div class="control-row">
+        <label class="hex-pill" for="hex-input">
+          <span class="swatch-indicator" aria-hidden="true"></span>
+          <span class="hex-prefix" aria-hidden="true">#</span>
+          <input id="hex-input" class="hex-value" type="text" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code" value="2563EB">
+        </label>
+
+        <button type="button" id="find-btn" class="find-btn">Find 5 &rarr;</button>
+
+        <div class="aa-toggle" role="group" aria-label="Contrast threshold">
+          <button type="button" class="aa-toggle-btn" data-threshold="AA"  aria-pressed="true">AA</button>
+          <button type="button" class="aa-toggle-btn" data-threshold="AAA" aria-pressed="false">AAA</button>
+        </div>
+      </div>
+
+      <span id="hex-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
+
+      <div id="swatch-row" class="swatch-row" hidden>
+        <ul class="swatch-list" role="list" aria-label="Accessible colour pairs">
+        </ul>
+        <p id="distance-warning" class="distance-warning" hidden>
+          <span class="distance-warning__prefix" aria-hidden="true">&#x26A0;</span>
+          These pairs are a long way from your original colour — no closer accessible shades exist.
+        </p>
+      </div>
+
+      <p id="top-zone-warning" class="top-zone-warning" hidden aria-live="polite">Warning: current colour may reduce readability of page controls.</p>
+      <span id="copy-live" class="sr-only" aria-live="polite"></span>
+
+    </div>
+  </div>
+
+  <div class="preview-zone">
     <div class="panels">
 
       <section class="panel panel--light">
         <h2 class="sr-only">Light background</h2>
-        <div class="bg-input-row">
-          <label class="bg-input-label" for="light-bg-input">Background</label>
-          <span class="hex-prefix" aria-hidden="true">#</span>
-          <input id="light-bg-input" class="bg-input" type="text" maxlength="6"
-                 spellcheck="false" autocomplete="off"
-                 aria-label="Light background hex colour"
-                 aria-invalid="false"
-                 value="ffffff">
+
+        <div class="preview-field">
+          <span class="preview-field__label">Foreground colour</span>
+          <span class="hex-pill preview-pill">
+            <span class="swatch-indicator swatch-indicator--fg" aria-hidden="true"></span>
+            <span class="hex-prefix" aria-hidden="true">#</span>
+            <span class="hex-value fg-hex">2563EB</span>
+            <span class="pill-divider" aria-hidden="true"></span>
+            <button type="button" class="copy-btn" aria-label="Copy hex to clipboard" title="Copy hex to clipboard">&#x2398;</button>
+          </span>
+        </div>
+
+        <div class="preview-field">
+          <span class="preview-field__label">Background colour</span>
+          <span class="hex-pill preview-pill">
+            <span class="swatch-indicator swatch-indicator--bg swatch-indicator--light" aria-hidden="true"></span>
+            <span class="hex-prefix" aria-hidden="true">#</span>
+            <input id="light-bg-input" class="hex-value bg-input" type="text" maxlength="6"
+                   spellcheck="false" autocomplete="off"
+                   aria-label="Light background hex colour"
+                   aria-invalid="false"
+                   value="ffffff">
+            <span class="pill-divider" aria-hidden="true"></span>
+            <button type="button" class="copy-btn" aria-label="Copy hex to clipboard" title="Copy hex to clipboard">&#x2398;</button>
+          </span>
           <span id="light-bg-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
         </div>
-        <h3 contenteditable="true" aria-label="Editable heading — light panel" class="sample-heading sample-text">The quick brown fox</h3>
-        <p contenteditable="true" aria-label="Editable paragraph — light panel" class="sample-para sample-text">Designers and developers use accessible colours so everyone can read content clearly, regardless of ability or context.</p>
-        <div class="badge-area">
-          <div class="badge-row badge-row--normal" aria-label="Normal text contrast">
-            <span class="ratio">—:1</span>
-            <span class="badge badge-aa badge--fail">Fail AA</span>
-            <span class="badge badge-aaa badge--fail">Fail AAA</span>
-          </div>
-          <div class="badge-row badge-row--large" aria-label="Large text contrast">
-            <span class="badge-row-label">Large text:</span>
-            <span class="badge badge-aa-lg badge--fail">Fail AA</span>
-            <span class="badge badge-aaa-lg badge--fail">Fail AAA</span>
-          </div>
+
+        <p class="contrast-ratio contrast-ratio--large"><span class="ratio">—</span></p>
+
+        <div class="badge-area" aria-live="polite">
+          <span class="badge badge-aa badge--fail"></span>
+          <span class="badge badge-aaa badge--fail"></span>
+          <span class="badge badge-aa-lg badge--fail"></span>
+          <span class="badge badge-aaa-lg badge--fail"></span>
         </div>
+
+        <h3 contenteditable="true" aria-label="Editable heading — light panel" class="sample-heading sample-text">The quick brown fox</h3>
+        <p contenteditable="true" aria-label="Editable paragraph — light panel" class="sample-para sample-text">Typography should be readable first. This paragraph uses the current base colour at 16 px against the chosen background — the small-text benchmark for WCAG body copy.</p>
+        <p class="numerals sample-text">0 1 2 3 4 5 6 7 8 9</p>
       </section>
 
       <section class="panel panel--dark">
         <h2 class="sr-only">Dark background</h2>
-        <div class="bg-input-row">
-          <label class="bg-input-label" for="dark-bg-input">Background</label>
-          <span class="hex-prefix" aria-hidden="true">#</span>
-          <input id="dark-bg-input" class="bg-input" type="text" maxlength="6"
-                 spellcheck="false" autocomplete="off"
-                 aria-label="Dark background hex colour"
-                 aria-invalid="false"
-                 value="000000">
+
+        <div class="preview-field">
+          <span class="preview-field__label">Foreground colour</span>
+          <span class="hex-pill preview-pill">
+            <span class="swatch-indicator swatch-indicator--fg" aria-hidden="true"></span>
+            <span class="hex-prefix" aria-hidden="true">#</span>
+            <span class="hex-value fg-hex">2563EB</span>
+            <span class="pill-divider" aria-hidden="true"></span>
+            <button type="button" class="copy-btn" aria-label="Copy hex to clipboard" title="Copy hex to clipboard">&#x2398;</button>
+          </span>
+        </div>
+
+        <div class="preview-field">
+          <span class="preview-field__label">Background colour</span>
+          <span class="hex-pill preview-pill">
+            <span class="swatch-indicator swatch-indicator--bg swatch-indicator--dark" aria-hidden="true"></span>
+            <span class="hex-prefix" aria-hidden="true">#</span>
+            <input id="dark-bg-input" class="hex-value bg-input" type="text" maxlength="6"
+                   spellcheck="false" autocomplete="off"
+                   aria-label="Dark background hex colour"
+                   aria-invalid="false"
+                   value="000000">
+            <span class="pill-divider" aria-hidden="true"></span>
+            <button type="button" class="copy-btn" aria-label="Copy hex to clipboard" title="Copy hex to clipboard">&#x2398;</button>
+          </span>
           <span id="dark-bg-error" class="error-msg" aria-live="polite" hidden>Enter a valid hex colour</span>
         </div>
-        <h3 contenteditable="true" aria-label="Editable heading — dark panel" class="sample-heading sample-text">The quick brown fox</h3>
-        <p contenteditable="true" aria-label="Editable paragraph — dark panel" class="sample-para sample-text">Designers and developers use accessible colours so everyone can read content clearly, regardless of ability or context.</p>
-        <div class="badge-area">
-          <div class="badge-row badge-row--normal" aria-label="Normal text contrast">
-            <span class="ratio">—:1</span>
-            <span class="badge badge-aa badge--fail">Fail AA</span>
-            <span class="badge badge-aaa badge--fail">Fail AAA</span>
-          </div>
-          <div class="badge-row badge-row--large" aria-label="Large text contrast">
-            <span class="badge-row-label">Large text:</span>
-            <span class="badge badge-aa-lg badge--fail">Fail AA</span>
-            <span class="badge badge-aaa-lg badge--fail">Fail AAA</span>
-          </div>
+
+        <p class="contrast-ratio contrast-ratio--large"><span class="ratio">—</span></p>
+
+        <div class="badge-area" aria-live="polite">
+          <span class="badge badge-aa badge--fail"></span>
+          <span class="badge badge-aaa badge--fail"></span>
+          <span class="badge badge-aa-lg badge--fail"></span>
+          <span class="badge badge-aaa-lg badge--fail"></span>
         </div>
+
+        <h3 contenteditable="true" aria-label="Editable heading — dark panel" class="sample-heading sample-text">The quick brown fox</h3>
+        <p contenteditable="true" aria-label="Editable paragraph — dark panel" class="sample-para sample-text">Typography should be readable first. This paragraph uses the current base colour at 16 px against the chosen background — the small-text benchmark for WCAG body copy.</p>
+        <p class="numerals sample-text">0 1 2 3 4 5 6 7 8 9</p>
       </section>
 
     </div>
+  </div>
 
-    <div id="swatch-row" class="swatch-row" hidden>
-      <ul class="swatch-list" role="list" aria-label="Accessible colour pairs">
-      </ul>
-      <p id="distance-warning" class="distance-warning" hidden>
-        <span class="distance-warning__prefix" aria-hidden="true">&#x26A0;</span>
-        These pairs are a long way from your original colour — no closer accessible shades exist.
-      </p>
-    </div>
-  </main>
 </body>
 </html>
