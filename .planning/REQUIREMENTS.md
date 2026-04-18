@@ -48,8 +48,8 @@
 
 ### Visual Design
 
-- [ ] **UI-01**: Minimal monochrome UI — black/white chrome, colour only from user input
-- [ ] **UI-02**: Clean, modern layout inspired by colourcontrast.cc
+- [x] **UI-01**: Minimal monochrome UI — black/white chrome, colour only from user input
+- [x] **UI-02**: Clean, modern layout inspired by colourcontrast.cc
 - [x] **UI-03**: British spelling throughout (colour, not color)
 
 ### Accessibility
@@ -106,8 +106,8 @@
 | CFG-01  | Phase 4 | Complete |
 | CFG-02  | Phase 4 | Complete |
 | CFG-03  | Phase 4 | Complete |
-| UI-01 | Phase 5 | Pending |
-| UI-02 | Phase 5 | Pending |
+| UI-01 | Phase 5 | Complete |
+| UI-02 | Phase 5 | Complete |
 | UI-03 | Phase 5 | Complete |
 | A11Y-01 | Phase 5 | Complete |
 | A11Y-02 | Phase 5 | Complete |
