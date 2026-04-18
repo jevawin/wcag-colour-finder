@@ -9,7 +9,8 @@
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check
 
 import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js';
-import { findVariants, DISTANCE_WARNING_THRESHOLD } from './variant-search.js';
+import { findVariantPairs, DISTANCE_WARNING_THRESHOLD } from './variant-search.js';
+import { parseHashState, buildHashPath } from './url-state.js';
 
 // --- Pure functions (exported for testing) ---
 
@@ -60,21 +61,29 @@ export { buildBadgeState, expandHex, formatRatio };
 // --- DOM wiring (browser only) ---
 
 if (typeof document !== 'undefined') {
-  const LIGHT_BG = '#ffffff';
-  const DARK_BG  = '#111111';
-  const HEX_DEFAULT = '2563EB';
+  const HEX_DEFAULT      = '2563EB';
+  const LIGHT_BG_DEFAULT = '#ffffff';
+  const DARK_BG_DEFAULT  = '#000000';
+  const URL_DEBOUNCE_MS  = 300;
 
   // Cache element references — select once
-  const hexInput  = document.querySelector('#hex-input');
-  const errorMsg  = document.querySelector('#hex-error');
-  const lightPanel = document.querySelector('.panel--light');
-  const darkPanel  = document.querySelector('.panel--dark');
-  const findBtn     = document.querySelector('#find-btn');
-  const swatchRow   = document.querySelector('#swatch-row');
-  const swatchList  = document.querySelector('.swatch-list');
-  const distWarning = document.querySelector('#distance-warning');
+  const hexInput     = document.querySelector('#hex-input');
+  const errorMsg     = document.querySelector('#hex-error');
+  const lightPanel   = document.querySelector('.panel--light');
+  const darkPanel    = document.querySelector('.panel--dark');
+  const findBtn      = document.querySelector('#find-btn');
+  const swatchRow    = document.querySelector('#swatch-row');
+  const swatchList   = document.querySelector('.swatch-list');
+  const distWarning  = document.querySelector('#distance-warning');
+  const lightBgInput = document.querySelector('#light-bg-input');
+  const lightBgError = document.querySelector('#light-bg-error');
+  const darkBgInput  = document.querySelector('#dark-bg-input');
+  const darkBgError  = document.querySelector('#dark-bg-error');
 
-  let lastValidHex = HEX_DEFAULT;
+  let lastValidHex     = HEX_DEFAULT;
+  let lastValidLightBg = LIGHT_BG_DEFAULT;
+  let lastValidDarkBg  = DARK_BG_DEFAULT;
+  let urlSyncTimer     = null;
 
   /**
    * Apply the user's hex as the CSS custom property for colour propagation.
@@ -84,13 +93,16 @@ if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty('--user-colour', '#' + hex);
   }
 
+  function applyLightBg(hex) {
+    document.documentElement.style.setProperty('--light-bg', hex);
+  }
+
+  function applyDarkBg(hex) {
+    document.documentElement.style.setProperty('--dark-bg', hex);
+  }
+
   /**
    * Set pass/fail text and class on a single badge element.
-   *
-   * @param {Element} root - Panel element to scope the query
-   * @param {string} selector - CSS selector for the badge
-   * @param {boolean} passes - Whether this threshold is met
-   * @param {string} label - 'AA' or 'AAA'
    */
   function setBadge(root, selector, passes, label) {
     const el = root.querySelector(selector);
@@ -102,9 +114,6 @@ if (typeof document !== 'undefined') {
 
   /**
    * Update all badge elements and the ratio display for a single panel.
-   *
-   * @param {Element} panelEl - The panel section element
-   * @param {number} ratio - Raw contrast ratio
    */
   function updatePanel(panelEl, ratio) {
     panelEl.querySelector('.ratio').textContent = formatRatio(ratio);
@@ -117,22 +126,30 @@ if (typeof document !== 'undefined') {
   }
 
   /**
-   * Render all panels for a given hex colour.
+   * Render both panels for a given hex colour against the current BGs.
    *
    * @param {string} hex - 6-digit uppercase hex without #
    */
   function render(hex) {
     applyColor(hex);
-    const ratioLight = contrastRatio('#' + hex, LIGHT_BG);
-    const ratioDark  = contrastRatio('#' + hex, DARK_BG);
+    const ratioLight = contrastRatio('#' + hex, lastValidLightBg);
+    const ratioDark  = contrastRatio('#' + hex, lastValidDarkBg);
     updatePanel(lightPanel, ratioLight);
     updatePanel(darkPanel, ratioDark);
   }
 
+  function renderLightPanel(hex) {
+    const r = contrastRatio('#' + hex, lastValidLightBg);
+    updatePanel(lightPanel, r);
+  }
+
+  function renderDarkPanel(hex) {
+    const r = contrastRatio('#' + hex, lastValidDarkBg);
+    updatePanel(darkPanel, r);
+  }
+
   /**
-   * Toggle error state on the hex input and error message.
-   *
-   * @param {boolean} isError
+   * Toggle error state on the main hex input and error message.
    */
   function setErrorState(isError) {
     hexInput.setAttribute('aria-invalid', isError ? 'true' : 'false');
@@ -140,76 +157,138 @@ if (typeof document !== 'undefined') {
     errorMsg.hidden = !isError;
   }
 
+  function setBgErrorState(input, errorEl, isError) {
+    input.setAttribute('aria-invalid', isError ? 'true' : 'false');
+    input.classList.toggle('input--error', isError);
+    errorEl.hidden = !isError;
+  }
+
   /**
    * Remove the selected ring from whichever swatch is currently active.
    */
   function clearSelectedSwatch() {
-    const prev = swatchList.querySelector('.swatch-btn--selected');
-    if (prev) prev.classList.remove('swatch-btn--selected');
+    const prev1 = swatchList.querySelector('.swatch-btn--selected');
+    if (prev1) prev1.classList.remove('swatch-btn--selected');
+    const prev2 = swatchList.querySelector('.swatch-pair--selected');
+    if (prev2) prev2.classList.remove('swatch-pair--selected');
+  }
+
+  function clearPairs() {
+    swatchList.innerHTML = '';
+    distWarning.hidden = true;
+    swatchRow.hidden = true;
   }
 
   /**
-   * Render the swatch row from an array of { hex, distance } objects.
-   * Shows the distance warning if the closest variant exceeds the threshold.
-   *
-   * @param {Array<{ hex: string, distance: number }>} variants
+   * Render the pair swatch row from an array of { lightHex, darkHex, distance }.
    */
-  function renderSwatches(variants) {
+  function renderPairs(pairs) {
     swatchList.innerHTML = '';
-    for (const v of variants) {
+    for (const p of pairs) {
       const li = document.createElement('li');
       li.className = 'swatch-item';
 
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'swatch-btn';
-      btn.style.background = v.hex;
-      btn.setAttribute('aria-label', 'Variant ' + v.hex + ' \u2014 click to preview');
+      btn.className = 'swatch-pair';
+      btn.setAttribute('aria-label',
+        'Variant pair ' + p.lightHex + ' on light, ' + p.darkHex + ' on dark \u2014 click to preview');
+
+      const lightHalf = document.createElement('span');
+      lightHalf.className = 'swatch-pair__half swatch-pair__half--light';
+      lightHalf.style.background = p.lightHex;
+      lightHalf.setAttribute('aria-hidden', 'true');
+
+      const darkHalf = document.createElement('span');
+      darkHalf.className = 'swatch-pair__half swatch-pair__half--dark';
+      darkHalf.style.background = p.darkHex;
+      darkHalf.setAttribute('aria-hidden', 'true');
+
+      btn.appendChild(lightHalf);
+      btn.appendChild(darkHalf);
 
       btn.addEventListener('click', () => {
-        // D-08: update panels but NOT hex input
-        const hexNoHash = v.hex.slice(1); // render() expects no # prefix
-        render(hexNoHash);
-        // D-09: highlight selected swatch
+        // D-07: each panel uses its own shade; D-08: do NOT update hex input
+        const lightNoHash = p.lightHex.slice(1);
+        const darkNoHash  = p.darkHex.slice(1);
+        // visual: --user-colour follows the light shade for the light panel
+        applyColor(lightNoHash);
+        renderLightPanel(lightNoHash);
+        // For dark panel, set sample colour locally via direct style on dark panel
+        // sample text — overrides the --user-colour cascade until user types a new hex.
+        darkPanel.querySelectorAll('.sample-text').forEach(el => el.style.color = p.darkHex);
+        renderDarkPanel(darkNoHash);
         clearSelectedSwatch();
-        btn.classList.add('swatch-btn--selected');
+        btn.classList.add('swatch-pair--selected');
       });
 
-      const span = document.createElement('span');
-      span.className = 'swatch-hex';
-      span.setAttribute('aria-hidden', 'true');
-      span.textContent = v.hex;
+      const label = document.createElement('span');
+      label.className = 'swatch-pair-hex';
+      label.textContent = p.lightHex + ' / ' + p.darkHex;
 
       li.appendChild(btn);
-      li.appendChild(span);
+      li.appendChild(label);
       swatchList.appendChild(li);
     }
 
-    // D-05/D-06: distance warning when closest variant > 0.12
-    const showWarning = variants.length > 0 && variants[0].distance > DISTANCE_WARNING_THRESHOLD;
+    const showWarning = pairs.length > 0 && pairs[0].distance > DISTANCE_WARNING_THRESHOLD;
     distWarning.hidden = !showWarning;
-
     swatchRow.hidden = false;
   }
 
-  // Find button click handler — D-01: manual button press only
-  findBtn.addEventListener('click', () => {
-    findBtn.disabled = true;
-    findBtn.textContent = 'Finding\u2026';
+  /**
+   * Debounced write of current state to window.location.hash.
+   */
+  function scheduleUrlSync() {
+    if (urlSyncTimer !== null) clearTimeout(urlSyncTimer);
+    urlSyncTimer = setTimeout(() => {
+      const hash = buildHashPath({
+        fg: lastValidHex.toLowerCase(),
+        lightBg: lastValidLightBg.replace(/^#/, '').toLowerCase(),
+        darkBg:  lastValidDarkBg.replace(/^#/, '').toLowerCase(),
+      });
+      history.replaceState(null, '', hash);
+      urlSyncTimer = null;
+    }, URL_DEBOUNCE_MS);
+  }
 
-    const results = findVariants('#' + lastValidHex);
+  // --- BG input handlers ---
 
-    findBtn.disabled = false;
-    findBtn.textContent = 'Find accessible colour';
-
-    if (results && results.length > 0) {
-      renderSwatches(results);
+  lightBgInput.addEventListener('input', () => {
+    const raw = lightBgInput.value.trim();
+    const parsed = parseHex(raw);
+    if (parsed !== null) {
+      lastValidLightBg = '#' + expandHex(raw.replace(/^#/, '')).toLowerCase();
+      setBgErrorState(lightBgInput, lightBgError, false);
+      applyLightBg(lastValidLightBg);
+      render(lastValidHex);
+      clearPairs();          // D-12
+      scheduleUrlSync();
+    } else {
+      setBgErrorState(lightBgInput, lightBgError, true);
     }
   });
 
-  // Input event handler — fires on every keystroke
+  darkBgInput.addEventListener('input', () => {
+    const raw = darkBgInput.value.trim();
+    const parsed = parseHex(raw);
+    if (parsed !== null) {
+      lastValidDarkBg = '#' + expandHex(raw.replace(/^#/, '')).toLowerCase();
+      setBgErrorState(darkBgInput, darkBgError, false);
+      applyDarkBg(lastValidDarkBg);
+      render(lastValidHex);
+      clearPairs();          // D-12
+      scheduleUrlSync();
+    } else {
+      setBgErrorState(darkBgInput, darkBgError, true);
+    }
+  });
+
+  // --- Main hex input handler ---
   hexInput.addEventListener('input', () => {
     clearSelectedSwatch();
+    // Clear inline dark-panel preview colour so the cascade reasserts.
+    darkPanel.querySelectorAll('.sample-text').forEach(el => el.style.color = '');
     const raw = hexInput.value.trim();
     const parsed = parseHex(raw);
 
@@ -217,19 +296,53 @@ if (typeof document !== 'undefined') {
       lastValidHex = expandHex(raw.replace(/^#/, ''));
       setErrorState(false);
       render(lastValidHex);
+      scheduleUrlSync();
     } else {
       setErrorState(true);
       // Do not call render — panels keep displaying lastValidHex
     }
   });
 
-  // Initial render on page load
-  document.addEventListener('DOMContentLoaded', () => {
-    hexInput.value = HEX_DEFAULT;
-    render(HEX_DEFAULT);
+  // --- Find button handler — D-01: manual trigger ---
+  findBtn.addEventListener('click', () => {
+    findBtn.disabled = true;
+    findBtn.textContent = 'Finding\u2026';
+
+    const results = findVariantPairs('#' + lastValidHex, lastValidLightBg, lastValidDarkBg);
+
+    findBtn.disabled = false;
+    findBtn.textContent = 'Find accessible colour';
+
+    if (results && results.length > 0) {
+      renderPairs(results);
+    } else {
+      // Empty state per UI-SPEC Copywriting
+      swatchList.innerHTML = '';
+      distWarning.hidden = false;
+      distWarning.textContent = 'No accessible pair found for this colour.';
+      swatchRow.hidden = false;
+    }
   });
 
-  // Immediate render in case DOMContentLoaded already fired
-  // (script is a module, which defers — but belt-and-braces)
-  render(HEX_DEFAULT);
+  // --- Page load hydration ---
+  function hydrateFromUrl() {
+    const parsed = parseHashState(window.location.hash);
+    const state = parsed ?? {
+      fg: HEX_DEFAULT.toLowerCase(),
+      lightBg: 'ffffff',
+      darkBg: '000000',
+    };
+    lastValidHex     = state.fg.toUpperCase();
+    lastValidLightBg = '#' + state.lightBg;
+    lastValidDarkBg  = '#' + state.darkBg;
+    hexInput.value      = lastValidHex;
+    lightBgInput.value  = state.lightBg;
+    darkBgInput.value   = state.darkBg;
+    applyLightBg(lastValidLightBg);
+    applyDarkBg(lastValidDarkBg);
+    render(lastValidHex);
+  }
+  document.addEventListener('DOMContentLoaded', hydrateFromUrl);
+  // belt-and-braces immediate call (script is a module, defer applies)
+  hydrateFromUrl();
 }
