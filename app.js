@@ -8,7 +8,7 @@
 //   - Store hex without # prefix; call contrastRatio('#' + hex, BG)
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check
 
-import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js';
+import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge, srgbToOklab, oklabToSrgb } from './colour-engine.js';
 import { findVariantPairs, DISTANCE_WARNING_THRESHOLD } from './variant-search.js';
 import { parseHashState, buildHashPath } from './url-state.js';
 
@@ -70,8 +70,51 @@ function buildBadgeHTML(passes, label) {
   return `<span aria-hidden="true">${icon}</span><span>${word} ${label}</span>`;
 }
 
+/**
+ * Pick a monochrome foreground (#000000 or #ffffff) that meets AA against the
+ * supplied user hex used as a background. Black wins when it passes AA (4.5:1)
+ * against userHex; otherwise white. Accepts hex with or without leading #.
+ *
+ * @param {string} userHex - '#rrggbb' or 'rrggbb'
+ * @returns {string} '#000000' or '#ffffff'
+ */
+function chooseChromeForeground(userHex) {
+  const hex = userHex.startsWith('#') ? userHex : '#' + userHex;
+  return contrastRatio('#000000', hex) >= 4.5 ? '#000000' : '#ffffff';
+}
+
+/**
+ * Derive pass-badge background + text colours from the user's hex using OKLab
+ * lightness shifts. Falls back to a static accessible green pair when the
+ * derived pair fails AA (4.5:1) or when input cannot be parsed.
+ *
+ * @param {string} userHex
+ * @returns {{ passBg: string, passText: string }}
+ */
+function deriveBadgeColors(userHex) {
+  // Deviation (Rule 1 – Bug): plan specified #16a34a, but #16a34a on #ffffff
+  // has contrast ~3.30 which fails AA 4.5. Use darker green #15803d (~5.02:1).
+  const FALLBACK = { passBg: '#15803d', passText: '#ffffff' };
+  try {
+    const hex = userHex.startsWith('#') ? userHex : '#' + userHex;
+    const rgb = parseHex(hex);
+    if (!rgb) return FALLBACK;
+    const oklab = srgbToOklab(rgb.r, rgb.g, rgb.b);
+    // Light tint for badge background, darker saturated variant for text.
+    const bg   = oklabToSrgb(0.90, oklab.a * 0.4, oklab.b * 0.4);
+    const text = oklabToSrgb(0.30, oklab.a,       oklab.b);
+    const toHex = (c) => c.toString(16).padStart(2, '0');
+    const passBg   = '#' + toHex(bg.r)   + toHex(bg.g)   + toHex(bg.b);
+    const passText = '#' + toHex(text.r) + toHex(text.g) + toHex(text.b);
+    if (contrastRatio(passText, passBg) >= 4.5) return { passBg, passText };
+    return FALLBACK;
+  } catch (_e) {
+    return FALLBACK;
+  }
+}
+
 // Named exports for testing — pure functions with no DOM dependency
-export { buildBadgeState, expandHex, formatRatio, buildBadgeHTML };
+export { buildBadgeState, expandHex, formatRatio, buildBadgeHTML, chooseChromeForeground, deriveBadgeColors };
 
 // --- DOM wiring (browser only) ---
 
