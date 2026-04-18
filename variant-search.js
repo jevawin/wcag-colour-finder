@@ -1,9 +1,14 @@
 // variant-search.js
 // Pure ES module — no DOM, no window. Imports only from colour-engine.js.
 //
+// Dual-pair output: each result is a shade that passes AA on the supplied
+// light BG and a shade that passes AA on the supplied dark BG. BGs are
+// parameters — no hardcoded constants (per Phase 4 D-10, Pitfall 5).
+//
 // Exports:
-//   findVariants(inputHex, count = 5)  → Array<{ hex, distance }> | null
-//   DISTANCE_WARNING_THRESHOLD          → 0.12
+//   findVariantPairs(inputHex, lightBg, darkBg, count = 5)
+//     → Array<{ lightHex, darkHex, distance }> | null
+//   DISTANCE_WARNING_THRESHOLD → 0.12
 
 import {
   parseHex,
@@ -16,12 +21,9 @@ import {
 
 // --- Constants ---
 
-const LIGHT_BG = '#ffffff';
-const DARK_BG  = '#111111'; // Must match app.js DARK_BG — NOT #000000
-
 export const DISTANCE_WARNING_THRESHOLD = 0.12;
 
-// Small a-channel offsets to generate up to 5 distinct candidates.
+// Small a-channel offsets to generate up to 5 distinct candidate pairs.
 // Restricted to ±0.02 to preserve colour identity (hue/chroma shift is minimal).
 const A_OFFSETS = [0, 0.01, -0.01, 0.02, -0.02];
 
@@ -44,20 +46,18 @@ function rgbToHex(r, g, b) {
 }
 
 /**
- * Binary search on the OKLab L axis for the closest accessible variant.
- *
- * Monotonicity guarantee: OKLab L is monotonically related to WCAG luminance,
- * so there is exactly one crossing point in each direction (darker / lighter).
+ * Binary search on the OKLab L axis for the closest shade that passes AA
+ * against a single supplied background. Monotonicity holds because OKLab L
+ * is monotonically related to WCAG luminance.
  *
  * @param {number} L          - Starting OKLab L value
  * @param {number} a          - OKLab a channel (fixed during this search)
  * @param {number} b          - OKLab b channel (fixed during this search)
  * @param {'darker'|'lighter'} direction
- * @param {string} lightBg    - Light background hex (e.g. '#ffffff')
- * @param {string} darkBg     - Dark background hex (e.g. '#111111')
- * @returns {string|null}     - Uppercase hex string, or null if no crossing found
+ * @param {string} bgHex      - Background to pass against (e.g. '#ffffff')
+ * @returns {string|null}     - Uppercase hex or null if no crossing found
  */
-function searchL(L, a, b, direction, lightBg, darkBg) {
+function searchLForBg(L, a, b, direction, bgHex) {
   let lo = direction === 'darker' ? 0 : L;
   let hi = direction === 'darker' ? L : 1;
   let result = null;
@@ -68,19 +68,18 @@ function searchL(L, a, b, direction, lightBg, darkBg) {
     const hex = rgbToHex(r, gv, bv);
 
     // Gamut check: round-trip to OKLab and verify a/b channels haven't shifted.
-    // Large shifts mean clamping distorted the colour identity — discard.
+    // If out of gamut, move the search interval back toward origin L
+    // (i.e., away from the extreme sRGB boundary that caused clamping).
     const roundTrip = srgbToOklab(r, gv, bv);
     if (Math.abs(roundTrip.a - a) > 0.02 || Math.abs(roundTrip.b - b) > 0.02) {
-      // Search further away from the gamut boundary
-      if (direction === 'darker') hi = mid;
-      else lo = mid;
+      if (direction === 'darker') lo = mid; // push lo up toward L
+      else hi = mid;                         // push hi down toward L
       continue;
     }
 
-    const rl = contrastRatio(hex, lightBg);
-    const rd = contrastRatio(hex, darkBg);
+    const ratio = contrastRatio(hex, bgHex);
 
-    if ((rl !== null && passesAA(rl)) || (rd !== null && passesAA(rd))) {
+    if (ratio !== null && passesAA(ratio)) {
       result = hex;
       // Keep searching toward the original colour to find the closest passing point
       if (direction === 'darker') lo = mid;
@@ -98,52 +97,59 @@ function searchL(L, a, b, direction, lightBg, darkBg) {
 // --- Main export ---
 
 /**
- * Find up to `count` accessible colour variants close to inputHex.
+ * Find up to `count` accessible dual-pair colour variants.
  *
- * Strategy:
- *   1. Convert input to OKLab origin point.
- *   2. For each of 5 small a-channel offsets, run binary search in both
- *      'darker' and 'lighter' directions on the L axis.
- *   3. Discard results that fail gamut checks (handled inside searchL).
- *   4. Deduplicate by uppercase hex.
- *   5. Sort by ascending OKLab distance from the original input colour.
- *   6. Return the first `count` results.
+ * For each a-channel offset, we try all four direction combinations
+ * (light side darker/lighter × dark side darker/lighter) and keep the
+ * pair with the smallest `max(distLight, distDark)`. Light backgrounds
+ * usually want a darker foreground; dark backgrounds usually want a
+ * lighter foreground — but for edge inputs (very light / very dark)
+ * both shades may lie in the same direction, so we try all four.
+ *
+ * Distance metric (per 04-RESEARCH.md Open Question 3): max of the two
+ * per-shade distances. Conservative — pairs are only "close" if both
+ * shades are close to the input.
  *
  * @param {string} inputHex   - Hex colour, with or without #, 3 or 6 digits
- * @param {number} count      - Maximum variants to return (default 5)
- * @returns {Array<{ hex: string, distance: number }> | null}
- *   Returns null for invalid input. Each object has:
- *     - hex: 7-char uppercase hex string (e.g. '#2563EB')
- *     - distance: OKLab Euclidean distance from the original colour (lower = closer)
+ * @param {string} lightBg    - Light background hex (e.g. '#ffffff')
+ * @param {string} darkBg     - Dark background hex (e.g. '#000000')
+ * @param {number} count      - Maximum pairs to return (default 5)
+ * @returns {Array<{ lightHex: string, darkHex: string, distance: number }> | null}
  */
-export function findVariants(inputHex, count = 5) {
+export function findVariantPairs(inputHex, lightBg, darkBg, count = 5) {
   const rgb = parseHex(inputHex);
   if (!rgb) return null;
 
   const origin = srgbToOklab(rgb.r, rgb.g, rgb.b);
-  const candidates = new Map(); // key: uppercase hex → { hex, distance }
+  const candidates = new Map(); // key: lightHex+'|'+darkHex → { lightHex, darkHex, distance }
 
   for (const aOffset of A_OFFSETS) {
-    const aShifted = origin.a + aOffset;
-    const bFixed   = origin.b;
+    const a = origin.a + aOffset;
+    const b = origin.b;
 
-    for (const direction of ['darker', 'lighter']) {
-      const hex = searchL(origin.L, aShifted, bFixed, direction, LIGHT_BG, DARK_BG);
-      if (!hex) continue;
+    for (const lDir of ['darker', 'lighter']) {
+      for (const dDir of ['darker', 'lighter']) {
+        const lightHex = searchLForBg(origin.L, a, b, lDir, lightBg);
+        const darkHex  = searchLForBg(origin.L, a, b, dDir, darkBg);
+        if (!lightHex || !darkHex) continue;
 
-      const resultRgb = parseHex(hex);
-      if (!resultRgb) continue;
+        const lightRgb = parseHex(lightHex);
+        const darkRgb  = parseHex(darkHex);
+        if (!lightRgb || !darkRgb) continue;
 
-      const dist = oklabDistance(rgb, resultRgb);
-      const key  = hex.toUpperCase();
+        const distLight = oklabDistance(rgb, lightRgb);
+        const distDark  = oklabDistance(rgb, darkRgb);
+        const distance  = Math.max(distLight, distDark);
 
-      // Keep only the closest occurrence if we find the same hex via different paths
-      if (!candidates.has(key) || candidates.get(key).distance > dist) {
-        candidates.set(key, { hex: key, distance: dist });
+        const key = lightHex + '|' + darkHex;
+        if (!candidates.has(key) || candidates.get(key).distance > distance) {
+          candidates.set(key, { lightHex, darkHex, distance });
+        }
       }
     }
   }
 
-  const sorted = [...candidates.values()].sort((x, y) => x.distance - y.distance);
-  return sorted.slice(0, count);
+  return [...candidates.values()]
+    .sort((x, y) => x.distance - y.distance)
+    .slice(0, count);
 }
