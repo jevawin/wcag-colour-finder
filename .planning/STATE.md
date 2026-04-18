@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 5 context gathered
-last_updated: "2026-04-18T15:34:47.339Z"
+status: executing
+stopped_at: Completed 05-01-pure-helpers-and-wave-0-PLAN.md
+last_updated: "2026-04-18T23:23:43.639Z"
 last_activity: 2026-04-18
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 10
+  completed_plans: 8
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** Phase 04 — modes-and-configuration
+**Current focus:** Phase 05 — design-and-accessibility
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 05 (design-and-accessibility) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-18
 
 Progress: [░░░░░░░░░░] 0%
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 04-modes-and-configuration P01 | 15 | 2 tasks | 4 files |
 | Phase 04-modes-and-configuration P02 | 10 | 2 tasks | 3 files |
 | Phase 04-modes-and-configuration P03 | 5 | 2 tasks | 1 files |
+| Phase 05-design-and-accessibility P01 | 3 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 04-modes-and-configuration]: Dark-panel pair preview uses inline style.color; main hex input handler clears it so --user-colour cascade reasserts
 - [Phase 04-modes-and-configuration]: URL hydrate falls back to defaults on invalid/missing hash without writing back
 - [Phase 04-modes-and-configuration]: MODE-01 and MODE-03 formally DROPPED in traceability per D-01 (dual-only pivot)
+- [Phase 05-design-and-accessibility]: FALLBACK passBg changed from #16a34a (fails AA at 3.30:1) to #15803d (5.02:1 vs white)
+- [Phase 05-design-and-accessibility]: deriveBadgeColors uses OKLab L=0.90 (bg) / L=0.30 (text) with chroma scaled 0.4 on bg side
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-18T15:34:47.337Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-design-and-accessibility/05-CONTEXT.md
+Last session: 2026-04-18T23:23:43.637Z
+Stopped at: Completed 05-01-pure-helpers-and-wave-0-PLAN.md
+Resume file: None

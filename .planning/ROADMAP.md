@@ -97,7 +97,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-pure-helpers-and-wave-0-PLAN.md — Wave 0: extract buildBadgeHTML, chooseChromeForeground, deriveBadgeColors + test stubs (british-spelling, badge-markup, ui-chrome-contrast)
+- [x] 05-01-pure-helpers-and-wave-0-PLAN.md — Wave 0: extract buildBadgeHTML, chooseChromeForeground, deriveBadgeColors + test stubs (british-spelling, badge-markup, ui-chrome-contrast)
 - [ ] 05-02-two-zone-layout-and-badges-PLAN.md — Two-zone HTML, typography/spacing CSS, derived pass-badge tint, British copy sweep, setBadge rewire
 - [ ] 05-03-focus-responsive-a11y-audit-PLAN.md — Unified focus styles, mobile tabs ARIA, axe-core + keyboard + VoiceOver audit in VERIFICATION.md
 **UI hint**: yes
