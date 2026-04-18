@@ -70,4 +70,12 @@ describe('buildBadgeHTML (smoke)', () => {
     assert.ok(html.includes('Pass AAA Large'));
     assert.ok(html.includes('aria-hidden="true"'));
   });
+
+  it('renders stable markup across runs for (true, "AA") — contract guard for setBadge', () => {
+    // setBadge now writes this string via innerHTML; pin the exact shape.
+    const expected = '<span aria-hidden="true">\u2713</span><span>Pass AA</span>';
+    assert.equal(buildBadgeHTML(true, 'AA'), expected);
+    // Idempotent — repeated calls return identical output
+    assert.equal(buildBadgeHTML(true, 'AA'), buildBadgeHTML(true, 'AA'));
+  });
 });
