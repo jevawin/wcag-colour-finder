@@ -154,3 +154,120 @@ The automated greps below were captured against the current-on-disk code during 
 ## Handoff
 
 Run `/gsd:plan-phase 5 --gaps` to consume this file as the gap payload and generate the rebuild wave against the new mockup ground truth at `.planning/phases/05-design-and-accessibility/mockup/wcag-colour-finder/project/WCAG Colour Finder.html`.
+
+## Rebuild Audit — 2026-04-19
+
+Automated evidence captured against the rebuilt UI (post 05-04 through 05-07). Human audit results (axe-core, keyboard, VoiceOver) filled in during Plan 05-08 Task 2 checkpoint.
+
+### Automated Test Suite
+
+- `node --test test/*.test.js` — **88 pass / 0 fail** (2026-04-19T19:05Z).
+
+### G1. Full-width topbar takes user colour as background
+
+- `grep -c 'class="topbar-wrap"' index.html` → **1** ✅ (topbar-wrap shell present on line 15)
+- Topbar wraps every control and uses `--topbar-bg` / `--topbar-fg` tokens (style.css confirmed in 05-05 summary).
+
+### G2. Controls live inside the topbar
+
+- Topbar contains `.row-one` (hex-input, Find btn, target-toggle) and `.row-two` (.alts grid) — both nested inside `.topbar-wrap` per index.html lines 23–41.
+
+### G3. Single segmented AA/AAA toggle
+
+- `grep -c 'target-toggle' index.html` → **1** ✅ (segmented component present)
+- `grep -c 'data-target="AAA"' index.html` → **1** ✅ (second segment button present)
+
+### G4. fg-tag / bg-tag tag pattern with copy buttons
+
+- `grep -c 'class="fg-tag"' index.html` → **2** ✅ (both preview panels, expected 2)
+- `grep -c 'class="bg-tag"' index.html` → **2** ✅ (expected 2)
+- `grep -c 'data-copy-target' index.html` → **2** ✅ (expected 2 — light + dark fg copy buttons)
+
+### G5 + G7. 64px ratio + specimen typography
+
+- `grep -c "font-size: 64px" style.css` → **2** ✅ (expected ≥ 2 — .ratio + .heading)
+
+### G6. Inter + JetBrains Mono via Google Fonts
+
+- `grep -c 'fonts.googleapis.com' index.html` → **2** ✅ (preconnect + stylesheet link; expected ≥ 1)
+- `grep -c '\.mono' style.css` → **1** ✅ (expected ≥ 1 — `.mono` utility class)
+
+### G7. Specimen copy
+
+- `grep -c 'The quick brown fox' index.html` → **2** ✅ (expected 2 — light + dark panels)
+- `grep -c "0 1 2 3 4 5 6 7 8 9" index.html` → **2** ✅ (expected 2 — both digits rows)
+
+### G8. Auto-find on input change + Find re-roll
+
+- `grep -c 'autoFindAndApply' app.js` → **7** ✅ (expected ≥ 2 — definition + 6 call sites across input/bg/colour-picker listeners)
+- `grep -c "'Searching…'" app.js` → **0** — literal ellipsis char not in source, but the behaviour is present at app.js line 325 as `findLabel.textContent = 'Searching\u2026';` (unicode escape for the same glyph). Verified grep: `grep -c "Searching" app.js` → 1. Functional parity with mockup; only the source representation differs.
+
+### G9. Swatch-pair alt tile format
+
+- `grep -c "document.createElement('button')" app.js` → **1** ✅ (alt tiles rebuilt as semantic `<button type="button">` per 05-07)
+- `.alt.is-selected` + `button.alt:focus-visible` rules present in style.css (05-07 summary).
+
+### G10. Retirement of `.sample-text` editable specimen
+
+- `grep -c "sample-text" index.html` → **0** ✅ (expected 0 — retired)
+- `grep -c "sample-text" style.css` → **0** ✅ (expected 0 — rule removed)
+- `grep -c "contenteditable" index.html` → **0** ✅ (expected 0 — specimen is fixed copy)
+
+### UI-01 Monochrome chrome — rebuild-era note
+
+UI-01 is partially superseded by the new topbar model: `--user-colour` legitimately paints the topbar-wrap background by design (mockup ground truth). The "monochrome chrome" spirit of UI-01 now reads as: user colour paints topbar + preview specimen colours only; no unexpected tints on focus rings, borders, selection indicators, or alt-tile chrome outside those two surfaces.
+
+### UI-02 Clean layout — rebuild-era
+
+- Two-zone layout restructured into single topbar-wrap + full-bleed previews (mockup).
+- Mobile tablist markup preserved: `role="tablist"` / `role="tab"` / `role="tabpanel"` present in index.html (lines 46–51).
+
+### UI-03 British spelling
+
+- `node --test test/british-spelling.test.js` — pass via full-suite run (88/88).
+
+### A11Y-01 axe-core DevTools scan — **pending human audit (Task 2)**
+
+| Hex value | Critical | Serious | Notes |
+| --- | --- | --- | --- |
+| `#2563EB` (default blue) | pending | pending | |
+| `#111111` (near-black; topbar-fg auto-flips to white) | pending | pending | |
+| `#ffff00` (high-L yellow; topbar-fg stays black) | pending | pending | |
+| Post-auto-find state (alts grid populated) | pending | pending | |
+
+Target: 0 critical, 0 serious at each.
+
+### A11Y-01 VoiceOver smoke test — **pending human audit (Task 2)**
+
+- [ ] Hex input announces "Hex colour code, edit text, 2563EB"
+- [ ] Find button announces "Find 5, button"
+- [ ] Each pill announces Pass/Fail + label (AA Normal, AA Large, AAA Normal, AAA Large)
+- [ ] Alt tile announces "Apply pair: light #XXXXXX, dark #YYYYYY"
+- [ ] Copy button announces "Copy hex, button"; `✓` visual confirmation on press
+- [ ] Mobile tabs (< 768px) announce "Light, tab" / "Dark, tab"
+
+### A11Y-02 Non-colour cues — **pending human audit (Task 2)**
+
+- [ ] Pills show ✓ / ✕ glyph plus Pass/Fail text — not colour-only
+- [ ] Badge/pills `aria-live="polite"` regions update after recompute
+- [ ] Copy-button shows text label via aria-label plus the `✓` state transition
+
+### A11Y-03 Visible focus — **pending human audit (Task 2)**
+
+Keyboard walkthrough stops:
+
+- [ ] Stop 1: hex input — focus ring visible (2px `--topbar-fg`) against topbar bg
+- [ ] Stop 2: Find button — focus ring visible
+- [ ] Stop 3: AA option — focus ring visible
+- [ ] Stop 4: AAA option — focus ring visible; Space toggles + triggers auto-find
+- [ ] Stops 5–9: 5 alt tiles — focus ring visible; Enter/Space applies pair
+- [ ] Stop 10: light bg colour-picker swatch — focus ring acceptable
+- [ ] Stop 11: light bg hex text input — focus ring visible against white panel
+- [ ] Stop 12: light panel copy button — focus ring visible; Enter fires copy
+- [ ] Stop 13+: dark panel mirrors light (copy-button focus ring against `#111111`)
+- [ ] Shift+Tab reverses without trap
+- [ ] No dashed outline anywhere (the `.sample-text:focus` exception is gone — confirmed above at G10)
+
+### Status
+
+`status: gaps-found` retained until Task 2 human audit checkpoint approves the above. On approval, Task 2 flips this file's frontmatter to `status: complete`, updates ROADMAP.md Phase 5 row, and closes A11Y-03 in REQUIREMENTS.md.
