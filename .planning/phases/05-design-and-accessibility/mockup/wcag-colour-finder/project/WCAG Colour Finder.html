@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WCAG Colour Finder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111111;
+    --ink-mute: #555555;
+    --paper: #ffffff;
+    --border-w: 2px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin:0; padding:0; background: var(--ink); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'ss01','cv11';
+    min-height: 100vh;
+  }
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-ligatures: none; }
+
+  /* ——— Top bar (the top of the T) ——— */
+  .topbar-wrap {
+    background: var(--topbar-bg, #6BD4AC);
+    color: var(--topbar-fg, #111111);
+    transition: background 0.2s, color 0.2s;
+    border-bottom: var(--border-w) solid var(--topbar-fg, #111111);
+  }
+  .topbar {
+    padding: 32px 32px 32px;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    position: relative;
+  }
+  .title-row {
+    position: static;
+    display: flex; flex-direction: column; align-items: flex-start;
+    line-height: 1;
+    max-width: none;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 40px; font-weight: 700; margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .subtitle {
+    font-size: 20px; font-weight: 400; margin: 0;
+    line-height: 1.4;
+    text-align: left;
+    opacity: 0.85;
+    max-width: 720px;
+  }
+  .credit {
+    position: absolute;
+    top: 44px; right: 32px;
+    font-size: 16px;
+    color: var(--topbar-fg);
+    opacity: 0.85;
+    line-height: 1;
+  }
+  .credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  .credit a:hover { opacity: 0.75; }
+  .controls {
+    display: block;
+  }
+  .row-one {
+    display: flex; gap: 12px; align-items: stretch;
+    margin-bottom: 32px;
+    max-width: 720px;
+    margin-top: 0;
+  }
+  .row-two { width: 100%; }
+  .controls > .card { width: 100%; max-width: none; justify-self: stretch; }
+  .card {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    color: var(--topbar-fg);
+  }
+  .card-label {
+    font-size: 16px; letter-spacing: 0;
+    color: var(--topbar-fg); margin-bottom: 10px; font-weight: 600;
+    display: flex; align-items: center; justify-content: space-between;
+    text-transform: none;
+  }
+  .card-label .hint { font-weight: 400; color: var(--topbar-fg); opacity: 0.7; font-size: 16px; }
+
+  .base-row { display: flex; align-items: stretch; gap: 10px; }
+  .hex-input {
+    flex: 1;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--paper);
+    border: var(--border-w) solid var(--topbar-fg);
+    border-radius: 6px;
+    padding: 0 16px;
+    height: 72px;
+  }
+  .hex-input .swatch {
+    width: 36px; height: 36px; border-radius: 5px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    flex-shrink: 0; cursor: pointer; position: relative; overflow: hidden;
+  }
+  .hex-input .swatch input[type="color"] {
+    position: absolute; inset: -4px; width: 200%; height: 200%; border: 0; opacity: 0; cursor: pointer;
+  }
+  .hex-input .hash { color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 500; }
+  .hex-input input[type="text"] {
+    flex: 1;
+    background: transparent; border: 0; outline: 0;
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px; font-weight: 500;
+    text-transform: uppercase;
+    min-width: 0;
+  }
+  .btn {
+    height: 72px;
+    padding: 0 32px;
+    border-radius: 6px;
+    border: var(--border-w) solid var(--topbar-fg);
+    background: var(--topbar-fg);
+    color: var(--topbar-bg);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn:disabled { opacity: 0.5; cursor: progress; }
+
+  /* AA / AAA segmented toggle next to Find */
+  .target-toggle {
+    display: inline-flex;
+    align-items: stretch;
+    height: 72px;
+    border: var(--border-w) solid var(--topbar-fg);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .target-opt {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    padding: 0 20px;
+    cursor: pointer;
+    min-width: 64px;
+  }
+  .target-opt + .target-opt {
+    border-left: var(--border-w) solid var(--topbar-fg);
+  }
+  .target-opt.is-active {
+    background: var(--topbar-fg);
+    color: var(--topbar-bg);
+  }
+
+  .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .toggle {
+    position: relative;
+    width: 40px; height: 22px;
+    background: var(--paper);
+    border: var(--border-w) solid var(--topbar-fg);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--topbar-fg);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .toggle.on { background: var(--topbar-fg); }
+  .toggle.on::after { transform: translateX(18px); background: var(--topbar-bg); }
+  .toggle-label { font-size: 16px; color: var(--topbar-fg); }
+  .toggle-label strong { color: var(--topbar-fg); font-weight: 600; }
+
+  .alts {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .alt {
+    background: var(--paper);
+    border: var(--border-w) solid var(--topbar-fg);
+    border-radius: 6px;
+    padding: 14px 14px 12px;
+    cursor: pointer;
+    transition: transform 0.08s;
+    display: flex; flex-direction: column; gap: 10px;
+    min-width: 0;
+  }
+  .alt .chips {
+    display: flex; gap: 4px; height: 44px;
+    border-radius: 4px; overflow: hidden;
+  }
+  .alt .hex { font-size: 16px; text-align: center; color: var(--ink); font-weight: 500; white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+  .alt .chip { flex: 1; }
+  .alt .chip.light { background: var(--alt-light, #fff); }
+  .alt .chip.dark { background: var(--alt-dark, #000); }
+  .alt.single .chip { background: var(--alt-color); }
+  .alt .hex { font-size: 16px; text-align: center; color: var(--ink); font-weight: 500; white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+  .alt.placeholder { cursor: default; background: transparent; border-style: dashed; opacity: 0.55; }
+  .alt.placeholder .chips { background: transparent; }
+  .alt.placeholder .chip { background: transparent; }
+  .alt.placeholder .hex { color: var(--topbar-fg); }
+
+  /* ——— Preview panels — the stem of the T, flex-grow to fill ——— */
+  .previews {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    flex: 1;
+  }
+  .preview {
+    padding: 32px 32px 32px;
+    position: relative;
+    display: flex; flex-direction: column;
+    min-width: 0;
+  }
+  .preview.is-light .preview-inner { margin-right: auto; margin-left: 0; max-width: 640px; }
+  .preview.is-dark .preview-inner  { margin-left: 0; margin-right: auto; max-width: 640px; }
+  .preview-inner { padding-top: 180px; }
+  .preview.is-dark { border-left: var(--border-w) solid var(--ink); }
+  .preview-inner { width: 100%; color: var(--specimen, currentColor); }
+
+  .bg-tag {
+    position: absolute;
+    top: 88px;
+    display: flex; align-items: center; gap: 10px;
+    background: transparent;
+    border: var(--border-w) solid var(--specimen, currentColor);
+    border-radius: 6px;
+    padding: 8px 12px;
+    height: 44px;
+  }
+  .preview.is-light .bg-tag { right: 32px; }
+  .preview.is-dark  .bg-tag { right: 32px; }
+
+  .fg-tag {
+    position: absolute;
+    top: 88px; left: 32px;
+    display: flex; align-items: center; gap: 10px;
+    border: var(--border-w) solid var(--specimen, currentColor);
+    border-radius: 6px;
+    padding: 8px 0 8px 12px;
+    height: 44px;
+    color: var(--specimen, currentColor);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px; font-weight: 500;
+  }
+  .fg-tag .fg-swatch {
+    width: 20px; height: 20px; border-radius: 3px;
+    background: var(--specimen, currentColor);
+    border: var(--border-w) solid var(--specimen, currentColor);
+    flex-shrink: 0;
+  }
+
+  /* Section label above each tag */
+  .tag-label {
+    position: absolute;
+    top: 64px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--specimen, currentColor);
+    line-height: 1;
+  }
+  .preview .tag-label.is-fg { left: 32px; }
+  .preview .tag-label.is-bg { right: 32px; }
+
+  /* Copy button lives at the end of fg-tag and bg-tag */
+  .copy-btn {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-left: var(--border-w) solid var(--specimen, currentColor);
+    align-self: stretch;
+    margin-left: 4px;
+    padding: 0 12px;
+    cursor: pointer;
+    color: var(--specimen, currentColor);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: opacity 0.15s;
+  }
+  .copy-btn:hover { opacity: 0.65; }
+  .copy-btn svg { width: 16px; height: 16px; display: block; }
+  .copy-btn.copied svg { display: none; }
+  .copy-btn.copied::before { content: "✓"; font-size: 16px; font-weight: 700; line-height: 1; }
+  .bg-tag .label {
+    display: none;
+  }
+  .bg-tag .swatch-sm {
+    width: 20px; height: 20px; border-radius: 3px;
+    border: var(--border-w) solid var(--specimen, currentColor);
+    cursor: pointer; position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .bg-tag .swatch-sm input[type="color"] { position: absolute; inset: -4px; width: 200%; height: 200%; border: 0; opacity: 0; cursor: pointer; }
+  .bg-tag .hash-sm { color: var(--specimen, currentColor); font-size: 16px; font-weight: 500; }
+  .bg-tag input[type="text"] {
+    background: transparent; border: 0; outline: 0;
+    color: var(--specimen, currentColor);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px; font-weight: 500;
+    text-transform: uppercase;
+    width: 78px;
+  }
+
+  /* Top of panel: ratio + pills side by side */
+  .ratio-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin: 0 0 40px;
+    flex-wrap: nowrap;
+  }
+  @media (max-width: 991px) {
+    .ratio-row { flex-wrap: wrap; }
+  }
+  .ratio {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.85;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .pills {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 10px 18px;
+    margin: 0;
+    justify-content: start;
+  }
+  @media (max-width: 1400px) {
+    .pills { grid-template-columns: repeat(2, auto); }
+  }
+  .pill-wrap { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 17px; font-weight: 700; letter-spacing: 0;
+    text-transform: none;
+    border: var(--border-w) solid var(--specimen, currentColor);
+  }
+  .pill.pass { background: var(--specimen, currentColor); color: var(--bg-for-specimen, transparent); }
+  .pill.fail { background: transparent; color: var(--specimen, currentColor); opacity: 0.45; }
+  .pill .glyph { font-size: 16px; line-height: 1; }
+  .pill-label { font-size: 16px; color: var(--specimen, currentColor); opacity: 0.8; font-weight: 500; padding-left: 2px; }
+
+  /* Specimen */
+  .heading {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    margin: 0 0 22px;
+  }
+  .para {
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+    margin: 0 0 26px;
+    max-width: 52ch;
+  }
+  .digits {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 34px;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* Mobile tabs (hidden on desktop) */
+  .preview-tabs {
+    display: none;
+    background: transparent;
+  }
+  .preview-tabs-inner {
+    display: flex;
+  }
+  .tab-btn {
+    flex: 1;
+    appearance: none;
+    border: 0;
+    border-bottom: var(--border-w) solid var(--ink);
+    background: #FFFFFF;
+    color: var(--light-fg, var(--ink));
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 18px 0;
+    cursor: pointer;
+  }
+  .tab-btn[data-tab="dark"] {
+    background: var(--ink);
+    color: var(--dark-fg, #FFFFFF);
+  }
+  .tab-btn.is-active {
+    border-bottom-color: transparent;
+  }
+
+  @media (max-width: 767px) {
+    .topbar { padding: 32px 24px; display: flex; flex-direction: column; }
+    .credit { position: static; margin: 8px 0; font-size: 14px; order: 2; }
+    .title-row { margin: 0; gap: 0; display: contents; }
+    .controls { display: contents; }
+    .row-two { display: contents; }
+    h1 { order: 1; margin: 0; }
+    .subtitle { order: 3; margin: 8px 0 0; }
+    .row-one { order: 4; margin-top: 24px; margin-bottom: 0; }
+    .alts { order: 5; margin-top: 12px; }
+    h1 { font-size: 32px; }
+    .subtitle { font-size: 16px; }
+    .row-one {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .hex-input { flex: 1 1 100%; height: 64px; }
+    .btn { flex: 1 1 auto; height: 56px; padding: 0 20px; font-size: 16px; }
+    .target-toggle { flex: 0 0 auto; height: 56px; }
+    .target-opt { padding: 0 16px; min-width: 56px; font-size: 16px; }
+    .alts {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .alt { flex-direction: row; align-items: center; padding: 10px 14px; gap: 14px; }
+    .alt .chips { flex: 0 0 72px; height: 40px; }
+    .alt .hex { flex: 1; text-align: left; }
+
+    /* Tabs replace side-by-side previews */
+    .preview-tabs { display: block; }
+    .previews { display: block; }
+    /* fg / bg tags laid out as 2-col grid: fg left, bg right */
+    .preview {
+      display: none;
+      padding: 24px 24px 32px;
+      border-left: 0 !important;
+      position: relative;
+    }
+    .preview.is-visible { display: grid; }
+    .preview.is-visible {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "fg-label bg-label"
+        "fg-tag   bg-tag"
+        "body     body";
+      column-gap: 16px;
+      row-gap: 8px;
+    }
+    .preview-inner { grid-area: body; padding-top: 32px; max-width: none !important; margin: 0 !important; }
+    .tag-label { position: static; display: block; margin: 0; }
+    .tag-label.is-fg { grid-area: fg-label; justify-self: start; }
+    .tag-label.is-bg { grid-area: bg-label; justify-self: end; }
+    .fg-tag {
+      grid-area: fg-tag;
+      position: static;
+      display: inline-flex;
+      justify-self: start;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+    }
+    .bg-tag {
+      grid-area: bg-tag;
+      position: static;
+      display: inline-flex;
+      justify-self: end;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+      right: auto !important;
+    }
+
+    .ratio-row { flex-wrap: wrap; }
+    .pills {
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+    }
+    .heading { font-size: 40px; }
+    .ratio { font-size: 48px; }
+    .para { font-size: 18px; }
+    .digits { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+  <div class="topbar-wrap" id="topbar-wrap">
+  <div class="topbar">
+    <span class="credit">Inspired by <a href="https://colourcontrast.cc" target="_blank" rel="noopener">colourcontrast.cc</a></span>
+    <div class="title-row">
+      <h1>WCAG colour finder</h1>
+      <p class="subtitle">Enter a hex code then press “Find 5” to find close pairs accessible on light and dark backgrounds.</p>
+    </div>
+
+    <div class="controls">
+      <div class="row-one">
+        <label class="hex-input" for="base-text">
+          <span class="swatch" id="base-swatch" style="background:#6BD4AC">
+            <input type="color" id="base-color" value="#6BD4AC" aria-label="Pick base colour"/>
+          </span>
+          <span class="hash mono">#</span>
+          <input id="base-text" type="text" value="6BD4AC" maxlength="6" spellcheck="false" autocomplete="off"/>
+        </label>
+        <button class="btn" id="find-btn"><span id="find-btn-label">Find 5</span><span>→</span></button>
+        <div class="target-toggle" id="target-toggle" role="group" aria-label="Target WCAG level">
+          <button type="button" class="target-opt is-active" data-target="AA">AA</button>
+          <button type="button" class="target-opt" data-target="AAA">AAA</button>
+        </div>
+      </div>
+      <div class="row-two card">
+        <div class="alts" id="alts"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Mobile-only tab bar for Light/Dark -->
+  <div class="preview-tabs" role="tablist" aria-label="Preview background">
+    <div class="preview-tabs-inner">
+      <button type="button" class="tab-btn is-active" data-tab="light" role="tab" aria-selected="true">Light</button>
+      <button type="button" class="tab-btn" data-tab="dark" role="tab" aria-selected="false">Dark</button>
+    </div>
+  </div>
+
+  <!-- Full-bleed light/dark previews — stem of the T -->
+  <section class="previews">
+    <div class="preview is-light is-visible" id="preview-light">
+      <span class="tag-label is-fg">Foreground colour</span>
+      <span class="tag-label is-bg">Background colour</span>
+      <div class="fg-tag"><span class="fg-swatch"></span><span id="light-fg-hex">#6BD4AC</span><button class="copy-btn" type="button" data-copy-target="light-fg-hex" aria-label="Copy hex"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="8" height="9" rx="1.2"/><path d="M3 10V3.2A1.2 1.2 0 0 1 4.2 2H10"/></svg></button></div>
+      <div class="bg-tag">
+        <span class="swatch-sm" style="background:#ffffff">
+          <input type="color" id="light-bg-color" value="#ffffff" aria-label="Light background"/>
+        </span>
+        <span class="hash-sm mono">#</span>
+        <input id="light-bg-text" type="text" value="FFFFFF" maxlength="6" spellcheck="false" autocomplete="off"/>
+      </div>
+      <div class="preview-inner">
+        <div class="ratio-row">
+          <div class="ratio mono"><span id="light-ratio">—</span></div>
+          <div class="pills" id="light-pills"></div>
+        </div>
+        <h2 class="heading">The quick brown fox</h2>
+        <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p>
+        <p class="digits">0 1 2 3 4 5 6 7 8 9</p>
+      </div>
+    </div>
+
+    <div class="preview is-dark" id="preview-dark">
+      <span class="tag-label is-fg">Foreground colour</span>
+      <span class="tag-label is-bg">Background colour</span>
+      <div class="fg-tag"><span class="fg-swatch"></span><span id="dark-fg-hex">#6BD4AC</span><button class="copy-btn" type="button" data-copy-target="dark-fg-hex" aria-label="Copy hex"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="8" height="9" rx="1.2"/><path d="M3 10V3.2A1.2 1.2 0 0 1 4.2 2H10"/></svg></button></div>
+      <div class="bg-tag">
+        <span class="swatch-sm" style="background:#111111">
+          <input type="color" id="dark-bg-color" value="#111111" aria-label="Dark background"/>
+        </span>
+        <span class="hash-sm mono">#</span>
+        <input id="dark-bg-text" type="text" value="111111" maxlength="6" spellcheck="false" autocomplete="off"/>
+      </div>
+      <div class="preview-inner">
+        <div class="ratio-row">
+          <div class="ratio mono"><span id="dark-ratio">—</span></div>
+          <div class="pills" id="dark-pills"></div>
+        </div>
+        <h2 class="heading">The quick brown fox</h2>
+        <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p>
+        <p class="digits">0 1 2 3 4 5 6 7 8 9</p>
+      </div>
+    </div>
+  </section>
+
+<script>
+/* ——— Hex / RGB / OKLCH ——— */
+function normalizeHex(h) {
+  if (!h) return null;
+  h = h.trim().replace(/^#/, '');
+  if (/^[0-9a-fA-F]{3}$/.test(h)) h = h.split('').map(c => c+c).join('');
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+  return h.toUpperCase();
+}
+function hexToRgb(hex) {
+  const h = normalizeHex(hex); if (!h) return null;
+  return { r: parseInt(h.slice(0,2),16), g: parseInt(h.slice(2,4),16), b: parseInt(h.slice(4,6),16) };
+}
+function rgbToHex({r,g,b}) {
+  const c = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0');
+  return (c(r) + c(g) + c(b)).toUpperCase();
+}
+function srgbToLin(c) { c /= 255; return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+function relLuminance({r,g,b}) { return 0.2126*srgbToLin(r) + 0.7152*srgbToLin(g) + 0.0722*srgbToLin(b); }
+function contrastRatio(a, b) {
+  const L1 = relLuminance(a), L2 = relLuminance(b);
+  const [hi,lo] = L1 > L2 ? [L1,L2] : [L2,L1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+function linSrgbToOklab(r,g,b){const l=0.4122214708*r+0.5363325363*g+0.0514459929*b,m=0.2119034982*r+0.6806995451*g+0.1073969566*b,s=0.0883024619*r+0.2817188376*g+0.6299787005*b;const l_=Math.cbrt(l),m_=Math.cbrt(m),s_=Math.cbrt(s);return{L:0.2104542553*l_+0.7936177850*m_-0.0040720468*s_,a:1.9779984951*l_-2.4285922050*m_+0.4505937099*s_,b:0.0259040371*l_+0.7827717662*m_-0.8086757660*s_};}
+function oklabToLinSrgb(L,a,b){const l_=L+0.3963377774*a+0.2158037573*b,m_=L-0.1055613458*a-0.0638541728*b,s_=L-0.0894841775*a-1.2914855480*b;const l=l_*l_*l_,m=m_*m_*m_,s=s_*s_*s_;return{r:4.0767416621*l-3.3077115913*m+0.2309699292*s,g:-1.2684380046*l+2.6097574011*m-0.3413193965*s,b:-0.0041960863*l-0.7034186147*m+1.7076147010*s};}
+function rgbToOklch({r,g,b}){const R=srgbToLin(r),G=srgbToLin(g),B=srgbToLin(b);const lab=linSrgbToOklab(R,G,B);const C=Math.sqrt(lab.a*lab.a+lab.b*lab.b);const h=Math.atan2(lab.b,lab.a)*180/Math.PI;return{L:lab.L,C,h:(h+360)%360};}
+function oklchToRgb({L,C,h}){const hr=h*Math.PI/180;const a=Math.cos(hr)*C,b=Math.sin(hr)*C;const lin=oklabToLinSrgb(L,a,b);const conv=v=>{v=Math.max(0,Math.min(1,v));return v<=0.0031308?v*12.92:1.055*Math.pow(v,1/2.4)-0.055;};return{r:Math.round(conv(lin.r)*255),g:Math.round(conv(lin.g)*255),b:Math.round(conv(lin.b)*255)};}
+function deltaE(a,b){const dL=a.L-b.L,dC=a.C-b.C;let dh=a.h-b.h;if(dh>180)dh-=360;if(dh<-180)dh+=360;const Cavg=(a.C+b.C)/2;const dHab=2*Math.sin(dh*Math.PI/360)*Cavg;return Math.sqrt(dL*dL*4+dC*dC+dHab*dHab);}
+
+const WCAG = { AA:{small:4.5,large:3.0}, AAA:{small:7.0,large:4.5} };
+function evalContrast(fg,bg){const r=contrastRatio(fg,bg);return{ratio:r,AAsmall:r>=4.5,AAlarge:r>=3,AAAsmall:r>=7,AAAlarge:r>=4.5};}
+
+/* ——— State ——— */
+const state = { base:'6BD4AC', light:'FFFFFF', dark:'111111', shades:false, target:'AA', alts:[], appliedLight: null, appliedDark: null };
+const $ = s => document.querySelector(s);
+const els = {
+  baseText:$('#base-text'), baseColor:$('#base-color'), baseSwatch:$('#base-swatch'),
+  lightBgText:$('#light-bg-text'), lightBgColor:$('#light-bg-color'),
+  darkBgText:$('#dark-bg-text'), darkBgColor:$('#dark-bg-color'),
+  shadesToggle:{ classList:{toggle:()=>{},add:()=>{}}, setAttribute:()=>{}, addEventListener:()=>{} },
+  findBtn:$('#find-btn'), findLabel:$('#find-btn-label'),
+  altsEl:$('#alts'), altHint:{ set textContent(v){} },
+  lightPreview:$('#preview-light'), darkPreview:$('#preview-dark'),
+  lightRatio:$('#light-ratio'), darkRatio:$('#dark-ratio'),
+  lightPills:$('#light-pills'), darkPills:$('#dark-pills'),
+};
+
+/* ——— Render ——— */
+function pill(label, ok) {
+  return `<div class="pill-wrap"><span class="pill ${ok?'pass':'fail'}"><span class="glyph">${ok?'✓':'✕'}</span>${ok?'Pass':'Fail'}</span><span class="pill-label">${label}</span></div>`;
+}
+function pillsHtml(ev) {
+  return pill('AA Normal', ev.AAsmall)
+       + pill('AA Large', ev.AAlarge)
+       + pill('AAA Normal', ev.AAAsmall)
+       + pill('AAA Large', ev.AAAlarge);
+}
+function renderPreviews() {
+  const baseRgb = hexToRgb(state.base);
+  const lightRgb = hexToRgb(state.light);
+  const darkRgb = hexToRgb(state.dark);
+  if (!baseRgb || !lightRgb || !darkRgb) return;
+
+  // Topbar takes the base colour; pick white or black text for best contrast
+  const topbar = document.getElementById('topbar-wrap');
+  const white = {r:255,g:255,b:255}, black = {r:0,g:0,b:0};
+  const useWhite = contrastRatio(baseRgb, white) >= contrastRatio(baseRgb, black);
+  topbar.style.setProperty('--topbar-bg', '#' + state.base);
+  topbar.style.setProperty('--topbar-fg', useWhite ? '#ffffff' : '#000000');
+  topbar.style.setProperty('--topbar-mute', useWhite ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)');
+  topbar.style.setProperty('--card-bg', useWhite ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)');
+  topbar.style.setProperty('--card-border', useWhite ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.18)');
+  topbar.style.setProperty('--input-bg', useWhite ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.35)');
+
+  // If we have applied shade pair, use those on their respective bgs; else use base on both
+  const lightSpecHex = state.appliedLight || state.base;
+  const darkSpecHex  = state.appliedDark  || state.base;
+  const lightSpecRgb = hexToRgb(lightSpecHex);
+  const darkSpecRgb  = hexToRgb(darkSpecHex);
+
+  els.lightPreview.style.background = '#' + state.light;
+  els.lightPreview.style.setProperty('--specimen', '#' + lightSpecHex);
+  els.lightPreview.style.setProperty('--bg-for-specimen', '#' + state.light);
+  document.documentElement.style.setProperty('--light-fg', '#' + lightSpecHex);
+  document.getElementById('light-fg-hex').textContent = '#' + lightSpecHex;
+  const L = evalContrast(lightSpecRgb, lightRgb);
+  els.lightRatio.textContent = L.ratio.toFixed(2);
+  els.lightPills.innerHTML = pillsHtml(L);
+
+  els.darkPreview.style.background = '#' + state.dark;
+  els.darkPreview.style.setProperty('--specimen', '#' + darkSpecHex);
+  els.darkPreview.style.setProperty('--bg-for-specimen', '#' + state.dark);
+  document.documentElement.style.setProperty('--dark-fg', '#' + darkSpecHex);
+  document.getElementById('dark-fg-hex').textContent = '#' + darkSpecHex;
+  const D = evalContrast(darkSpecRgb, darkRgb);
+  els.darkRatio.textContent = D.ratio.toFixed(2);
+  els.darkPills.innerHTML = pillsHtml(D);
+}
+
+function renderAlts() {
+  els.altsEl.innerHTML = '';
+  if (state.alts.length === 0) {
+    for (let i = 0; i < 5; i++) {
+      const el = document.createElement('div');
+      el.className = 'alt placeholder';
+      el.innerHTML = `<div class="chips"><span class="chip"></span></div><div class="hex mono">—</div>`;
+      els.altsEl.appendChild(el);
+    }
+    els.altHint.textContent = state.shades
+      ? 'Press Find to search (different tints per bg)'
+      : 'Press Find to search';
+    return;
+  }
+  state.alts.forEach(a => {
+    const el = document.createElement('div');
+    const isShade = a.lightHex !== a.darkHex;
+    el.className = 'alt' + (isShade ? '' : ' single');
+    el.style.setProperty('--alt-color', '#' + a.lightHex);
+    el.style.setProperty('--alt-light', '#' + a.lightHex);
+    el.style.setProperty('--alt-dark', '#' + a.darkHex);
+    el.title = isShade ? `Light #${a.lightHex} · Dark #${a.darkHex}` : `#${a.lightHex}`;
+    el.innerHTML = `
+      <div class="chips">
+        <span class="chip light"></span>
+        ${isShade ? '<span class="chip dark"></span>' : ''}
+      </div>
+      <div class="hex mono">${isShade ? `${a.lightHex} / ${a.darkHex}` : '#'+a.lightHex}</div>
+    `;
+    el.addEventListener('click', () => {
+      if (isShade) {
+        state.appliedLight = a.lightHex;
+        state.appliedDark = a.darkHex;
+        renderPreviews();
+        renderAlts();
+      } else {
+        setBase(a.lightHex);
+      }
+    });
+    // mark applied pair
+    if (state.appliedLight === a.lightHex && state.appliedDark === a.darkHex) {
+      el.style.outline = '2px solid var(--topbar-fg)';
+      el.style.outlineOffset = '2px';
+    }
+    els.altsEl.appendChild(el);
+  });
+  els.altHint.textContent = 'Click to apply pair';
+}
+
+/* ——— Find ——— */
+function findAccessible({ baseHex, lightBgHex, darkBgHex, shades, target }) {
+  const THRESHOLD = (target === 'AAA') ? 7.0 : 4.5;
+  const baseRgb = hexToRgb(baseHex);
+  const lightBg = hexToRgb(lightBgHex);
+  const darkBg  = hexToRgb(darkBgHex);
+  const baseOklch = rgbToOklch(baseRgb);
+  const candidates = [];
+  for (let li = 0; li <= 40; li++) {
+    const L = li/40;
+    for (let ci = 0; ci <= 18; ci++) {
+      const C = (ci/18)*0.37;
+      for (let hi = 0; hi < 36; hi++) {
+        const h = (hi/36)*360;
+        const rgb = oklchToRgb({L,C,h});
+        if (rgb.r<0||rgb.r>255||rgb.g<0||rgb.g>255||rgb.b<0||rgb.b>255) continue;
+        candidates.push({ oklch:{L,C,h}, rgb, hex: rgbToHex(rgb) });
+      }
+    }
+  }
+  for (let dL=-0.08; dL<=0.08; dL+=0.02) for (let dC=-0.06; dC<=0.06; dC+=0.02) for (let dH=-40; dH<=40; dH+=5) {
+    const L=Math.max(0,Math.min(1,baseOklch.L+dL)), C=Math.max(0,baseOklch.C+dC), h=(baseOklch.h+dH+360)%360;
+    const rgb = oklchToRgb({L,C,h});
+    candidates.push({ oklch:{L,C,h}, rgb, hex: rgbToHex(rgb) });
+  }
+  const results = [];
+  if (!shades) {
+    for (const c of candidates) {
+      if (contrastRatio(c.rgb, lightBg) >= THRESHOLD && contrastRatio(c.rgb, darkBg) >= THRESHOLD) {
+        results.push({ lightHex:c.hex, darkHex:c.hex, delta: deltaE(c.oklch, baseOklch) });
+      }
+    }
+    results.sort((a,b) => a.delta - b.delta);
+    return dedup(results, 5, r => r.lightHex);
+  }
+  const lightOK = candidates.filter(c => contrastRatio(c.rgb, lightBg) >= THRESHOLD);
+  const darkOK  = candidates.filter(c => contrastRatio(c.rgb, darkBg)  >= THRESHOLD);
+  for (let dH=-60; dH<=60; dH+=6) {
+    const h = (baseOklch.h + dH + 360) % 360;
+    let bL=null, bD=null, bLd=Infinity, bDd=Infinity;
+    for (const c of lightOK) {
+      let dh=c.oklch.h-h; if(dh>180)dh-=360; if(dh<-180)dh+=360;
+      if (Math.abs(dh) > 6) continue;
+      const d = deltaE(c.oklch, baseOklch);
+      if (d < bLd) { bLd=d; bL=c; }
+    }
+    for (const c of darkOK) {
+      let dh=c.oklch.h-h; if(dh>180)dh-=360; if(dh<-180)dh+=360;
+      if (Math.abs(dh) > 6) continue;
+      const d = deltaE(c.oklch, baseOklch);
+      if (d < bDd) { bDd=d; bD=c; }
+    }
+    if (bL && bD) results.push({ lightHex:bL.hex, darkHex:bD.hex, delta:(bLd+bDd)/2 });
+  }
+  results.sort((a,b) => a.delta - b.delta);
+  return dedup(results, 5, r => r.lightHex+'|'+r.darkHex);
+}
+function dedup(arr, n, keyFn) {
+  const seen = new Set(); const out = [];
+  for (const it of arr) {
+    const k = keyFn(it); if (seen.has(k)) continue;
+    let close = false;
+    for (const p of out) {
+      if (Math.abs(p.delta-it.delta)<0.008 && p.lightHex.slice(0,2)===it.lightHex.slice(0,2)) { close = true; break; }
+    }
+    if (close) continue;
+    seen.add(k); out.push(it);
+    if (out.length >= n) break;
+  }
+  return out;
+}
+
+/* ——— Wiring ——— */
+function setBase(hex) {
+  const h = normalizeHex(hex); if (!h) return;
+  state.base = h;
+  els.baseText.value = h; els.baseColor.value = '#'+h;
+  els.baseSwatch.style.background = '#'+h;
+  // Reset applied shade pair, auto-regenerate alternatives
+  state.appliedLight = null;
+  state.appliedDark = null;
+  autoFindAndApply();
+}
+function setLightBg(hex) {
+  const h = normalizeHex(hex); if (!h) return;
+  state.light = h;
+  els.lightBgText.value = h; els.lightBgColor.value = '#'+h;
+  els.lightBgColor.parentElement.style.background = '#'+h;
+  autoFindAndApply();
+}
+function setDarkBg(hex) {
+  const h = normalizeHex(hex); if (!h) return;
+  state.dark = h;
+  els.darkBgText.value = h; els.darkBgColor.value = '#'+h;
+  els.darkBgColor.parentElement.style.background = '#'+h;
+  autoFindAndApply();
+}
+
+// Auto-generate shade-pair alternatives and apply the first pair
+function autoFindAndApply() {
+  state.alts = findAccessible({
+    baseHex: state.base,
+    lightBgHex: state.light,
+    darkBgHex: state.dark,
+    shades: true,
+    target: state.target,
+  });
+  if (state.alts.length > 0 && state.appliedLight === null) {
+    state.appliedLight = state.alts[0].lightHex;
+    state.appliedDark = state.alts[0].darkHex;
+  }
+  renderAlts();
+  renderPreviews();
+}
+
+function wireHex(inputEl, setter) {
+  inputEl.addEventListener('input', e => {
+    const v = e.target.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase().slice(0,6);
+    e.target.value = v;
+    if (v.length === 3 || v.length === 6) { const h = normalizeHex(v); if (h) setter(h); }
+  });
+}
+wireHex(els.baseText, setBase);
+wireHex(els.lightBgText, setLightBg);
+wireHex(els.darkBgText, setDarkBg);
+els.baseColor.addEventListener('input', e => setBase(e.target.value));
+els.lightBgColor.addEventListener('input', e => setLightBg(e.target.value));
+els.darkBgColor.addEventListener('input', e => setDarkBg(e.target.value));
+
+// Mobile Light/Dark tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const which = btn.dataset.tab; // 'light' or 'dark'
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      const active = b.dataset.tab === which;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', active);
+    });
+    document.getElementById('preview-light').classList.toggle('is-visible', which === 'light');
+    document.getElementById('preview-dark').classList.toggle('is-visible', which === 'dark');
+  });
+});
+
+// AA / AAA target toggle
+document.querySelectorAll('.target-opt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.target = btn.dataset.target;
+    document.querySelectorAll('.target-opt').forEach(b => b.classList.toggle('is-active', b === btn));
+    state.appliedLight = null; state.appliedDark = null;
+    autoFindAndApply();
+  });
+});
+
+// Copy-to-clipboard on hex tags
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  e.preventDefault();
+  let text = '';
+  if (btn.dataset.copyTarget) {
+    text = document.getElementById(btn.dataset.copyTarget).textContent.trim();
+  } else if (btn.dataset.copyInput) {
+    text = '#' + document.getElementById(btn.dataset.copyInput).value.trim();
+  }
+  if (!text) return;
+  const done = () => {
+    btn.classList.add('copied');
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => { btn.classList.remove('copied'); }, 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(done);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(_) {}
+    document.body.removeChild(ta);
+    done();
+  }
+});
+
+els.findBtn.addEventListener('click', () => {
+  els.findBtn.disabled = true;
+  els.findLabel.textContent = 'Searching…';
+  setTimeout(() => {
+    state.appliedLight = null; state.appliedDark = null;
+    autoFindAndApply();
+    els.findBtn.disabled = false;
+    els.findLabel.textContent = 'Find 5';
+    if (state.alts.length === 0) els.altHint.textContent = 'No matches — try different backgrounds';
+  }, 20);
+});
+
+state.shades = true;
+
+els.lightBgColor.parentElement.style.background = '#' + state.light;
+els.darkBgColor.parentElement.style.background = '#' + state.dark;
+autoFindAndApply();
+</script>
+</body>
+</html>
