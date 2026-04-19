@@ -101,7 +101,7 @@ Plans:
 - [x] 05-02-two-zone-layout-and-badges-PLAN.md — Two-zone HTML, typography/spacing CSS, derived pass-badge tint, British copy sweep, setBadge rewire
 - [x] 05-03-focus-responsive-a11y-audit-PLAN.md — Unified focus styles + mobile tabs ARIA shipped (Task 1); a11y audit deferred to gap-closure wave after new Claude Design mockup arrived mid-plan (status: gaps-found — 10 structural gaps recorded in 05-VERIFICATION.md)
 - [x] 05-04-rebuild-markup-and-fonts-PLAN.md — Rebuild wave W1: new index.html skeleton matching mockup + Google Fonts (Inter + JetBrains Mono). Closes G1/G2/G6/G7/G10 markup.
-- [ ] 05-05-rebuild-styles-PLAN.md — Rebuild wave W2: replace style.css with mockup CSS + unified focus append. Closes G1/G5/G6/G7/G10 CSS.
+- [x] 05-05-rebuild-styles-PLAN.md — Rebuild wave W2: replace style.css with mockup CSS + unified focus append. Closes G1/G5/G6/G7/G10 CSS.
 - [ ] 05-06-rewire-app-PLAN.md — Rebuild wave W3: rewire app.js against new DOM — auto-find pipeline, segmented AA|AAA toggle, fg-tag/bg-tag copy, Find re-roll, topbar-fg derivation. Closes G3/G4/G8.
 - [ ] 05-07-alts-grid-polish-PLAN.md — Rebuild wave W4: alts tiles as semantic buttons with aria-label + .is-selected class + :focus-visible. Closes G9 keyboard/SR bits.
 - [ ] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.

@@ -56,7 +56,7 @@
 
 - [x] **A11Y-01**: The tool itself passes WCAG AA for all text and interactive elements
 - [x] **A11Y-02**: Pass/fail status not communicated by colour alone (text labels + icons)
-- [ ] **A11Y-03**: All interactive elements have visible focus states
+- [x] **A11Y-03**: All interactive elements have visible focus states
 
 ## v2 Requirements
 
@@ -111,7 +111,7 @@
 | UI-03 | Phase 5 | Complete |
 | A11Y-01 | Phase 5 | Complete |
 | A11Y-02 | Phase 5 | Complete |
-| A11Y-03 | Phase 5 | Pending |
+| A11Y-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 22 total (+ Phase 1 engine foundation with no explicit req IDs)
