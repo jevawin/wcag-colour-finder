@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBadgeState, expandHex, formatRatio, buildBadgeHTML } from '../app.js';
+import { buildBadgeState, expandHex, formatRatio, buildPillHTML } from '../app.js';
 
 describe('buildBadgeState', () => {
   it('returns all true for ratio 8.0 (passes AA, AAA, AA large, AAA large)', () => {
@@ -64,18 +64,32 @@ describe('formatRatio', () => {
   });
 });
 
-describe('buildBadgeHTML (smoke)', () => {
-  it('renders "Pass AAA Large" label variant', () => {
-    const html = buildBadgeHTML(true, 'AAA Large');
-    assert.ok(html.includes('Pass AAA Large'));
-    assert.ok(html.includes('aria-hidden="true"'));
+describe('buildPillHTML', () => {
+  it('pass case contains "pass", "✓", "Pass", aria-hidden glyph, and the label', () => {
+    const html = buildPillHTML('AA Normal', true);
+    assert.ok(html.includes('pass'), 'expected pass class');
+    assert.ok(html.includes('✓'), 'expected tick glyph');
+    assert.ok(html.includes('Pass'), 'expected visible "Pass" word for screen readers');
+    assert.ok(html.includes('AA Normal'), 'expected label text');
+    assert.ok(html.includes('aria-hidden="true"'), 'expected aria-hidden on glyph');
   });
 
-  it('renders stable markup across runs for (true, "AA") — contract guard for setBadge', () => {
-    // setBadge now writes this string via innerHTML; pin the exact shape.
-    const expected = '<span aria-hidden="true">\u2713</span><span>Pass AA</span>';
-    assert.equal(buildBadgeHTML(true, 'AA'), expected);
-    // Idempotent — repeated calls return identical output
-    assert.equal(buildBadgeHTML(true, 'AA'), buildBadgeHTML(true, 'AA'));
+  it('fail case contains "fail", "✕", "Fail", and the label', () => {
+    const html = buildPillHTML('AAA Large', false);
+    assert.ok(html.includes('fail'), 'expected fail class');
+    assert.ok(html.includes('✕'), 'expected cross glyph');
+    assert.ok(html.includes('Fail'), 'expected visible "Fail" word');
+    assert.ok(html.includes('AAA Large'), 'expected label text');
+    assert.ok(html.includes('aria-hidden="true"'), 'expected aria-hidden on glyph');
+  });
+
+  it('renders the exact contract string for (AA Normal, true)', () => {
+    const expected = '<div class="pill-wrap"><span class="pill pass"><span class="glyph" aria-hidden="true">\u2713</span>Pass</span><span class="pill-label">AA Normal</span></div>';
+    assert.equal(buildPillHTML('AA Normal', true), expected);
+  });
+
+  it('renders the exact contract string for (AA Large, false)', () => {
+    const expected = '<div class="pill-wrap"><span class="pill fail"><span class="glyph" aria-hidden="true">\u2715</span>Fail</span><span class="pill-label">AA Large</span></div>';
+    assert.equal(buildPillHTML('AA Large', false), expected);
   });
 });
