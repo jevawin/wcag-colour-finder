@@ -73,6 +73,8 @@ const COLOR_ALLOW = [
   'clearColor',
   'checkTopZoneContrast',
   'American spelling', // the CLAUDE convention comment in app.js
+  'type="color"',      // HTML native <input type="color"> — American-by-spec
+  "type='color'",
 ];
 
 function isAllowed(line, allowList) {
