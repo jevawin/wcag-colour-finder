@@ -187,13 +187,19 @@ if (typeof document !== 'undefined') {
       return;
     }
     state.alts.forEach(a => {
-      const el = document.createElement('div');
+      const el = document.createElement('button');
+      el.type = 'button';
       const isShade = a.lightHex !== a.darkHex;
       el.className = 'alt' + (isShade ? '' : ' single');
       el.style.setProperty('--alt-colour', '#' + a.lightHex);
       el.style.setProperty('--alt-light',  '#' + a.lightHex);
       el.style.setProperty('--alt-dark',   '#' + a.darkHex);
       el.title = isShade ? 'Light #' + a.lightHex + ' \u00b7 Dark #' + a.darkHex : '#' + a.lightHex;
+      // A11Y-03: keyboard + screen-reader label. Button element gives Enter/Space
+      // activation natively; aria-label describes the pair being applied.
+      el.setAttribute('aria-label', isShade
+        ? 'Apply pair: light #' + a.lightHex + ', dark #' + a.darkHex
+        : 'Apply single #' + a.lightHex);
       el.innerHTML =
         '<div class="chips">' +
           '<span class="chip light"></span>' +
@@ -209,8 +215,7 @@ if (typeof document !== 'undefined') {
         renderAlts();
       });
       if (state.appliedLight === a.lightHex && state.appliedDark === a.darkHex) {
-        el.style.outline = '2px solid var(--topbar-fg)';
-        el.style.outlineOffset = '2px';
+        el.classList.add('is-selected');
       }
       altsEl.appendChild(el);
     });

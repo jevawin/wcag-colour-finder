@@ -521,3 +521,18 @@ h1 {
   outline-offset: -2px;
 }
 .input--error { outline: 2px solid #dc2626 !important; }
+
+/* --- Alts selection + focus (A11Y-03) --- */
+.alt.is-selected {
+  outline: 2px solid var(--topbar-fg, #111111);
+  outline-offset: 2px;
+}
+button.alt {
+  font: inherit;
+  text-align: left;
+  color: inherit;
+}
+button.alt:focus-visible {
+  outline: 2px solid var(--topbar-fg, #111111);
+  outline-offset: 2px;
+}
