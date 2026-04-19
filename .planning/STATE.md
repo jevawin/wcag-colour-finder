@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-06-rewire-app-PLAN.md
-last_updated: "2026-04-19T19:02:42.778Z"
+stopped_at: Completed 05-07-alts-grid-polish-PLAN.md
+last_updated: "2026-04-19T19:05:04.444Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
   percent: 100
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 05 (design-and-accessibility) — EXECUTING
-Plan: 4 of 8
+Plan: 5 of 8
 Status: Ready to execute
 Last activity: 2026-04-19
 
@@ -63,6 +63,7 @@ Progress: [██████████] 100% (all planned plans complete; reb
 | Phase 05 P04 | 8 | 1 tasks | 2 files |
 | Phase 05-design-and-accessibility P05 | 3m | 1 tasks | 1 files |
 | Phase 05-design-and-accessibility P06 | 8m | 1 tasks | 5 files |
+| Phase 05-design-and-accessibility P07 | 3m | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,7 @@ Recent decisions affecting current work:
 - [Phase 05-design-and-accessibility]: Mockup CSS imported verbatim into style.css (lines 10-515); --alt-color renamed --alt-colour for british-spelling compliance; topbar transition drops color keyword (foreground flips instantly via var swap, no animation needed)
 - [Phase 05-design-and-accessibility]: 05-06 app.js chose post-filter (in-app contrastRatio >= threshold) over refactoring findVariantPairs — preserves variant-search's AA invariant for existing callers/tests, trade-off is fewer AAA results when space is sparse
 - [Phase 05-design-and-accessibility]: 05-06 retired buildBadgeHTML + deriveBadgeColors; new buildPillHTML uses --specimen/--bg-for-specimen tokens directly per mockup, no derived pass-tint
+- [Phase 05-design-and-accessibility]: 05-07 alt tiles rebuilt as semantic <button type='button'> with aria-label + .is-selected class — native Enter/Space activation, class-based selection over inline style
 
 ### Pending Todos
 
@@ -111,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-19T19:02:42.776Z
-Stopped at: Completed 05-06-rewire-app-PLAN.md
+Last session: 2026-04-19T19:05:04.441Z
+Stopped at: Completed 05-07-alts-grid-polish-PLAN.md
 Resume file: None

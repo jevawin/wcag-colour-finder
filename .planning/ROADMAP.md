@@ -103,7 +103,7 @@ Plans:
 - [x] 05-04-rebuild-markup-and-fonts-PLAN.md — Rebuild wave W1: new index.html skeleton matching mockup + Google Fonts (Inter + JetBrains Mono). Closes G1/G2/G6/G7/G10 markup.
 - [x] 05-05-rebuild-styles-PLAN.md — Rebuild wave W2: replace style.css with mockup CSS + unified focus append. Closes G1/G5/G6/G7/G10 CSS.
 - [x] 05-06-rewire-app-PLAN.md — Rebuild wave W3: rewire app.js against new DOM — auto-find pipeline, segmented AA|AAA toggle, fg-tag/bg-tag copy, Find re-roll, topbar-fg derivation. Closes G3/G4/G8.
-- [ ] 05-07-alts-grid-polish-PLAN.md — Rebuild wave W4: alts tiles as semantic buttons with aria-label + .is-selected class + :focus-visible. Closes G9 keyboard/SR bits.
+- [x] 05-07-alts-grid-polish-PLAN.md — Rebuild wave W4: alts tiles as semantic buttons with aria-label + .is-selected class + :focus-visible. Closes G9 keyboard/SR bits.
 - [ ] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.
 **UI hint**: yes
 
