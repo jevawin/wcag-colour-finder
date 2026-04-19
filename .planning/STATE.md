@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-05-rebuild-styles-PLAN.md
-last_updated: "2026-04-19T18:56:53.083Z"
+stopped_at: Completed 05-06-rewire-app-PLAN.md
+last_updated: "2026-04-19T19:02:42.778Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 15
-  completed_plans: 12
+  completed_plans: 13
   percent: 100
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 05 (design-and-accessibility) — EXECUTING
-Plan: 3 of 8
+Plan: 4 of 8
 Status: Ready to execute
 Last activity: 2026-04-19
 
@@ -62,6 +62,7 @@ Progress: [██████████] 100% (all planned plans complete; reb
 | Phase 05-design-and-accessibility P02 | 7 | 3 tasks | 4 files |
 | Phase 05 P04 | 8 | 1 tasks | 2 files |
 | Phase 05-design-and-accessibility P05 | 3m | 1 tasks | 1 files |
+| Phase 05-design-and-accessibility P06 | 8m | 1 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 05-design-and-accessibility]: Mockup bundle under `.planning/phases/05-design-and-accessibility/mockup/wcag-colour-finder/` is the new ground truth — mockup wins over prior UI-SPEC per UI-SPEC line 16
 - [Phase 05]: 05-04 index.html rebuilt to mockup ground truth; Google Fonts Inter + JetBrains Mono loaded; retired contenteditable .sample-text pattern
 - [Phase 05-design-and-accessibility]: Mockup CSS imported verbatim into style.css (lines 10-515); --alt-color renamed --alt-colour for british-spelling compliance; topbar transition drops color keyword (foreground flips instantly via var swap, no animation needed)
+- [Phase 05-design-and-accessibility]: 05-06 app.js chose post-filter (in-app contrastRatio >= threshold) over refactoring findVariantPairs — preserves variant-search's AA invariant for existing callers/tests, trade-off is fewer AAA results when space is sparse
+- [Phase 05-design-and-accessibility]: 05-06 retired buildBadgeHTML + deriveBadgeColors; new buildPillHTML uses --specimen/--bg-for-specimen tokens directly per mockup, no derived pass-tint
 
 ### Pending Todos
 
@@ -108,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-19T18:56:49.569Z
-Stopped at: Completed 05-05-rebuild-styles-PLAN.md
+Last session: 2026-04-19T19:02:42.776Z
+Stopped at: Completed 05-06-rewire-app-PLAN.md
 Resume file: None
