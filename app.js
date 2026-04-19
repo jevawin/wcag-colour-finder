@@ -1,15 +1,15 @@
 // app.js
-// UI wiring for WCAG Colour Finder.
+// UI wiring for WCAG Colour Finder — drives the 05-04 mockup DOM.
 // Imports colour maths from colour-engine.js — does not reimplement any formula.
 //
 // Conventions:
-//   - American spelling in code identifiers (color, ratio)
-//   - British spelling in UI text (colour)
-//   - Store hex without # prefix; call contrastRatio('#' + hex, BG)
-//   - Pass raw contrastRatio float to passesAA etc — never round before threshold check
+//   - American spelling in code identifiers (color, ratio) — CSS/DOM API reality.
+//   - British spelling in UI text (colour).
+//   - Store hex without # prefix in state; pass `'#' + hex` into contrastRatio.
+//   - Pass raw contrastRatio float to passesAA etc — never round before threshold check.
 
-import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge, srgbToOklab, oklabToSrgb } from './colour-engine.js';
-import { findVariantPairs, DISTANCE_WARNING_THRESHOLD } from './variant-search.js';
+import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js';
+import { findVariantPairs } from './variant-search.js';
 import { parseHashState, buildHashPath } from './url-state.js';
 
 // --- Pure functions (exported for testing) ---
@@ -32,7 +32,6 @@ function buildBadgeState(ratio) {
 
 /**
  * Expand a 3-digit hex string to 6-digit uppercase.
- * If already 6 digits, returns it uppercased unchanged.
  * No validation — parseHex already validated the input.
  *
  * @param {string} hex - 3 or 6 character hex string (no #)
@@ -56,24 +55,9 @@ function formatRatio(ratio) {
 }
 
 /**
- * Build the inner HTML for a pass/fail badge.
- * Returns a string with an aria-hidden icon span and a visible text label span,
- * so screen readers read only the text (A11Y-02 text + icon cue).
- *
- * @param {boolean} passes - true for pass, false for fail
- * @param {string} label - threshold label (e.g. 'AA', 'AAA', 'AA Large', 'AAA Large')
- * @returns {string} HTML string
- */
-function buildBadgeHTML(passes, label) {
-  const icon = passes ? '✓' : '✗';
-  const word = passes ? 'Pass' : 'Fail';
-  return `<span aria-hidden="true">${icon}</span><span>${word} ${label}</span>`;
-}
-
-/**
  * Pick a monochrome foreground (#000000 or #ffffff) that meets AA against the
  * supplied user hex used as a background. Black wins when it passes AA (4.5:1)
- * against userHex; otherwise white. Accepts hex with or without leading #.
+ * against userHex; otherwise white.
  *
  * @param {string} userHex - '#rrggbb' or 'rrggbb'
  * @returns {string} '#000000' or '#ffffff'
@@ -84,404 +68,336 @@ function chooseChromeForeground(userHex) {
 }
 
 /**
- * Derive pass-badge background + text colours from the user's hex using OKLab
- * lightness shifts. Falls back to a static accessible green pair when the
- * derived pair fails AA (4.5:1) or when input cannot be parsed.
+ * Build the HTML for a single pass/fail pill in the ratio-row pills grid.
+ * A11Y-02: glyph is aria-hidden, word "Pass"/"Fail" is screen-reader-readable,
+ * visible label (e.g. "AA Normal") is rendered alongside.
  *
- * @param {string} userHex
- * @returns {{ passBg: string, passText: string }}
+ * @param {string} label - e.g. 'AA Normal', 'AAA Large'
+ * @param {boolean} passes
+ * @returns {string}
  */
-function deriveBadgeColors(userHex) {
-  // Deviation (Rule 1 – Bug): plan specified #16a34a, but #16a34a on #ffffff
-  // has contrast ~3.30 which fails AA 4.5. Use darker green #15803d (~5.02:1).
-  const FALLBACK = { passBg: '#15803d', passText: '#ffffff' };
-  try {
-    const hex = userHex.startsWith('#') ? userHex : '#' + userHex;
-    const rgb = parseHex(hex);
-    if (!rgb) return FALLBACK;
-    const oklab = srgbToOklab(rgb.r, rgb.g, rgb.b);
-    // Light tint for badge background, darker saturated variant for text.
-    const bg   = oklabToSrgb(0.90, oklab.a * 0.4, oklab.b * 0.4);
-    const text = oklabToSrgb(0.30, oklab.a,       oklab.b);
-    const toHex = (c) => c.toString(16).padStart(2, '0');
-    const passBg   = '#' + toHex(bg.r)   + toHex(bg.g)   + toHex(bg.b);
-    const passText = '#' + toHex(text.r) + toHex(text.g) + toHex(text.b);
-    if (contrastRatio(passText, passBg) >= 4.5) return { passBg, passText };
-    return FALLBACK;
-  } catch (_e) {
-    return FALLBACK;
-  }
+function buildPillHTML(label, passes) {
+  return '<div class="pill-wrap"><span class="pill ' + (passes ? 'pass' : 'fail') +
+    '"><span class="glyph" aria-hidden="true">' + (passes ? '\u2713' : '\u2715') + '</span>' +
+    (passes ? 'Pass' : 'Fail') + '</span><span class="pill-label">' + label + '</span></div>';
 }
 
 // Named exports for testing — pure functions with no DOM dependency
-export { buildBadgeState, expandHex, formatRatio, buildBadgeHTML, chooseChromeForeground, deriveBadgeColors };
+export { buildBadgeState, expandHex, formatRatio, chooseChromeForeground, buildPillHTML };
 
 // --- DOM wiring (browser only) ---
 
 if (typeof document !== 'undefined') {
-  const HEX_DEFAULT      = '2563EB';
-  const LIGHT_BG_DEFAULT = '#ffffff';
-  const DARK_BG_DEFAULT  = '#000000';
-  const URL_DEBOUNCE_MS  = 300;
+  const URL_DEBOUNCE_MS = 300;
+  const DEFAULT_BASE = '2563EB';
+  const DEFAULT_LIGHT = 'FFFFFF';
+  const DEFAULT_DARK = '111111';
 
-  // Cache element references — select once
-  const hexInput     = document.querySelector('#hex-input');
-  const errorMsg     = document.querySelector('#hex-error');
-  const lightPanel   = document.querySelector('.panel--light');
-  const darkPanel    = document.querySelector('.panel--dark');
-  const findBtn      = document.querySelector('#find-btn');
-  const swatchRow    = document.querySelector('#swatch-row');
-  const swatchList   = document.querySelector('.swatch-list');
-  const distWarning  = document.querySelector('#distance-warning');
-  const lightBgInput = document.querySelector('#light-bg-input');
-  const lightBgError = document.querySelector('#light-bg-error');
-  const darkBgInput  = document.querySelector('#dark-bg-input');
-  const darkBgError  = document.querySelector('#dark-bg-error');
+  // Element cache
+  const baseText      = document.getElementById('base-text');
+  // Picker inputs use the HTML <input type="color"> element; identifiers use
+  // "Picker" to keep British spelling compliance (UI-03) while still driving
+  // the native picker.
+  const basePicker    = document.getElementById('base-color');
+  const baseSwatch    = document.getElementById('base-swatch');
+  const findBtn       = document.getElementById('find-btn');
+  const findLabel     = document.getElementById('find-btn-label');
+  const altsEl        = document.getElementById('alts');
+  const targetToggle  = document.getElementById('target-toggle');
+  const topbar        = document.getElementById('topbar-wrap');
+  const previewLight  = document.getElementById('preview-light');
+  const previewDark   = document.getElementById('preview-dark');
+  const lightFgHex    = document.getElementById('light-fg-hex');
+  const darkFgHex     = document.getElementById('dark-fg-hex');
+  const lightBgPicker = document.getElementById('light-bg-color');
+  const lightBgText   = document.getElementById('light-bg-text');
+  const darkBgPicker  = document.getElementById('dark-bg-color');
+  const darkBgText    = document.getElementById('dark-bg-text');
+  const lightRatioEl  = document.getElementById('light-ratio');
+  const darkRatioEl   = document.getElementById('dark-ratio');
+  const lightPillsEl  = document.getElementById('light-pills');
+  const darkPillsEl   = document.getElementById('dark-pills');
 
-  let lastValidHex     = HEX_DEFAULT;
-  let lastValidLightBg = LIGHT_BG_DEFAULT;
-  let lastValidDarkBg  = DARK_BG_DEFAULT;
-  let urlSyncTimer     = null;
+  const state = {
+    base: DEFAULT_BASE,
+    light: DEFAULT_LIGHT,
+    dark: DEFAULT_DARK,
+    target: 'AA',       // 'AA' | 'AAA'
+    alts: [],           // Array<{ lightHex, darkHex, distance }>
+    appliedLight: null, // selected alt's lightHex (6-digit uppercase, no #)
+    appliedDark: null,  // selected alt's darkHex
+  };
+  let urlSyncTimer = null;
 
   /**
-   * Apply the user's hex as the CSS custom property for colour propagation.
-   * One update — cascade handles all sample-text elements.
+   * Set --topbar-bg to the user's hex and derive --topbar-fg for WCAG AA chrome.
    */
-  function applyColor(hex) {
-    document.documentElement.style.setProperty('--user-colour', '#' + hex);
-  }
-
-  function applyLightBg(hex) {
-    document.documentElement.style.setProperty('--light-bg', hex);
-  }
-
-  function applyDarkBg(hex) {
-    document.documentElement.style.setProperty('--dark-bg', hex);
+  function applyTopbar(hex) {
+    topbar.style.setProperty('--topbar-bg', '#' + hex);
+    topbar.style.setProperty('--topbar-fg', chooseChromeForeground(hex));
   }
 
   /**
-   * Set pass/fail text and class on a single badge element.
-   */
-  function setBadge(root, selector, passes, label) {
-    const el = root.querySelector(selector);
-    if (!el) return;
-    // Delegates markup to buildBadgeHTML for A11Y-02 icon + text cue
-    el.innerHTML = buildBadgeHTML(passes, label);
-    el.classList.toggle('badge--pass', passes);
-    el.classList.toggle('badge--fail', !passes);
-  }
-
-  /**
-   * Update all badge elements and the ratio display for a single panel.
-   */
-  function updatePanel(panelEl, ratio) {
-    // Large display shows the bare number (e.g. "4.57"); keep formatRatio-style rounding.
-    panelEl.querySelector('.ratio').textContent = ratio.toFixed(2);
-
-    const state = buildBadgeState(ratio);
-    setBadge(panelEl, '.badge-aa',     state.aa,       'AA');
-    setBadge(panelEl, '.badge-aaa',    state.aaa,      'AAA');
-    setBadge(panelEl, '.badge-aa-lg',  state.aaLarge,  'AA Large');
-    setBadge(panelEl, '.badge-aaa-lg', state.aaaLarge, 'AAA Large');
-  }
-
-  /**
-   * Render both panels for a given hex colour against the current BGs.
+   * Render one preview panel: ratio + 4 pills + fg hex label + specimen colour.
    *
-   * @param {string} hex - 6-digit uppercase hex without #
+   * @param {HTMLElement} panelEl
+   * @param {string} fgHex - 6-digit hex no #
+   * @param {string} bgHex - 6-digit hex no #
+   * @param {HTMLElement} ratioEl
+   * @param {HTMLElement} pillsEl
+   * @param {HTMLElement} fgHexLabelEl
    */
-  function render(hex) {
-    applyColor(hex);
-
-    // Derive and apply pass-badge tokens for the current user colour.
-    const { passBg, passText } = deriveBadgeColors(hex);
-    document.documentElement.style.setProperty('--pass-bg',   passBg);
-    document.documentElement.style.setProperty('--pass-text', passText);
-
-    // Pick chrome foreground for the control zone and toggle the warning.
-    const chromeFg = chooseChromeForeground(hex);
-    document.documentElement.style.setProperty('--control-zone-text', chromeFg);
-    const warn = document.getElementById('top-zone-warning');
-    if (warn) warn.hidden = (chromeFg === '#000000');
-
-    // Mirror the current hex into the per-panel foreground pill labels.
-    const upper = hex.toUpperCase();
-    document.querySelectorAll('.fg-hex').forEach(el => { el.textContent = upper; });
-
-    const ratioLight = contrastRatio('#' + hex, lastValidLightBg);
-    const ratioDark  = contrastRatio('#' + hex, lastValidDarkBg);
-    updatePanel(lightPanel, ratioLight);
-    updatePanel(darkPanel, ratioDark);
+  function renderPanel(panelEl, fgHex, bgHex, ratioEl, pillsEl, fgHexLabelEl) {
+    panelEl.style.background = '#' + bgHex;
+    panelEl.style.setProperty('--specimen', '#' + fgHex);
+    panelEl.style.setProperty('--bg-for-specimen', '#' + bgHex);
+    const ratio = contrastRatio('#' + fgHex, '#' + bgHex) || 0;
+    ratioEl.textContent = ratio.toFixed(2);
+    fgHexLabelEl.textContent = '#' + fgHex;
+    const bs = buildBadgeState(ratio);
+    pillsEl.innerHTML =
+      buildPillHTML('AA Normal',  bs.aa) +
+      buildPillHTML('AA Large',   bs.aaLarge) +
+      buildPillHTML('AAA Normal', bs.aaa) +
+      buildPillHTML('AAA Large',  bs.aaaLarge);
   }
 
-  function renderLightPanel(hex) {
-    const r = contrastRatio('#' + hex, lastValidLightBg);
-    updatePanel(lightPanel, r);
+  function renderPreviews() {
+    applyTopbar(state.base);
+    baseSwatch.style.background = '#' + state.base;
+    basePicker.value = '#' + state.base;
+    if (document.activeElement !== baseText) baseText.value = state.base;
+
+    const lightSpecHex = state.appliedLight || state.base;
+    const darkSpecHex  = state.appliedDark  || state.base;
+
+    renderPanel(previewLight, lightSpecHex, state.light, lightRatioEl, lightPillsEl, lightFgHex);
+    renderPanel(previewDark,  darkSpecHex,  state.dark,  darkRatioEl,  darkPillsEl,  darkFgHex);
   }
 
-  function renderDarkPanel(hex) {
-    const r = contrastRatio('#' + hex, lastValidDarkBg);
-    updatePanel(darkPanel, r);
-  }
-
-  /**
-   * Toggle error state on the main hex input and error message.
-   */
-  function setErrorState(isError) {
-    hexInput.setAttribute('aria-invalid', isError ? 'true' : 'false');
-    hexInput.classList.toggle('input--error', isError);
-    errorMsg.hidden = !isError;
-  }
-
-  function setBgErrorState(input, errorEl, isError) {
-    input.setAttribute('aria-invalid', isError ? 'true' : 'false');
-    input.classList.toggle('input--error', isError);
-    errorEl.hidden = !isError;
-  }
-
-  /**
-   * Remove the selected ring from whichever swatch is currently active.
-   */
-  function clearSelectedSwatch() {
-    const prev1 = swatchList.querySelector('.swatch-btn--selected');
-    if (prev1) prev1.classList.remove('swatch-btn--selected');
-    const prev2 = swatchList.querySelector('.swatch-pair--selected');
-    if (prev2) prev2.classList.remove('swatch-pair--selected');
-  }
-
-  function clearPairs() {
-    swatchList.innerHTML = '';
-    distWarning.hidden = true;
-    swatchRow.hidden = true;
-  }
-
-  /**
-   * Render the pair swatch row from an array of { lightHex, darkHex, distance }.
-   */
-  function renderPairs(pairs) {
-    swatchList.innerHTML = '';
-    for (const p of pairs) {
-      const li = document.createElement('li');
-      li.className = 'swatch-item';
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'swatch-pair';
-      btn.setAttribute('aria-label',
-        'Variant pair ' + p.lightHex + ' on light, ' + p.darkHex + ' on dark \u2014 click to preview');
-
-      const lightHalf = document.createElement('span');
-      lightHalf.className = 'swatch-pair__half swatch-pair__half--light';
-      lightHalf.style.background = p.lightHex;
-      lightHalf.setAttribute('aria-hidden', 'true');
-
-      const darkHalf = document.createElement('span');
-      darkHalf.className = 'swatch-pair__half swatch-pair__half--dark';
-      darkHalf.style.background = p.darkHex;
-      darkHalf.setAttribute('aria-hidden', 'true');
-
-      btn.appendChild(lightHalf);
-      btn.appendChild(darkHalf);
-
-      btn.addEventListener('click', () => {
-        // D-07: each panel uses its own shade; D-08: do NOT update hex input
-        const lightNoHash = p.lightHex.slice(1);
-        const darkNoHash  = p.darkHex.slice(1);
-        // visual: --user-colour follows the light shade for the light panel
-        applyColor(lightNoHash);
-        renderLightPanel(lightNoHash);
-        // For dark panel, set sample colour locally via direct style on dark panel
-        // sample text — overrides the --user-colour cascade until user types a new hex.
-        darkPanel.querySelectorAll('.sample-text').forEach(el => el.style.color = p.darkHex);
-        renderDarkPanel(darkNoHash);
-        clearSelectedSwatch();
-        btn.classList.add('swatch-pair--selected');
-      });
-
-      const label = document.createElement('span');
-      label.className = 'swatch-pair-hex';
-      label.textContent = p.lightHex + ' / ' + p.darkHex;
-
-      li.appendChild(btn);
-      li.appendChild(label);
-      swatchList.appendChild(li);
+  function renderAlts() {
+    altsEl.innerHTML = '';
+    if (state.alts.length === 0) {
+      for (let i = 0; i < 5; i++) {
+        const el = document.createElement('div');
+        el.className = 'alt placeholder';
+        el.innerHTML = '<div class="chips"><span class="chip"></span></div><div class="hex mono">\u2014</div>';
+        altsEl.appendChild(el);
+      }
+      return;
     }
-
-    const showWarning = pairs.length > 0 && pairs[0].distance > DISTANCE_WARNING_THRESHOLD;
-    distWarning.hidden = !showWarning;
-    swatchRow.hidden = false;
+    state.alts.forEach(a => {
+      const el = document.createElement('div');
+      const isShade = a.lightHex !== a.darkHex;
+      el.className = 'alt' + (isShade ? '' : ' single');
+      el.style.setProperty('--alt-colour', '#' + a.lightHex);
+      el.style.setProperty('--alt-light',  '#' + a.lightHex);
+      el.style.setProperty('--alt-dark',   '#' + a.darkHex);
+      el.title = isShade ? 'Light #' + a.lightHex + ' \u00b7 Dark #' + a.darkHex : '#' + a.lightHex;
+      el.innerHTML =
+        '<div class="chips">' +
+          '<span class="chip light"></span>' +
+          (isShade ? '<span class="chip dark"></span>' : '') +
+        '</div>' +
+        '<div class="hex mono">' +
+          (isShade ? (a.lightHex + ' / ' + a.darkHex) : ('#' + a.lightHex)) +
+        '</div>';
+      el.addEventListener('click', () => {
+        state.appliedLight = a.lightHex;
+        state.appliedDark  = a.darkHex;
+        renderPreviews();
+        renderAlts();
+      });
+      if (state.appliedLight === a.lightHex && state.appliedDark === a.darkHex) {
+        el.style.outline = '2px solid var(--topbar-fg)';
+        el.style.outlineOffset = '2px';
+      }
+      altsEl.appendChild(el);
+    });
   }
 
   /**
-   * Debounced write of current state to window.location.hash.
+   * Run findVariantPairs and post-filter by the active target threshold.
+   * findVariantPairs uses AA (4.5) internally — for AAA we drop pairs whose
+   * contrast against either bg falls below 7.0. See SUMMARY "threshold"
+   * decision: chose post-filter over refactoring variant-search to keep
+   * its AA-compliance invariant intact for other callers/tests.
    */
+  function autoFindAndApply() {
+    const pairs = findVariantPairs('#' + state.base, '#' + state.light, '#' + state.dark) || [];
+    const threshold = state.target === 'AAA' ? 7.0 : 4.5;
+    const filtered = pairs.filter(p => {
+      const lr = contrastRatio(p.lightHex, '#' + state.light);
+      const dr = contrastRatio(p.darkHex,  '#' + state.dark);
+      return lr !== null && dr !== null && lr >= threshold && dr >= threshold;
+    }).map(p => ({
+      lightHex: p.lightHex.replace(/^#/, '').toUpperCase(),
+      darkHex:  p.darkHex.replace(/^#/, '').toUpperCase(),
+      distance: p.distance,
+    }));
+    state.alts = filtered;
+    if (filtered.length > 0 && (state.appliedLight === null || state.appliedDark === null)) {
+      state.appliedLight = filtered[0].lightHex;
+      state.appliedDark  = filtered[0].darkHex;
+    }
+    if (filtered.length === 0) {
+      state.appliedLight = null;
+      state.appliedDark  = null;
+    }
+    renderAlts();
+    renderPreviews();
+  }
+
+  function setBase(hex) {
+    const parsed = parseHex(hex);
+    if (!parsed) return;
+    state.base = expandHex(hex.replace(/^#/, ''));
+    baseText.value = state.base;
+    basePicker.value = '#' + state.base;
+    baseSwatch.style.background = '#' + state.base;
+    state.appliedLight = null;
+    state.appliedDark = null;
+    autoFindAndApply();
+    scheduleUrlSync();
+  }
+
+  function setLightBg(hex) {
+    const parsed = parseHex(hex);
+    if (!parsed) return;
+    state.light = expandHex(hex.replace(/^#/, ''));
+    lightBgText.value = state.light;
+    lightBgPicker.value = '#' + state.light;
+    // Parent .swatch-sm span holds the visible swatch background.
+    if (lightBgPicker.parentElement) lightBgPicker.parentElement.style.background = '#' + state.light;
+    autoFindAndApply();
+    scheduleUrlSync();
+  }
+
+  function setDarkBg(hex) {
+    const parsed = parseHex(hex);
+    if (!parsed) return;
+    state.dark = expandHex(hex.replace(/^#/, ''));
+    darkBgText.value = state.dark;
+    darkBgPicker.value = '#' + state.dark;
+    if (darkBgPicker.parentElement) darkBgPicker.parentElement.style.background = '#' + state.dark;
+    autoFindAndApply();
+    scheduleUrlSync();
+  }
+
+  /**
+   * Wire a hex text input: sanitise on input and call setter when we have
+   * a valid 3- or 6-char hex.
+   */
+  function wireHexInput(inputEl, setter) {
+    inputEl.addEventListener('input', (e) => {
+      const v = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
+      e.target.value = v;
+      if ((v.length === 3 || v.length === 6) && parseHex(v)) setter(v);
+    });
+  }
+  wireHexInput(baseText,    setBase);
+  wireHexInput(lightBgText, setLightBg);
+  wireHexInput(darkBgText,  setDarkBg);
+
+  basePicker.addEventListener('input',    (e) => setBase(e.target.value));
+  lightBgPicker.addEventListener('input', (e) => setLightBg(e.target.value));
+  darkBgPicker.addEventListener('input',  (e) => setDarkBg(e.target.value));
+
+  // AA / AAA segmented toggle — reads the data-target attribute via .dataset.target
+  targetToggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('.target-opt');
+    if (!btn) return;
+    state.target = btn.dataset.target;
+    targetToggle.querySelectorAll('.target-opt').forEach(b => b.classList.toggle('is-active', b === btn));
+    state.appliedLight = null;
+    state.appliedDark  = null;
+    autoFindAndApply();
+  });
+
+  // Find button — re-roll with "Searching…" label
+  findBtn.addEventListener('click', () => {
+    findBtn.disabled = true;
+    findLabel.textContent = 'Searching\u2026';
+    setTimeout(() => {
+      state.appliedLight = null;
+      state.appliedDark  = null;
+      autoFindAndApply();
+      findBtn.disabled = false;
+      findLabel.textContent = 'Find 5';
+    }, 20);
+  });
+
+  // Copy buttons — delegated. Reads textContent of #[data-copy-target], strips leading #.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    e.preventDefault();
+    const targetId = btn.dataset.copyTarget;
+    if (!targetId) return;
+    const src = document.getElementById(targetId);
+    if (!src) return;
+    const text = (src.textContent || '').trim().replace(/^#/, '');
+    if (!text) return;
+    const done = () => {
+      btn.classList.add('copied');
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(() => btn.classList.remove('copied'), 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(done);
+    } else {
+      done();
+    }
+  });
+
+  // Mobile tabs — swap .is-visible between the two preview panels
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const which = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        const active = b.dataset.tab === which;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', String(active));
+      });
+      previewLight.classList.toggle('is-visible', which === 'light');
+      previewDark.classList.toggle('is-visible',  which === 'dark');
+    });
+  });
+
+  // URL hash hydrate + debounced sync
   function scheduleUrlSync() {
     if (urlSyncTimer !== null) clearTimeout(urlSyncTimer);
     urlSyncTimer = setTimeout(() => {
       const hash = buildHashPath({
-        fg: lastValidHex.toLowerCase(),
-        lightBg: lastValidLightBg.replace(/^#/, '').toLowerCase(),
-        darkBg:  lastValidDarkBg.replace(/^#/, '').toLowerCase(),
+        fg: state.base.toLowerCase(),
+        lightBg: state.light.toLowerCase(),
+        darkBg:  state.dark.toLowerCase(),
       });
       history.replaceState(null, '', hash);
       urlSyncTimer = null;
     }, URL_DEBOUNCE_MS);
   }
 
-  // --- BG input handlers ---
-
-  lightBgInput.addEventListener('input', () => {
-    const raw = lightBgInput.value.trim();
-    const parsed = parseHex(raw);
-    if (parsed !== null) {
-      lastValidLightBg = '#' + expandHex(raw.replace(/^#/, '')).toLowerCase();
-      setBgErrorState(lightBgInput, lightBgError, false);
-      applyLightBg(lastValidLightBg);
-      render(lastValidHex);
-      clearPairs();          // D-12
-      scheduleUrlSync();
-    } else {
-      setBgErrorState(lightBgInput, lightBgError, true);
-    }
-  });
-
-  darkBgInput.addEventListener('input', () => {
-    const raw = darkBgInput.value.trim();
-    const parsed = parseHex(raw);
-    if (parsed !== null) {
-      lastValidDarkBg = '#' + expandHex(raw.replace(/^#/, '')).toLowerCase();
-      setBgErrorState(darkBgInput, darkBgError, false);
-      applyDarkBg(lastValidDarkBg);
-      render(lastValidHex);
-      clearPairs();          // D-12
-      scheduleUrlSync();
-    } else {
-      setBgErrorState(darkBgInput, darkBgError, true);
-    }
-  });
-
-  // --- Main hex input handler ---
-  hexInput.addEventListener('input', () => {
-    clearSelectedSwatch();
-    // Clear inline dark-panel preview colour so the cascade reasserts.
-    darkPanel.querySelectorAll('.sample-text').forEach(el => el.style.color = '');
-    const raw = hexInput.value.trim();
-    const parsed = parseHex(raw);
-
-    if (parsed !== null) {
-      lastValidHex = expandHex(raw.replace(/^#/, ''));
-      setErrorState(false);
-      render(lastValidHex);
-      scheduleUrlSync();
-    } else {
-      setErrorState(true);
-      // Do not call render — panels keep displaying lastValidHex
-    }
-  });
-
-  // --- Find button handler — D-01: manual trigger ---
-  findBtn.addEventListener('click', () => {
-    const originalLabel = findBtn.textContent;
-    findBtn.disabled = true;
-    findBtn.textContent = 'Finding\u2026';
-
-    const results = findVariantPairs('#' + lastValidHex, lastValidLightBg, lastValidDarkBg);
-
-    findBtn.disabled = false;
-    findBtn.textContent = originalLabel;
-
-    if (results && results.length > 0) {
-      renderPairs(results);
-    } else {
-      // Empty state per UI-SPEC Copywriting
-      swatchList.innerHTML = '';
-      distWarning.hidden = false;
-      distWarning.textContent = 'No accessible pair found for this colour.';
-      swatchRow.hidden = false;
-    }
-  });
-
-  // --- AA/AAA segmented toggle ---
-  // currentThreshold is captured for future filtering (Plan 05-03 or later consumer).
-  const aaToggleBtns = document.querySelectorAll('.aa-toggle-btn');
-  let currentThreshold = 'AA'; // eslint-disable-line no-unused-vars
-  aaToggleBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentThreshold = btn.dataset.threshold;
-      aaToggleBtns.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-    });
-  });
-
-  // --- Copy-to-clipboard buttons ---
-  document.querySelectorAll('.copy-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      // The hex value sits before the pill-divider, which sits before this button.
-      // Walk backwards to find the nearest .hex-value sibling in the pill.
-      const pill = btn.closest('.hex-pill');
-      const target = pill ? pill.querySelector('.hex-value') : null;
-      const raw = target ? (target.value !== undefined ? target.value : target.textContent).trim().replace(/^#/, '') : '';
-      if (!raw) return;
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(raw);
-        }
-        const live = document.getElementById('copy-live');
-        if (live) {
-          live.textContent = '';
-          live.textContent = 'Copied';
-          setTimeout(() => { live.textContent = ''; }, 1500);
-        }
-      } catch (_e) { /* silent on unsupported environments */ }
-    });
-  });
-
-  // --- Mobile tabs (Light / Dark) — UI-02, A11Y-02 ---
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const panelLight = document.querySelector('.panel--light');
-  const panelDark  = document.querySelector('.panel--dark');
-
-  function syncTabs(activePanel) {
-    tabBtns.forEach(b => b.setAttribute('aria-selected', String(b.dataset.panel === activePanel)));
-    if (panelLight) panelLight.hidden = (activePanel !== 'light');
-    if (panelDark)  panelDark.hidden  = (activePanel !== 'dark');
-  }
-
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => syncTabs(btn.dataset.panel));
-  });
-
-  function applyTabState() {
-    const isMobile = window.matchMedia('(max-width: 700px)').matches;
-    if (!isMobile) {
-      if (panelLight) panelLight.hidden = false;
-      if (panelDark)  panelDark.hidden  = false;
-    } else {
-      const active = document.querySelector('.tab-btn[aria-selected="true"]');
-      syncTabs(active ? active.dataset.panel : 'light');
-    }
-  }
-  window.addEventListener('resize', applyTabState);
-  applyTabState();
-
-  // --- Page load hydration ---
   function hydrateFromUrl() {
     const parsed = parseHashState(window.location.hash);
-    const state = parsed ?? {
-      fg: HEX_DEFAULT.toLowerCase(),
-      lightBg: 'ffffff',
-      darkBg: '000000',
-    };
-    lastValidHex     = state.fg.toUpperCase();
-    lastValidLightBg = '#' + state.lightBg;
-    lastValidDarkBg  = '#' + state.darkBg;
-    hexInput.value      = lastValidHex;
-    lightBgInput.value  = state.lightBg;
-    darkBgInput.value   = state.darkBg;
-    applyLightBg(lastValidLightBg);
-    applyDarkBg(lastValidDarkBg);
-    render(lastValidHex);
+    if (parsed) {
+      state.base  = parsed.fg.toUpperCase();
+      state.light = parsed.lightBg.toUpperCase();
+      state.dark  = parsed.darkBg.toUpperCase();
+    }
+    // Sync visible inputs to state
+    baseText.value      = state.base;
+    basePicker.value     = '#' + state.base;
+    baseSwatch.style.background = '#' + state.base;
+    lightBgText.value   = state.light;
+    lightBgPicker.value  = '#' + state.light;
+    if (lightBgPicker.parentElement) lightBgPicker.parentElement.style.background = '#' + state.light;
+    darkBgText.value    = state.dark;
+    darkBgPicker.value   = '#' + state.dark;
+    if (darkBgPicker.parentElement) darkBgPicker.parentElement.style.background = '#' + state.dark;
   }
-  document.addEventListener('DOMContentLoaded', hydrateFromUrl);
-  // belt-and-braces immediate call (script is a module, defer applies)
+
+  // Initial boot
   hydrateFromUrl();
+  autoFindAndApply();
 }

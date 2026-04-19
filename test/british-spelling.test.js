@@ -75,6 +75,15 @@ const COLOR_ALLOW = [
   'American spelling', // the CLAUDE convention comment in app.js
   'type="color"',      // HTML native <input type="color"> — American-by-spec
   "type='color'",
+  // HTML id attributes wired to native <input type="color"> pickers in the
+  // 05-04 mockup DOM. The IDs are American-by-spec (mirror the element's
+  // type="color" attribute). See 05-06 deviation note.
+  "'base-color'",
+  "'light-bg-color'",
+  "'dark-bg-color'",
+  '"base-color"',
+  '"light-bg-color"',
+  '"dark-bg-color"',
 ];
 
 function isAllowed(line, allowList) {
