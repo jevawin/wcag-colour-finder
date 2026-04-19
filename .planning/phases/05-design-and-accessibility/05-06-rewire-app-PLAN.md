@@ -30,7 +30,7 @@ must_haves:
   artifacts:
     - path: "app.js"
       provides: "DOM wiring against new mockup IDs + auto-find pipeline + segmented toggle + topbar-fg derivation + copy buttons"
-      exports: ["buildBadgeState", "expandHex", "formatRatio", "chooseChromeForeground"]
+      exports: ["buildBadgeState", "expandHex", "formatRatio", "chooseChromeForeground", "buildPillHTML"]
     - path: "test/app.test.js"
       provides: "Updated assertions matching new API surface"
   key_links:

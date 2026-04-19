@@ -7,6 +7,9 @@ depends_on:
   - 05-07
 files_modified:
   - .planning/phases/05-design-and-accessibility/05-VERIFICATION.md
+  - .planning/ROADMAP.md
+  - .planning/REQUIREMENTS.md
+  - .planning/STATE.md
 autonomous: false
 gap_closure: true
 requirements:

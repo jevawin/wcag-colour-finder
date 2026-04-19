@@ -18,7 +18,7 @@ must_haves:
     - "DOM matches mockup structure: .topbar-wrap > .topbar > .title-row + .controls(.row-one + .row-two > .alts) + .previews > .preview.is-light + .preview.is-dark"
     - "Hex input, Find button, segmented AA|AAA toggle live inside .topbar"
     - "Each preview has fg-tag (label + swatch + hex span + copy button SVG) and bg-tag (colour-input + hash + text input)"
-    - "Each preview has a .ratio span + .pills container + .heading 'The quick brown fox' + .para + .digits row '0 1 2 3 4 5 6 7 8 9'"
+    - "Each preview has a .ratio span + .pills container (aria-live=\"polite\") + .heading 'The quick brown fox' + .para + .digits row '0 1 2 3 4 5 6 7 8 9'"
     - "No .sample-text contenteditable elements remain in markup"
   artifacts:
     - path: "index.html"
@@ -103,8 +103,8 @@ Output: new index.html that visually matches the mockup skeleton (CSS comes in 0
          - `<span class="tag-label is-bg">Background colour</span>`
          - `<div class="fg-tag"> <span class="fg-swatch"></span> <span id="light-fg-hex">#2563EB</span> <button class="copy-btn" type="button" data-copy-target="light-fg-hex" aria-label="Copy hex"> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="8" height="9" rx="1.2"/><path d="M3 10V3.2A1.2 1.2 0 0 1 4.2 2H10"/></svg> </button> </div>`
          - `<div class="bg-tag"> <span class="swatch-sm" style="background:#ffffff"> <input type="color" id="light-bg-color" value="#ffffff" aria-label="Light background"> </span> <span class="hash-sm mono">#</span> <input id="light-bg-text" type="text" value="FFFFFF" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Light background hex colour"> </div>`
-         - `<div class="preview-inner"> <div class="ratio-row"> <div class="ratio mono"><span id="light-ratio">—</span></div> <div class="pills" id="light-pills"></div> </div> <h2 class="heading">The quick brown fox</h2> <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p> <p class="digits">0 1 2 3 4 5 6 7 8 9</p> </div>`
-       - `<div class="preview is-dark" id="preview-dark">` — mirror structure with `dark-fg-hex`, `dark-bg-color` (value="#111111"), `dark-bg-text` (value="111111", aria-label="Dark background hex colour"), `dark-ratio`, `dark-pills`.
+         - `<div class="preview-inner"> <div class="ratio-row"> <div class="ratio mono"><span id="light-ratio">—</span></div> <div class="pills" id="light-pills" aria-live="polite"></div> </div> <h2 class="heading">The quick brown fox</h2> <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p> <p class="digits">0 1 2 3 4 5 6 7 8 9</p> </div>`
+       - `<div class="preview is-dark" id="preview-dark">` — mirror structure with `dark-fg-hex`, `dark-bg-color` (value="#111111"), `dark-bg-text` (value="111111", aria-label="Dark background hex colour"), `dark-ratio`, `dark-pills` (also `aria-live="polite"`).
 
     Remove entirely from the current file: `.control-zone`, `.preview-zone`, `.aa-toggle`, `.hex-pill` (old pattern), all `contenteditable` attributes, all `.sample-text` / `.sample-heading` / `.sample-para` / `.numerals` classes, `#swatch-row` / `.swatch-list` / `.distance-warning` / `#top-zone-warning` / `#copy-live`, the old `.preview-field` / `.badge-area` / `.badge` markup.
 
@@ -123,6 +123,8 @@ Output: new index.html that visually matches the mockup skeleton (CSS comes in 0
     - `grep -c 'data-copy-target="light-fg-hex"' index.html` → 1 and same for dark
     - `grep -c 'id="light-ratio"' index.html` → 1, `grep -c 'id="dark-ratio"' index.html` → 1
     - `grep -c 'class="pills"' index.html` → 2
+    - `grep -c 'id="light-pills" aria-live="polite"' index.html` → 1
+    - `grep -c 'id="dark-pills" aria-live="polite"' index.html` → 1
     - `grep -c 'class="heading"' index.html` → 2
     - `grep -c 'class="digits"' index.html` → 2
     - `grep -c 'The quick brown fox' index.html` → 2
