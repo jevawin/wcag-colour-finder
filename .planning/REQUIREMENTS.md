@@ -51,6 +51,7 @@
 - [x] **UI-01**: Minimal monochrome UI — black/white chrome, colour only from user input
 - [x] **UI-02**: Clean, modern layout inspired by colourcontrast.cc
 - [x] **UI-03**: British spelling throughout (colour, not color)
+- [x] **UI-04**: Specimens (`.heading`, `.para`, `.digits`) are editable in both preview panels and mirror across panels via `input` events (no persistence) — reinstates PNL-03 after Phase 5 regression
 
 ### Accessibility
 
@@ -94,7 +95,7 @@
 | CON-05 | Phase 2 | Complete |
 | PNL-01 | Phase 2 | Complete |
 | PNL-02 | Phase 2 | Complete |
-| PNL-03 | Phase 2 | Complete |
+| PNL-03 | Phase 2 / 05.1 | Complete (reinstated via UI-04) |
 | VAR-01 | Phase 3 | Complete |
 | VAR-02 | Phase 3 | Complete |
 | VAR-03 | Phase 3 | Complete |
@@ -109,6 +110,7 @@
 | UI-01 | Phase 5 | Complete |
 | UI-02 | Phase 5 | Complete |
 | UI-03 | Phase 5 | Complete |
+| UI-04 | Phase 05.1 | Complete |
 | A11Y-01 | Phase 5 | Complete |
 | A11Y-02 | Phase 5 | Complete |
 | A11Y-03 | Phase 5 | Complete |
