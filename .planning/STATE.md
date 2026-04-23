@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 05-08-a11y-reaudit-PLAN.md — Phase 5 and v1.0 milestone complete
-last_updated: "2026-04-23T22:04:33.316Z"
-last_activity: 2026-04-23 -- Phase 05.1 execution started
+last_updated: "2026-04-23T22:16:10.778Z"
+last_activity: 2026-04-23
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 16
-  completed_plans: 15
+  completed_plans: 16
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 
 ## Current Position
 
-Phase: 05.1 (reinstate-editable-specimens) — EXECUTING
-Plan: 1 of 1
+Phase: 06
+Plan: Not started
 Status: Executing Phase 05.1
-Last activity: 2026-04-23 -- Phase 05.1 execution started
+Last activity: 2026-04-23
 
 Progress: [██████████] 100% (all 5 phases and 15 plans complete)
 
