@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: colour-engine
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: passed
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-12
+validated: 2026-04-23
 ---
 
 # Phase 1 — Validation Strategy
@@ -38,11 +39,11 @@ created: 2026-04-12
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | SC-1 (hex parsing) | unit | `node --test test/colour-engine.test.js` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | SC-2 (luminance) | unit | `node --test test/colour-engine.test.js` | ❌ W0 | ⬜ pending |
-| 01-01-03 | 01 | 1 | SC-3 (contrast ratio) | unit | `node --test test/colour-engine.test.js` | ❌ W0 | ⬜ pending |
-| 01-01-04 | 01 | 1 | SC-4 (OKLab/OKLCH) | unit | `node --test test/colour-engine.test.js` | ❌ W0 | ⬜ pending |
-| 01-01-05 | 01 | 1 | SC-5 (pure, no DOM) | structural | `node --test test/colour-engine.test.js` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | SC-1 (hex parsing) | unit | `node --test test/colour-engine.test.js` | ✅ | ✅ green |
+| 01-01-02 | 01 | 1 | SC-2 (luminance) | unit | `node --test test/colour-engine.test.js` | ✅ | ✅ green |
+| 01-01-03 | 01 | 1 | SC-3 (contrast ratio) | unit | `node --test test/colour-engine.test.js` | ✅ | ✅ green |
+| 01-01-04 | 01 | 1 | SC-4 (OKLab/OKLCH) | unit | `node --test test/colour-engine.test.js` | ✅ | ✅ green |
+| 01-01-05 | 01 | 1 | SC-5 (pure, no DOM) | structural | `node --test test/colour-engine.test.js` | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -50,10 +51,10 @@ created: 2026-04-12
 
 ## Wave 0 Requirements
 
-- [ ] `test/colour-engine.test.js` — test file covering all five success criteria
-- [ ] `colour-engine.js` — the ES module under test (greenfield)
+- [x] `test/colour-engine.test.js` — test file covering all five success criteria
+- [x] `colour-engine.js` — the ES module under test (greenfield)
 
-*Wave 0 creates both files from scratch.*
+*Wave 0 shipped during Phase 1 execution.*
 
 ---
 
@@ -65,11 +66,23 @@ created: 2026-04-12
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 2s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 2s (~45ms actual)
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** signed off 2026-04-23 — `node --test test/colour-engine.test.js` → 35 pass / 0 fail
+
+---
+
+## Validation Audit 2026-04-23
+
+| Metric | Count |
+|--------|-------|
+| Gaps found | 0 |
+| Resolved | 0 |
+| Escalated | 0 |
+
+Tests shipped during Phase 1 execution but frontmatter never flipped. Audit re-ran suite: 35/35 green across hex parse, luminance, contrast, OKLab/OKLCH, round-trip, perceptual distance. All 5 SCs covered. Flags flipped to compliant.
