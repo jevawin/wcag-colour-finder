@@ -48,7 +48,6 @@ h1 {
   font-size: 20px; font-weight: 400; margin: 0;
   line-height: 1.4;
   text-align: left;
-  opacity: 0.85;
   max-width: 720px;
 }
 .credit {
@@ -56,7 +55,6 @@ h1 {
   top: 44px; right: 32px;
   font-size: 16px;
   color: var(--topbar-fg);
-  opacity: 0.85;
   line-height: 1;
 }
 .credit a {
@@ -282,6 +280,14 @@ h1 {
   color: var(--specimen, currentColor);
   line-height: 1;
 }
+/* A11Y-03 fix: tag-labels are UI chrome — must pass 4.5:1 on panel background */
+.preview.is-light .tag-label { color: #555555; }
+.preview.is-dark .tag-label { color: #d1d5db; }
+/* A11Y-03 fix: fg-tag/bg-tag hex text must pass on panel bg regardless of user colour */
+.preview.is-light .fg-tag { color: var(--ink); }
+.preview.is-light .bg-tag .hash-sm,
+.preview.is-light .bg-tag input[type="text"] { color: var(--ink); }
+.preview.is-light .copy-btn { color: var(--ink); border-left-color: var(--specimen, currentColor); }
 .preview .tag-label.is-fg { left: 32px; }
 .preview .tag-label.is-bg { right: 32px; }
 
@@ -369,6 +375,11 @@ h1 {
 .pill.fail { background: transparent; color: var(--specimen, currentColor); opacity: 0.45; }
 .pill .glyph { font-size: 16px; line-height: 1; }
 .pill-label { font-size: 16px; color: var(--specimen, currentColor); opacity: 0.8; font-weight: 500; padding-left: 2px; }
+/* A11Y-03 fix: pill-labels and fail pills must pass 4.5:1 regardless of user colour */
+.preview.is-light .pill-label { color: #555555; opacity: 1; }
+.preview.is-light .pill.fail { color: #555555; opacity: 1; border-color: #d1d5db; }
+.preview.is-dark .pill-label { color: #d1d5db; opacity: 1; }
+.preview.is-dark .pill.fail { color: #d1d5db; opacity: 1; border-color: #4b5563; }
 
 /* Specimen */
 .heading {
