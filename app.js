@@ -401,6 +401,28 @@ if (typeof document !== 'undefined') {
     const classes = ['.heading', '.para', '.digits'];
     let mirroring = false;
 
+    // Paste handler: strip formatting by inserting plain text at caret.
+    // Guarantees the input event fires and the source panel stays clean.
+    const handlePaste = (el) => (e) => {
+      e.preventDefault();
+      const cd = e.clipboardData || window.clipboardData;
+      const text = cd ? cd.getData('text/plain') : '';
+      const selx = window.getSelection();
+      if (selx && selx.rangeCount > 0) {
+        const range = selx.getRangeAt(0);
+        range.deleteContents();
+        const node = document.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        range.collapse(true);
+        selx.removeAllRanges();
+        selx.addRange(range);
+      } else {
+        el.textContent = text;
+      }
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
     for (const sel of classes) {
       const a = light.querySelector(sel);
       const b = dark.querySelector(sel);
@@ -418,6 +440,9 @@ if (typeof document !== 'undefined') {
         a.textContent = b.textContent;
         mirroring = false;
       });
+
+      a.addEventListener('paste', handlePaste(a));
+      b.addEventListener('paste', handlePaste(b));
     }
   }
   wireSpecimenSync();
