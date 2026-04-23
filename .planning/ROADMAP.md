@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches (completed 2026-04-12)
 - [ ] **Phase 4: Modes and Configuration** - Dual-colour mode, custom background inputs, URL sharing
 - [x] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard (completed 2026-04-23)
+- [ ] **Phase 6: Gap Closure — VAR-05 + Orphan Cleanup** - Restore empty-state messaging, remove unused export, backfill Nyquist validation
 
 ## Phase Details
 
@@ -107,10 +108,23 @@ Plans:
 - [x] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.
 **UI hint**: yes
 
+### Phase 6: Gap Closure — VAR-05 + Orphan Cleanup
+**Goal**: Close v1.0 audit tech-debt items — restore explicit empty-state copy + SR announcement for VAR-05, remove orphan `DISTANCE_WARNING_THRESHOLD` export, backfill Nyquist validation across phases 1–5
+**Depends on**: Phase 5
+**Requirements**: VAR-05 (regression)
+**Gap Closure**: Closes tech_debt items from .planning/v1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. When `state.alts.length === 0`, an explicit text line ("No accessible pair found for this colour" or equivalent British copy) renders in place of em-dash placeholders
+  2. Empty-state change triggers an `announce()` call via `#sr-status` live region
+  3. `DISTANCE_WARNING_THRESHOLD` either consumed by UI (threshold-based warning) or removed from variant-search.js exports
+  4. All 5 VALIDATION.md files reach `nyquist_compliant: true` via `/gsd:validate-phase 1..5`
+  5. Re-run `/gsd:audit-milestone` reports `status: complete` with empty tech_debt
+**Plans:** TBD (run `/gsd:plan-phase 6`)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -119,3 +133,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. Variant Search | 2/2 | Complete   | 2026-04-12 |
 | 4. Modes and Configuration | 0/? | Not started | - |
 | 5. Design and Accessibility | 8/8 | Complete | 2026-04-23 |
+| 6. Gap Closure — VAR-05 + Orphan Cleanup | 0/? | Not started | - |

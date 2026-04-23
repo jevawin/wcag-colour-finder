@@ -32,7 +32,7 @@
 - [x] **VAR-02**: Returns ~5 accessible colour variants displayed as clickable swatches
 - [x] **VAR-03**: Clicking a swatch updates both panels to preview that variant
 - [x] **VAR-04**: Variants are as close to the original colour as possible (perceptual distance)
-- [x] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input
+- [ ] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input (regressed in Phase 5 rebuild — reassigned to Phase 6)
 
 ### Colour Modes
 
@@ -99,7 +99,7 @@
 | VAR-02 | Phase 3 | Complete |
 | VAR-03 | Phase 3 | Complete |
 | VAR-04 | Phase 3 | Complete |
-| VAR-05 | Phase 3 | Complete |
+| VAR-05 | Phase 6 | Pending |
 | MODE-01 | Phase 4 | DROPPED |
 | MODE-02 | Phase 4 | Complete |
 | MODE-03 | Phase 4 | DROPPED |
@@ -115,9 +115,9 @@
 
 **Coverage:**
 - v1 requirements: 22 total (+ Phase 1 engine foundation with no explicit req IDs)
-- Mapped to phases: 22 (20 active, 2 DROPPED in Phase 4)
+- Mapped to phases: 22 (19 complete, 1 pending regression, 2 DROPPED in Phase 4)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-12*
-*Last updated: 2026-04-23 — Phase 5 closeout — A11Y-01/A11Y-02/A11Y-03 confirmed complete via axe-core + keyboard + VoiceOver audit.*
+*Last updated: 2026-04-23 — Phase 6 gap closure opened — VAR-05 reassigned from Phase 3 to Phase 6 (Phase 5 rebuild removed empty-state copy).*
