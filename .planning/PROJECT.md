@@ -84,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-18 — Phase 4 (Modes and Configuration) complete*
+*Last updated: 2026-04-23 — Phase 05.1 (Reinstate Editable Specimens) complete — PNL-03/UI-04 back online with cross-panel mirror and paste-strip*
