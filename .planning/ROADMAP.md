@@ -108,6 +108,22 @@ Plans:
 - [x] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.
 **UI hint**: yes
 
+### Phase 05.1: reinstate-editable-specimens (INSERTED)
+
+**Goal:** Make the three specimen text elements (heading, paragraph, digits) editable in both preview panels. Edits in one panel mirror to the other. No persistence across reloads.
+**Requirements**: UI-04 (new — editable specimens)
+**Depends on:** Phase 5
+**Success Criteria** (what must be TRUE):
+  1. `.heading`, `.para`, `.digits` in both `#preview-light` and `#preview-dark` have `contenteditable="true"` and an appropriate `aria-label`
+  2. Editing any specimen element in one panel updates the matching element in the other panel in real time (`input` event)
+  3. Default copy restored on hard reload — no localStorage, no URL persistence
+  4. Focus outline visible when a specimen is focused; keyboard users can Tab to and edit each specimen
+  5. No new axe violations; existing contrast calc + sr-status announcements unaffected
+**Plans:** 1 plan
+
+Plans:
+- [ ] 05.1-01-editable-specimens-PLAN.md — reinstate contenteditable on .heading/.para/.digits in both panels + cross-panel input sync
+
 ### Phase 6: Gap Closure — VAR-05 + Orphan Cleanup
 **Goal**: Close v1.0 audit tech-debt items — restore explicit empty-state copy + SR announcement for VAR-05, remove orphan `DISTANCE_WARNING_THRESHOLD` export, backfill Nyquist validation across phases 1–5
 **Depends on**: Phase 5
