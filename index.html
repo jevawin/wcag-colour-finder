@@ -32,12 +32,12 @@
           </label>
           <button class="btn" id="find-btn"><span id="find-btn-label">Find 5</span><span>→</span></button>
           <div class="target-toggle" id="target-toggle" role="group" aria-label="Target WCAG level">
-            <button type="button" class="target-opt is-active" data-target="AA">AA</button>
-            <button type="button" class="target-opt" data-target="AAA">AAA</button>
+            <button type="button" class="target-opt is-active" data-target="AA" aria-pressed="true">AA</button>
+            <button type="button" class="target-opt" data-target="AAA" aria-pressed="false">AAA</button>
           </div>
         </div>
         <div class="row-two card">
-          <div class="alts" id="alts"></div>
+          <div class="alts" id="alts" aria-live="polite" aria-label="Colour pair suggestions"></div>
         </div>
       </div>
     </div>
@@ -109,6 +109,9 @@
       </div>
     </div>
   </section>
+
+  <!-- Screen-reader status announcements (visually hidden) -->
+  <span id="sr-status" aria-live="polite" aria-atomic="true" class="sr-only"></span>
 
 </main>
 </body>

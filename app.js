@@ -103,6 +103,14 @@ if (typeof document !== 'undefined') {
   const findBtn       = document.getElementById('find-btn');
   const findLabel     = document.getElementById('find-btn-label');
   const altsEl        = document.getElementById('alts');
+  const srStatus      = document.getElementById('sr-status');
+
+  /** Announce a message to screen readers via the sr-status live region. */
+  function announce(msg) {
+    srStatus.textContent = '';
+    // brief delay ensures live region re-fires even for repeated identical strings
+    requestAnimationFrame(() => { srStatus.textContent = msg; });
+  }
   const targetToggle  = document.getElementById('target-toggle');
   const topbar        = document.getElementById('topbar-wrap');
   const previewLight  = document.getElementById('preview-light');
@@ -208,13 +216,18 @@ if (typeof document !== 'undefined') {
         '<div class="hex mono">' +
           (isShade ? (a.lightHex + ' / ' + a.darkHex) : ('#' + a.lightHex)) +
         '</div>';
+      const isSelected = state.appliedLight === a.lightHex && state.appliedDark === a.darkHex;
+      el.setAttribute('aria-pressed', String(isSelected));
       el.addEventListener('click', () => {
         state.appliedLight = a.lightHex;
         state.appliedDark  = a.darkHex;
         renderPreviews();
         renderAlts();
+        announce(isShade
+          ? 'Applied pair: light #' + a.lightHex + ', dark #' + a.darkHex
+          : 'Applied #' + a.lightHex);
       });
-      if (state.appliedLight === a.lightHex && state.appliedDark === a.darkHex) {
+      if (isSelected) {
         el.classList.add('is-selected');
       }
       altsEl.appendChild(el);
@@ -313,7 +326,10 @@ if (typeof document !== 'undefined') {
     const btn = e.target.closest('.target-opt');
     if (!btn) return;
     state.target = btn.dataset.target;
-    targetToggle.querySelectorAll('.target-opt').forEach(b => b.classList.toggle('is-active', b === btn));
+    targetToggle.querySelectorAll('.target-opt').forEach(b => {
+      b.classList.toggle('is-active', b === btn);
+      b.setAttribute('aria-pressed', String(b === btn));
+    });
     state.appliedLight = null;
     state.appliedDark  = null;
     autoFindAndApply();
@@ -345,6 +361,7 @@ if (typeof document !== 'undefined') {
     if (!text) return;
     const done = () => {
       btn.classList.add('copied');
+      announce('Copied');
       clearTimeout(btn._copyTimer);
       btn._copyTimer = setTimeout(() => btn.classList.remove('copied'), 1200);
     };

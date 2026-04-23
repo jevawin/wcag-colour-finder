@@ -1,6 +1,9 @@
 /* style.css */
 /* WCAG Colour Finder — mockup-aligned styles (05-05 rebuild) */
 
+/* Visually hidden but screen-reader readable */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 :root {
   --ink: #111111;
   --ink-mute: #555555;
