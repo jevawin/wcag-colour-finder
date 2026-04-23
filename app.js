@@ -333,6 +333,7 @@ if (typeof document !== 'undefined') {
     state.appliedLight = null;
     state.appliedDark  = null;
     autoFindAndApply();
+    announce('Target ' + state.target + ' selected. ' + state.alts.length + ' pairs found.');
   });
 
   // Find button — re-roll with "Searching…" label
@@ -345,6 +346,7 @@ if (typeof document !== 'undefined') {
       autoFindAndApply();
       findBtn.disabled = false;
       findLabel.textContent = 'Find 5';
+      announce(state.alts.length + ' pairs found.');
     }, 20);
   });
 

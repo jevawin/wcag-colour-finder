@@ -30,14 +30,14 @@
             <span class="hash mono">#</span>
             <input id="base-text" type="text" value="2563EB" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code">
           </label>
-          <button class="btn" id="find-btn"><span id="find-btn-label">Find 5</span><span>→</span></button>
+          <button class="btn" id="find-btn"><span id="find-btn-label">Find 5</span><span aria-hidden="true">→</span></button>
           <div class="target-toggle" id="target-toggle" role="group" aria-label="Target WCAG level">
             <button type="button" class="target-opt is-active" data-target="AA" aria-pressed="true">AA</button>
             <button type="button" class="target-opt" data-target="AAA" aria-pressed="false">AAA</button>
           </div>
         </div>
         <div class="row-two card">
-          <div class="alts" id="alts" aria-live="polite" aria-label="Colour pair suggestions"></div>
+          <div class="alts" id="alts" aria-label="Colour pair suggestions"></div>
         </div>
       </div>
     </div>
@@ -73,7 +73,7 @@
       <div class="preview-inner">
         <div class="ratio-row">
           <div class="ratio mono"><span id="light-ratio">—</span></div>
-          <div class="pills" id="light-pills" aria-live="polite"></div>
+          <div class="pills" id="light-pills"></div>
         </div>
         <h2 class="heading">The quick brown fox</h2>
         <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p>
@@ -101,7 +101,7 @@
       <div class="preview-inner">
         <div class="ratio-row">
           <div class="ratio mono"><span id="dark-ratio">—</span></div>
-          <div class="pills" id="dark-pills" aria-live="polite"></div>
+          <div class="pills" id="dark-pills"></div>
         </div>
         <h2 class="heading">The quick brown fox</h2>
         <p class="para">Typography should be readable first. This paragraph uses the current base colour at 16&nbsp;px against the chosen background — the small-text benchmark for WCAG body copy.</p>
