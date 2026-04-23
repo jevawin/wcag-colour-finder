@@ -388,6 +388,40 @@ if (typeof document !== 'undefined') {
     });
   });
 
+  // --- Specimen cross-panel sync (UI-04) ---
+  // Edits in one preview panel mirror to the twin element in the other panel.
+  // textContent is used (not innerHTML) to strip any pasted markup on the twin.
+  // A mirroring-guard flag prevents the programmatic textContent write from
+  // re-entering its own input handler.
+  function wireSpecimenSync() {
+    const light = document.getElementById('preview-light');
+    const dark  = document.getElementById('preview-dark');
+    if (!light || !dark) return;
+
+    const classes = ['.heading', '.para', '.digits'];
+    let mirroring = false;
+
+    for (const sel of classes) {
+      const a = light.querySelector(sel);
+      const b = dark.querySelector(sel);
+      if (!a || !b) continue;
+
+      a.addEventListener('input', () => {
+        if (mirroring) return;
+        mirroring = true;
+        b.textContent = a.textContent;
+        mirroring = false;
+      });
+      b.addEventListener('input', () => {
+        if (mirroring) return;
+        mirroring = true;
+        a.textContent = b.textContent;
+        mirroring = false;
+      });
+    }
+  }
+  wireSpecimenSync();
+
   // URL hash hydrate + debounced sync
   function scheduleUrlSync() {
     if (urlSyncTimer !== null) clearTimeout(urlSyncTimer);
