@@ -120,4 +120,4 @@
 
 ---
 *Requirements defined: 2026-04-12*
-*Last updated: 2026-04-18 — Phase 4 closeout — MODE-01/MODE-03 dropped per D-01.*
+*Last updated: 2026-04-23 — Phase 5 closeout — A11Y-01/A11Y-02/A11Y-03 confirmed complete via axe-core + keyboard + VoiceOver audit.*

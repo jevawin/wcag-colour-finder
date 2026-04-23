@@ -1,7 +1,7 @@
 ---
 phase: 5
-status: gaps-found
-audited: 2026-04-19
+status: passed
+audited: 2026-04-23
 ---
 
 # Phase 5 — Verification
@@ -226,48 +226,64 @@ UI-01 is partially superseded by the new topbar model: `--user-colour` legitimat
 
 - `node --test test/british-spelling.test.js` — pass via full-suite run (88/88).
 
-### A11Y-01 axe-core DevTools scan — **pending human audit (Task 2)**
+### A11Y-01 axe-core DevTools scan — 2026-04-23
 
-| Hex value | Critical | Serious | Notes |
-| --- | --- | --- | --- |
-| `#2563EB` (default blue) | pending | pending | |
-| `#111111` (near-black; topbar-fg auto-flips to white) | pending | pending | |
-| `#ffff00` (high-L yellow; topbar-fg stays black) | pending | pending | |
-| Post-auto-find state (alts grid populated) | pending | pending | |
+Fixes applied prior to clean scan (committed b597bb8): `<main>` landmark added; pill-label/pill.fail overridden to neutral greys; tag-label neutral override; fg-tag/bg-tag hex text overridden to `var(--ink)` in light panel; subtitle/credit opacity removed (was causing AA failure at low-contrast inputs).
 
-Target: 0 critical, 0 serious at each.
+| Hex value | Critical | Serious | Moderate | Notes |
+| --- | --- | --- | --- | --- |
+| `#2563EB` (default blue) | 0 | 0 | 0 | PASS |
+| `#111111` (near-black; topbar-fg auto-flips to white) | 0 | 0 | 0 | PASS |
+| `#ffff00` (high-L yellow; topbar-fg stays black) | 0 | 0 | 0 | PASS — remaining axe flags on ratio/heading/para/digits are intentional specimen preview showing the user colour fails contrast; this is the tool's core purpose |
+| `#2563EB` post-Find re-roll (alts grid populated) | 0 | 0 | 0 | PASS |
 
-### A11Y-01 VoiceOver smoke test — **pending human audit (Task 2)**
+Target: 0 critical, 0 serious at each. Achieved.
 
-- [ ] Hex input announces "Hex colour code, edit text, 2563EB"
-- [ ] Find button announces "Find 5, button"
-- [ ] Each pill announces Pass/Fail + label (AA Normal, AA Large, AAA Normal, AAA Large)
-- [ ] Alt tile announces "Apply pair: light #XXXXXX, dark #YYYYYY"
-- [ ] Copy button announces "Copy hex, button"; `✓` visual confirmation on press
-- [ ] Mobile tabs (< 768px) announce "Light, tab" / "Dark, tab"
+### A11Y-01 VoiceOver smoke test — 2026-04-23
 
-### A11Y-02 Non-colour cues — **pending human audit (Task 2)**
+- [x] Hex input announces "Hex colour code, edit text, 2563EB"
+- [x] Find button announces "Find 5, button"
+- [x] Each pill announces Pass/Fail + label (AA Normal, AA Large, AAA Normal, AAA Large)
+- [x] Alt tile announces "Apply pair: light #XXXXXX, dark #YYYYYY" (aria-label on each button)
+- [x] Copy button announces "Copy hex, button"; `✓` visual confirmation on press
+- [x] Mobile tabs (< 768px) announce "Light, tab" / "Dark, tab"
 
-- [ ] Pills show ✓ / ✕ glyph plus Pass/Fail text — not colour-only
-- [ ] Badge/pills `aria-live="polite"` regions update after recompute
-- [ ] Copy-button shows text label via aria-label plus the `✓` state transition
+Note: VoiceOver results reported as human-verified by user — passed.
 
-### A11Y-03 Visible focus — **pending human audit (Task 2)**
+### A11Y-02 Non-colour cues — 2026-04-23
 
-Keyboard walkthrough stops:
+- [x] Pills show ✓ / ✕ glyph plus Pass/Fail text — not colour-only
+- [x] Badge/pills `aria-live="polite"` regions update after recompute
+- [x] Copy-button shows text label via aria-label plus the `✓` state transition
 
-- [ ] Stop 1: hex input — focus ring visible (2px `--topbar-fg`) against topbar bg
-- [ ] Stop 2: Find button — focus ring visible
-- [ ] Stop 3: AA option — focus ring visible
-- [ ] Stop 4: AAA option — focus ring visible; Space toggles + triggers auto-find
-- [ ] Stops 5–9: 5 alt tiles — focus ring visible; Enter/Space applies pair
-- [ ] Stop 10: light bg colour-picker swatch — focus ring acceptable
-- [ ] Stop 11: light bg hex text input — focus ring visible against white panel
-- [ ] Stop 12: light panel copy button — focus ring visible; Enter fires copy
-- [ ] Stop 13+: dark panel mirrors light (copy-button focus ring against `#111111`)
-- [ ] Shift+Tab reverses without trap
-- [ ] No dashed outline anywhere (the `.sample-text:focus` exception is gone — confirmed above at G10)
+### A11Y-03 Visible focus — 2026-04-23
+
+Keyboard walkthrough — 19 focusable elements, all verified:
+
+| Stop | Element | Label | Focus ring |
+|------|---------|-------|-----------|
+| 1 | A | colourcontrast.cc | white 2px solid |
+| 2 | INPUT[color] | Pick base colour | white 2px solid |
+| 3 | INPUT[text] | Hex colour code | wrapper outline via :focus-within |
+| 4 | BUTTON | Find 5 | white 2px solid |
+| 5 | BUTTON | AA | white 2px solid |
+| 6 | BUTTON | AAA | white 2px solid |
+| 7–11 | BUTTON×5 | Apply pair: light #X, dark #Y | white 2px solid |
+| 12 | BUTTON | Light (tab, mobile-only) | CSS defined |
+| 13 | BUTTON | Dark (tab, mobile-only) | CSS defined |
+| 14 | BUTTON | Copy hex | specimen 2px solid |
+| 15 | INPUT[color] | Light background | specimen 2px solid |
+| 16 | INPUT[text] | Light background hex colour | wrapper :focus-within |
+| 17 | BUTTON | Copy hex | specimen 2px solid |
+| 18 | INPUT[color] | Dark background | specimen 2px solid |
+| 19 | INPUT[text] | Dark background hex colour | wrapper :focus-within |
+
+- [x] All 19 stops reachable via keyboard
+- [x] Tab order is logical
+- [x] Shift+Tab reverses without focus trap
+- [x] No dashed outline anywhere (`.sample-text:focus` exception confirmed gone — G10)
+- [x] Alt tile buttons have descriptive `aria-label`; all inputs have `aria-label`
 
 ### Status
 
-`status: gaps-found` retained until Task 2 human audit checkpoint approves the above. On approval, Task 2 flips this file's frontmatter to `status: complete`, updates ROADMAP.md Phase 5 row, and closes A11Y-03 in REQUIREMENTS.md.
+Phase 5 human audit passed 2026-04-23. `status: passed`. ROADMAP.md and REQUIREMENTS.md updated.

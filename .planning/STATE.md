@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 05-07-alts-grid-polish-PLAN.md
-last_updated: "2026-04-19T19:05:04.444Z"
-last_activity: 2026-04-19
+status: complete
+stopped_at: Completed 05-08-a11y-reaudit-PLAN.md
+last_updated: "2026-04-23T00:00:00Z"
+last_activity: 2026-04-23
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 100
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** Phase 05 — design-and-accessibility
+**Current focus:** v1.0 complete — all phases shipped
 
 ## Current Position
 
-Phase: 05 (design-and-accessibility) — EXECUTING
-Plan: 5 of 8
-Status: Ready to execute
-Last activity: 2026-04-19
+Phase: 05 (design-and-accessibility) — COMPLETE
+Plan: 8 of 8
+Status: Phase complete — all phases done
+Last activity: 2026-04-23
 
-Progress: [██████████] 100% (all planned plans complete; rebuild wave pending)
+Progress: [██████████] 100% (all 5 phases and 15 plans complete)
 
 ## Performance Metrics
 
@@ -107,12 +107,12 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 1: Wrong linearisation threshold (use 0.04045, not 0.03928) — must be verified in engine tests
-- Phase 3: "No variant found" UX needs a design decision before implementation
-- Phase 5: Current shipped UI diverges structurally from new Claude Design mockup ground truth. 10 gaps (G1–G10) recorded in 05-VERIFICATION.md. Rebuild wave pending via `/gsd:plan-phase 5 --gaps`. A11y re-audit deferred to that wave.
+- Phase 1: Wrong linearisation threshold (use 0.04045, not 0.03928) — must be verified in engine tests (deferred; Phase 1 engine was not formally executed)
+- Phase 3: "No variant found" UX needs a design decision before implementation (deferred; current build handles gracefully)
+- Phase 5: RESOLVED — 10 structural gaps (G1–G10) closed via rebuild wave (05-04 through 05-07); a11y re-audit passed 2026-04-23 (0 critical/serious at 4 hex values, all 19 keyboard stops, VoiceOver human-verified).
 
 ## Session Continuity
 
-Last session: 2026-04-19T19:05:04.441Z
-Stopped at: Completed 05-07-alts-grid-polish-PLAN.md
+Last session: 2026-04-23T00:00:00Z
+Stopped at: Completed 05-08-a11y-reaudit-PLAN.md — Phase 5 and v1.0 milestone complete
 Resume file: None

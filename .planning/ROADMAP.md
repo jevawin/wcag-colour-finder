@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Live Preview UI** - Hex input, split-screen panels, contrast ratios, AA/AAA badges (completed 2026-04-12)
 - [x] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches (completed 2026-04-12)
 - [ ] **Phase 4: Modes and Configuration** - Dual-colour mode, custom background inputs, URL sharing
-- [ ] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard (3/3 plans complete — gaps-found: rebuild wave pending via `/gsd:plan-phase 5 --gaps`)
+- [x] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard (completed 2026-04-23)
 
 ## Phase Details
 
@@ -104,7 +104,7 @@ Plans:
 - [x] 05-05-rebuild-styles-PLAN.md — Rebuild wave W2: replace style.css with mockup CSS + unified focus append. Closes G1/G5/G6/G7/G10 CSS.
 - [x] 05-06-rewire-app-PLAN.md — Rebuild wave W3: rewire app.js against new DOM — auto-find pipeline, segmented AA|AAA toggle, fg-tag/bg-tag copy, Find re-roll, topbar-fg derivation. Closes G3/G4/G8.
 - [x] 05-07-alts-grid-polish-PLAN.md — Rebuild wave W4: alts tiles as semantic buttons with aria-label + .is-selected class + :focus-visible. Closes G9 keyboard/SR bits.
-- [ ] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.
+- [x] 05-08-a11y-reaudit-PLAN.md — Rebuild wave W5: axe-core + keyboard + VoiceOver re-audit at 4 hex values; flip phase status to complete.
 **UI hint**: yes
 
 ## Progress
@@ -118,4 +118,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Live Preview UI | 1/1 | Complete   | 2026-04-12 |
 | 3. Variant Search | 2/2 | Complete   | 2026-04-12 |
 | 4. Modes and Configuration | 0/? | Not started | - |
-| 5. Design and Accessibility | 3/3 | Gaps-found (rebuild wave pending) | - |
+| 5. Design and Accessibility | 8/8 | Complete | 2026-04-23 |
