@@ -119,10 +119,10 @@ Plans:
   3. Default copy restored on hard reload — no localStorage, no URL persistence
   4. Focus outline visible when a specimen is focused; keyboard users can Tab to and edit each specimen
   5. No new axe violations; existing contrast calc + sr-status announcements unaffected
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 05.1-01-editable-specimens-PLAN.md — reinstate contenteditable on .heading/.para/.digits in both panels + cross-panel input sync
+- [x] 05.1-01-editable-specimens-PLAN.md — reinstate contenteditable on .heading/.para/.digits in both panels + cross-panel input sync
 
 ### Phase 6: Gap Closure — VAR-05 + Orphan Cleanup
 **Goal**: Close v1.0 audit tech-debt items — restore explicit empty-state copy + SR announcement for VAR-05, remove orphan `DISTANCE_WARNING_THRESHOLD` export, backfill Nyquist validation across phases 1–5

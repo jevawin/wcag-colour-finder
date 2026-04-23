@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
+status: executing
 stopped_at: Completed 05-08-a11y-reaudit-PLAN.md — Phase 5 and v1.0 milestone complete
-last_updated: "2026-04-23T20:41:44.350Z"
-last_activity: 2026-04-23
+last_updated: "2026-04-23T22:04:33.316Z"
+last_activity: 2026-04-23 -- Phase 05.1 execution started
 progress:
-  total_phases: 5
+  total_phases: 7
   completed_phases: 5
-  total_plans: 15
+  total_plans: 16
   completed_plans: 15
   percent: 100
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** v1.0 complete — all phases shipped
+**Current focus:** Phase 05.1 — reinstate-editable-specimens
 
 ## Current Position
 
-Phase: 05
-Plan: Not started
-Status: Phase complete — all phases done
-Last activity: 2026-04-23
+Phase: 05.1 (reinstate-editable-specimens) — EXECUTING
+Plan: 1 of 1
+Status: Executing Phase 05.1
+Last activity: 2026-04-23 -- Phase 05.1 execution started
 
 Progress: [██████████] 100% (all 5 phases and 15 plans complete)
 
@@ -66,6 +66,10 @@ Progress: [██████████] 100% (all 5 phases and 15 plans compl
 | Phase 05-design-and-accessibility P07 | 3m | 1 tasks | 2 files |
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 05.1 inserted after Phase 5: reinstate-editable-specimens (URGENT) — re-add contenteditable on .heading + .para in both previews, restore D-03 focus exception, update Phase 5 G10 closure note + verify block, add DOM test, update PNL-03 wording.
 
 ### Decisions
 
