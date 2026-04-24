@@ -8,7 +8,6 @@
 // Exports:
 //   findVariantPairs(inputHex, lightBg, darkBg, count = 5)
 //     → Array<{ lightHex, darkHex, distance }> | null
-//   DISTANCE_WARNING_THRESHOLD → 0.12
 
 import {
   parseHex,
@@ -20,8 +19,6 @@ import {
 } from './colour-engine.js';
 
 // --- Constants ---
-
-export const DISTANCE_WARNING_THRESHOLD = 0.12;
 
 // Small a-channel offsets to generate up to 5 distinct candidate pairs.
 // Restricted to ±0.02 to preserve colour identity (hue/chroma shift is minimal).
