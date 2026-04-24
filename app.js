@@ -126,6 +126,8 @@ if (typeof document !== 'undefined') {
   const lightPillsEl  = document.getElementById('light-pills');
   const darkPillsEl   = document.getElementById('dark-pills');
 
+  let prevAltsLen = 0;
+
   const state = {
     base: DEFAULT_BASE,
     light: DEFAULT_LIGHT,
@@ -186,12 +188,10 @@ if (typeof document !== 'undefined') {
   function renderAlts() {
     altsEl.innerHTML = '';
     if (state.alts.length === 0) {
-      for (let i = 0; i < 5; i++) {
-        const el = document.createElement('div');
-        el.className = 'alt placeholder';
-        el.innerHTML = '<div class="chips"><span class="chip"></span></div><div class="hex mono">\u2014</div>';
-        altsEl.appendChild(el);
-      }
+      const msg = document.createElement('p');
+      msg.className = 'alts-empty';
+      msg.textContent = 'No accessible pair found for this colour';
+      altsEl.appendChild(msg);
       return;
     }
     state.alts.forEach(a => {
@@ -254,6 +254,10 @@ if (typeof document !== 'undefined') {
       distance: p.distance,
     }));
     state.alts = filtered;
+    if (prevAltsLen > 0 && filtered.length === 0) {
+      announce('No accessible pair found for this colour');
+    }
+    prevAltsLen = filtered.length;
     if (filtered.length > 0 && (state.appliedLight === null || state.appliedDark === null)) {
       state.appliedLight = filtered[0].lightHex;
       state.appliedDark  = filtered[0].darkHex;
@@ -346,7 +350,7 @@ if (typeof document !== 'undefined') {
       autoFindAndApply();
       findBtn.disabled = false;
       findLabel.textContent = 'Find 5';
-      announce(state.alts.length + ' pairs found.');
+      if (state.alts.length > 0) announce(state.alts.length + ' pairs found.');
     }, 20);
   });
 
