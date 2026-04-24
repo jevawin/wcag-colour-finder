@@ -32,7 +32,7 @@
 - [x] **VAR-02**: Returns ~5 accessible colour variants displayed as clickable swatches
 - [x] **VAR-03**: Clicking a swatch updates both panels to preview that variant
 - [x] **VAR-04**: Variants are as close to the original colour as possible (perceptual distance)
-- [ ] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input (regressed in Phase 5 rebuild — reassigned to Phase 6)
+- [x] **VAR-05**: Honest messaging when no nearby accessible variant exists for the input (regressed in Phase 5 rebuild — reassigned to Phase 6)
 
 ### Colour Modes
 
@@ -100,7 +100,7 @@
 | VAR-02 | Phase 3 | Complete |
 | VAR-03 | Phase 3 | Complete |
 | VAR-04 | Phase 3 | Complete |
-| VAR-05 | Phase 6 | Pending |
+| VAR-05 | Phase 6 | Complete |
 | MODE-01 | Phase 4 | DROPPED |
 | MODE-02 | Phase 4 | Complete |
 | MODE-03 | Phase 4 | DROPPED |
