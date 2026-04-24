@@ -1,10 +1,21 @@
 ---
 phase: 3
 slug: variant-search
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: validated
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-12
+validated: 2026-04-24
+validation_notes: |
+  Backfilled against final v1.0 code post 06-02 orphan cleanup.
+  Pre-flight: DISTANCE_WARNING_THRESHOLD absent from variant-search.js (grep returned 0).
+  Test coverage: test/variant-search.test.js runs 9 tests across 4 suites (basic contract,
+  AA compliance, sort order, BG parameter honoured) — all green. Full suite 87/87 passing.
+  Wave 0 artefacts: test/variant-search.test.js exists; test/colour-engine.test.js exists
+  with 35+ passing tests. Sampling rate (post-task run ~2s) satisfied by node:test built-in
+  runner. Per-task verify map (03-01-01..03) all covered by the single test file. Manual
+  verifications (swatch click, distance warning) remain manual by design — documented,
+  not gating Nyquist flags.
 ---
 
 # Phase 3 — Validation Strategy
