@@ -40,7 +40,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   3. User enters a colour that already passes on one background; that background keeps the entered colour and only the failing side shows an alternative
   4. Existing AA dual-pair behaviour continues to work for colours that fail on both backgrounds
 **Plans**: 3 plans
-- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
 - [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
 - [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 
