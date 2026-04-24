@@ -223,6 +223,18 @@ h1 {
 .alt.placeholder .chip { background: transparent; }
 .alt.placeholder .hex { color: var(--topbar-fg); }
 
+.alts-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 14px 0;
+  text-align: center;
+  color: var(--topbar-fg);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
 /* ——— Preview panels — the stem of the T, flex-grow to fill ——— */
 .previews {
   display: grid;
@@ -461,6 +473,7 @@ h1 {
     grid-template-columns: 1fr;
     gap: 10px;
   }
+  .alts-empty { padding: 10px 0; }
   .alt { flex-direction: row; align-items: center; padding: 10px 14px; gap: 14px; }
   .alt .chips { flex: 0 0 72px; height: 40px; }
   .alt .hex { flex: 1; text-align: left; }
