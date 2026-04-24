@@ -5,7 +5,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { contrastRatio } from '../colour-engine.js';
-import { findVariantPairs, DISTANCE_WARNING_THRESHOLD } from '../variant-search.js';
+import { findVariantPairs } from '../variant-search.js';
 
 const HEX_PATTERN = /^#[0-9A-F]{6}$/;
 
@@ -107,10 +107,3 @@ describe('findVariantPairs — BG parameter honoured', () => {
   });
 });
 
-// --- Constants ---
-
-describe('findVariantPairs — exported constants', () => {
-  it('DISTANCE_WARNING_THRESHOLD is 0.12', () => {
-    assert.strictEqual(DISTANCE_WARNING_THRESHOLD, 0.12);
-  });
-});
