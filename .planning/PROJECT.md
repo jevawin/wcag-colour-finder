@@ -1,5 +1,11 @@
 # WCAG Colour Finder
 
+## Current State
+
+**Shipped:** v1.0 MVP — 2026-04-24
+**Codebase:** ~3,200 LOC vanilla JS/HTML/CSS, zero runtime deps, 87/87 tests passing
+**Live behaviour:** Hex input → live light + dark previews with AA/AAA badges → find 5 closest accessible variant pairs via OKLab L-axis search → click-to-apply swatches → URL-shareable state. Six contenteditable specimens with cross-panel mirror.
+
 ## What This Is
 
 A web tool that helps designers and developers find accessible colour variants from any hex code that meet WCAG contrast standards. Enter a hex colour, see it previewed as text on light and dark backgrounds with pass/fail badges, then find the closest accessible alternatives. Inspired by colourcontrast.cc.
@@ -10,24 +16,30 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 
 ## Requirements
 
-### Validated
+### Validated (v1.0)
 
-- [x] Dual-colour mode: finds two close shades — one for light BG, one for dark BG — each passing AA — Validated in Phase 4
-- [x] Inline hex inputs to set custom light/dark background colours (defaults: #ffffff, #000000) — Validated in Phase 4
-- [x] Hex colour stored in URL for shareable links — Validated in Phase 4
+- ✓ User enters a hex colour code — v1.0 (Phase 2)
+- ✓ Split-screen layout: light background (left), dark background (right) — v1.0 (Phase 2)
+- ✓ User's hex becomes the text colour on both panels — v1.0 (Phase 2)
+- ✓ Real UI text samples (heading + paragraph) shown in the chosen colour — v1.0 (Phase 2 / 5.1)
+- ✓ AA and AAA pass/fail badges shown for both normal and large text, per panel — v1.0 (Phase 2)
+- ✓ "Find accessible colour" button triggers search for closest accessible variants — v1.0 (Phase 3)
+- ✓ Returns ~5 accessible colour variants, shown as clickable swatches — v1.0 (Phase 3)
+- ✓ Clicking a swatch updates both panels to preview that variant — v1.0 (Phase 3)
+- ✓ Empty-state messaging when no accessible pair exists — v1.0 (Phase 6, VAR-05)
+- ✓ Dual-colour mode: two close shades, one per BG, each passing AA — v1.0 (Phase 4)
+- ✓ Inline hex inputs for custom light/dark backgrounds — v1.0 (Phase 4)
+- ✓ Hex colour stored in URL for shareable links — v1.0 (Phase 4)
+- ✓ Default colour on load: #2563EB — v1.0 (Phase 2)
+- ✓ Minimal monochrome UI — black/white chrome, colour from user input — v1.0 (Phase 5)
+- ✓ Tool itself passes WCAG AA — v1.0 (Phase 5, axe 0/0 critical/serious)
+- ✓ Editable specimen text with cross-panel mirror — v1.0 (Phase 5.1)
 
-### Active
+### Active (v1.1 candidates)
 
-- [ ] User enters a hex colour code
-- [ ] Split-screen layout: light background (left), dark background (right)
-- [ ] User's hex becomes the text colour on both panels
-- [ ] Real UI text samples (heading + paragraph) shown in the chosen colour
-- [ ] AA and AAA pass/fail badges shown for both normal and large text, per panel
-- [ ] "Find accessible colour" button triggers search for closest accessible variants
-- [ ] Returns ~5 accessible colour variants, shown as clickable swatches
-- [ ] Clicking a swatch updates both panels to preview that variant
-- [ ] Default colour on load: #2563EB
-- [ ] Minimal monochrome UI — black/white chrome, colour only from user input
+_Populated when `/gsd:new-milestone` runs._
+
+- [ ] Hex input 3-char autocomplete fix (already shipped via quick task 260424-tzn — promote when scoping v1.1)
 
 ### Out of Scope
 
@@ -41,47 +53,42 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 ## Context
 
 - Vanilla HTML/CSS/JS, no frameworks, no build step
-- All colour calculations client-side
-- British spelling throughout UI (colour, not color)
+- All colour calculations client-side (OKLab perceptual space)
+- British spelling throughout UI (colour, not color) — non-negotiable
 - Inspired by colourcontrast.cc's clean aesthetic
-- WCAG contrast ratios: AA normal 4.5:1, AA large 3:1, AAA normal 7:1, AAA large 4.5:1
-- Relative luminance formula per WCAG 2.1 specification
+- WCAG 2.1 contrast ratios: AA normal 4.5:1, AA large 3:1, AAA normal 7:1, AAA large 4.5:1
+- Linearisation threshold 0.04045 per WCAG 2.1 spec
+- Test runner: `node --test 'test/*.test.js'` (Node 24 native)
 
 ## Constraints
 
-- **Tech stack**: Vanilla HTML/CSS/JS — no frameworks, no build tools, no dependencies
-- **Performance**: All calculations client-side, instant feedback on input
-- **Compatibility**: Modern browsers (no IE support needed)
-- **Accessibility**: The tool itself should be accessible
+- **Tech stack:** Vanilla HTML/CSS/JS — no frameworks, no build tools, no dependencies
+- **Performance:** All calculations client-side, instant feedback on input
+- **Compatibility:** Modern browsers (no IE support needed)
+- **Accessibility:** The tool itself passes WCAG AA (verified Phase 5)
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Vanilla JS, no framework | Simplicity, no build step, fast load | Validated (Phase 1) |
-| 5 colour variants per search | Enough choice without overwhelming | — Pending |
-| Colour swatches for cycling | Click to preview, visual and direct | — Pending |
-| URL state for sharing | Shareable links without accounts | Validated (Phase 4) |
-| Both normal + large text ratios | More useful for real decisions | — Pending |
-| Inline BG colour inputs | Quick access without hiding in settings | Validated (Phase 4) |
-| Dual-only, no single mode (D-01) | Simpler UX; single-mode rarely finds a match | Validated (Phase 4) |
+| Vanilla JS, no framework | Simplicity, no build, fast load | ✓ Validated (Phase 1) |
+| OKLab perceptual space for variant search | Lightness-monotonic with luminance enables binary search | ✓ Validated (Phase 3) |
+| OKLab L-axis binary search over brute-force sRGB | Fast, preserves colour identity (chroma/hue) | ✓ Validated (Phase 3) |
+| 5 colour variants per search | Enough choice without overwhelming | ✓ Validated (Phase 3) |
+| Colour swatches for cycling | Click to preview, visual and direct | ✓ Validated (Phase 3) |
+| URL state for sharing | Shareable links without accounts | ✓ Validated (Phase 4) |
+| Both normal + large text ratios | More useful for real decisions | ✓ Validated (Phase 5) |
+| Inline BG colour inputs | Quick access without hiding in settings | ✓ Validated (Phase 4) |
+| Dual-only, no single mode (D-01) | Simpler UX; single-mode rarely finds a match | ✓ Validated (Phase 4) |
+| `node:test` test runner | Zero deps, ships with Node 24 | ✓ Validated (Phase 1) |
+| Pure-function extraction pattern | Headless testable without JSDOM | ✓ Validated (Phase 2) |
+| `max(distLight, distDark)` pair distance metric | Worst-case bound preserves perceptual closeness on both BGs | ✓ Validated (Phase 4) |
+| Mockup as design ground truth, not UI-SPEC | Mockup arrived mid-phase; auditing pre-rebuild wasteful | ✓ Validated (Phase 5) |
+| Post-filter for AAA threshold (in-app, not in findVariantPairs) | Preserves variant-search AA invariant for callers/tests | ⚠️ Revisit (fewer AAA results when space sparse) |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
-**After each phase transition** (via `/gsd:transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
-
-**After each milestone** (via `/gsd:complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
-
 ---
-*Last updated: 2026-04-23 — Phase 05.1 (Reinstate Editable Specimens) complete — PNL-03/UI-04 back online with cross-panel mirror and paste-strip*
+*Last updated: 2026-04-24 after v1.0 MVP milestone completed*
