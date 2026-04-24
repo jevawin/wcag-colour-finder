@@ -235,37 +235,56 @@ if (typeof document !== 'undefined') {
   }
 
   /**
-   * Run findVariantPairs and post-filter by the active target threshold.
-   * findVariantPairs uses AA (4.5) internally — for AAA we drop pairs whose
-   * contrast against either bg falls below 7.0. See SUMMARY "threshold"
-   * decision: chose post-filter over refactoring variant-search to keep
-   * its AA-compliance invariant intact for other callers/tests.
+   * Run findVariantPairs with the active threshold and apply results to state.
+   *
+   * Phase 7: search is threshold-aware (D-01 / D-02). No post-filter.
+   * An empty array return from findVariantPairs means the input already
+   * passes targetRatio on both backgrounds (D-12) — surface that as an
+   * "already accessible" status, NOT as "no accessible pair".
    */
   function autoFindAndApply() {
-    const pairs = findVariantPairs('#' + state.base, '#' + state.light, '#' + state.dark) || [];
-    const threshold = state.target === 'AAA' ? 7.0 : 4.5;
-    const filtered = pairs.filter(p => {
-      const lr = contrastRatio(p.lightHex, '#' + state.light);
-      const dr = contrastRatio(p.darkHex,  '#' + state.dark);
-      return lr !== null && dr !== null && lr >= threshold && dr >= threshold;
-    }).map(p => ({
+    const targetRatio = state.target === 'AAA' ? 7.0 : 4.5;
+    const raw = findVariantPairs(
+      '#' + state.base,
+      '#' + state.light,
+      '#' + state.dark,
+      5,
+      targetRatio,
+    );
+
+    // Distinguish the three outcomes:
+    //   raw === null                            → invalid base hex (shouldn't reach here in practice)
+    //   Array.isArray(raw) && raw.length === 0  → input already accessible on both BGs (D-12)
+    //   non-empty array                         → normal search result
+    const alreadyAccessible = Array.isArray(raw) && raw.length === 0;
+    const pairs = Array.isArray(raw) ? raw : [];
+
+    state.alts = pairs.map(p => ({
       lightHex: p.lightHex.replace(/^#/, '').toUpperCase(),
       darkHex:  p.darkHex.replace(/^#/, '').toUpperCase(),
       distance: p.distance,
     }));
-    state.alts = filtered;
-    if (prevAltsLen > 0 && filtered.length === 0) {
-      announce('No accessible pair found for this colour');
-    }
-    prevAltsLen = filtered.length;
-    if (filtered.length > 0 && (state.appliedLight === null || state.appliedDark === null)) {
-      state.appliedLight = filtered[0].lightHex;
-      state.appliedDark  = filtered[0].darkHex;
-    }
-    if (filtered.length === 0) {
+
+    if (state.alts.length > 0) {
+      if (state.appliedLight === null || state.appliedDark === null) {
+        state.appliedLight = state.alts[0].lightHex;
+        state.appliedDark  = state.alts[0].darkHex;
+      }
+    } else {
       state.appliedLight = null;
       state.appliedDark  = null;
     }
+
+    // Status announcements — at most one per call, only on transitions.
+    if (alreadyAccessible && prevAltsLen !== 0) {
+      announce('This colour is already accessible on both backgrounds');
+    } else if (!alreadyAccessible && prevAltsLen > 0 && state.alts.length === 0) {
+      announce('No accessible pair found for this colour');
+    }
+    // Note: when alreadyAccessible is true and prevAltsLen was already 0,
+    // stay silent — no state change to announce.
+    prevAltsLen = state.alts.length;
+
     renderAlts();
     renderPreviews();
   }
