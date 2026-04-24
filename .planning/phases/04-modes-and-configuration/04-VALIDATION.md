@@ -1,10 +1,11 @@
 ---
 phase: 04
 slug: modes-and-configuration
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: passed
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-17
+validated: 2026-04-24
 ---
 
 # Phase 04 — Validation Strategy
@@ -49,10 +50,10 @@ created: 2026-04-17
 
 ## Wave 0 Requirements
 
-- [ ] `test/url-state.test.js` — stubs for CFG-03 (parseHashState / buildHashPath round-trip, invalid inputs, case handling)
-- [ ] Update `test/variant-search.test.js` — replace single-variant contract with pair contract for MODE-02; parameterise BGs (remove hardcoded `#111111`)
+- [x] `test/url-state.test.js` — stubs for CFG-03 (parseHashState / buildHashPath round-trip, invalid inputs, case handling) — landed in 04-03.
+- [x] Update `test/variant-search.test.js` — pair contract for MODE-02, BGs parameterised (no hardcoded `#111111`) — landed in 04-02.
 
-*Coupled: remove `DARK_BG = '#111111'` constant from `variant-search.js` with the test update.*
+*Coupled: `DARK_BG = '#111111'` constant removed from `variant-search.js` alongside the test update.*
 
 ---
 
@@ -70,11 +71,23 @@ created: 2026-04-17
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references (`test/url-state.test.js`, updated `test/variant-search.test.js`)
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (`test/url-state.test.js`, updated `test/variant-search.test.js`)
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s (full suite ~66ms, phase-4 tests ~50ms)
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** passed 2026-04-24
+
+### Backfill Notes (06-06)
+
+Nyquist validation backfilled after phase completion per v1.0 milestone audit item #3. Executed inline in plan 06-06 (nested slash-commands not invokable mid-execution).
+
+Evidence of compliance:
+
+- `test/url-state.test.js` present with 9 passing tests covering `parseHashState` (valid hash, missing parts, invalid fg/bg, extra slashes, case handling) and `buildHashPath` round-trip.
+- `test/variant-search.test.js` refactored to pair contract: 14 passing tests covering basic contract (shape, count, invalid input), AA compliance on both BGs, sort order, and BG parameter honouring.
+- `DARK_BG` hardcoded constant removed from `variant-search.js` — BGs threaded through function signature.
+- All Phase 4 requirements (MODE-02, CFG-01, CFG-02 manual, CFG-03) covered by automated tests or documented manual-smoke verifications.
+- Full suite: 87/87 tests passing, ~66ms runtime (well under 5s feedback-latency cap).
