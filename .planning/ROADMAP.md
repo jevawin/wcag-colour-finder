@@ -39,7 +39,10 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   2. User sees 5 variants that visibly span a wider L-axis range — first result nearest the input, last result a clearly distinct shade
   3. User enters a colour that already passes on one background; that background keeps the entered colour and only the failing side shows an alternative
   4. Existing AA dual-pair behaviour continues to work for colours that fail on both backgrounds
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
+- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 
 ### Phase 8: Auto-Find UX
 **Goal**: Search feels live — triggered by typing and threshold changes, with no explicit action button and no mid-typing hex rewrites
@@ -50,7 +53,10 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   2. User toggles between AA and AAA; results re-compute against the new threshold without further action
   3. User types a 3-char shorthand hex; the input does not auto-expand mid-typing
   4. "Find 5" button no longer appears in the UI
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
+- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 **UI hint**: yes
 
 ### Phase 9: Responsive Fixes
@@ -61,7 +67,10 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   1. User resizes to narrow viewport widths; all badge labels (AA Normal / AA Large / AAA Normal / AAA Large) remain fully visible
   2. User resizes to narrow viewport widths; the hex input container scales with the viewport and does not push content off-screen
   3. Tool continues to pass WCAG AA at all supported widths (no regression from v1.0 Phase 5)
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
+- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 **UI hint**: yes
 
 ## Progress
@@ -75,6 +84,6 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 | 5. Design and Accessibility     | v1.0      | 8/8            | Complete    | 2026-04-23 |
 | 5.1. Editable Specimens         | v1.0      | 1/1            | Complete    | 2026-04-23 |
 | 6. Gap Closure                  | v1.0      | 7/7            | Complete    | 2026-04-24 |
-| 7. Search Correctness & Spread  | v1.1      | 0/0            | Not started | -          |
+| 7. Search Correctness & Spread  | v1.1      | 0/3            | Planned     | -          |
 | 8. Auto-Find UX                 | v1.1      | 0/0            | Not started | -          |
 | 9. Responsive Fixes             | v1.1      | 0/0            | Not started | -          |
