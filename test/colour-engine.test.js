@@ -12,6 +12,7 @@ import {
   passesAAA,
   passesAALarge,
   passesAAALarge,
+  passesThreshold,
   srgbToOklab,
   oklabToSrgb,
   oklabDistance,
@@ -192,5 +193,34 @@ describe('oklabDistance', () => {
     const dOrange = oklabDistance(red, orange);
     const dBlue   = oklabDistance(red, blue);
     assert.ok(dOrange < dBlue, `Expected d(red,orange)=${dOrange} < d(red,blue)=${dBlue}`);
+  });
+});
+
+// --- passesThreshold ---
+
+describe('passesThreshold', () => {
+  it('returns true at the exact AA threshold (4.5)', () => {
+    assert.strictEqual(passesThreshold(4.5, 4.5), true);
+  });
+  it('returns false just below the AA threshold', () => {
+    assert.strictEqual(passesThreshold(4.499, 4.5), false);
+  });
+  it('returns true just above the AA threshold', () => {
+    assert.strictEqual(passesThreshold(4.501, 4.5), true);
+  });
+  it('returns true at the exact AAA threshold (7.0)', () => {
+    assert.strictEqual(passesThreshold(7.0, 7.0), true);
+  });
+  it('returns false just below the AAA threshold', () => {
+    assert.strictEqual(passesThreshold(6.999, 7.0), false);
+  });
+  it('AAA-passing ratio also passes the AA target', () => {
+    assert.strictEqual(passesThreshold(7.0, 4.5), true);
+  });
+  it('AA-passing ratio does NOT pass the AAA target', () => {
+    assert.strictEqual(passesThreshold(4.5, 7.0), false);
+  });
+  it('zero contrast fails any positive target', () => {
+    assert.strictEqual(passesThreshold(0, 4.5), false);
   });
 });
