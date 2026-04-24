@@ -125,6 +125,12 @@ None yet.
 - Phase 3: "No variant found" UX needs a design decision before implementation (deferred; current build handles gracefully)
 - Phase 5: RESOLVED — 10 structural gaps (G1–G10) closed via rebuild wave (05-04 through 05-07); a11y re-audit passed 2026-04-23 (0 critical/serious at 4 hex values, all 19 keyboard stops, VoiceOver human-verified).
 
+## Quick Tasks Completed
+
+| Slug | Date | Summary | Files |
+|------|------|---------|-------|
+| 260424-tzn-disable-hex-input-3-char-autocomplete | 2026-04-24 | Stop hex input auto-expanding 3-char shorthand mid-typing | app.js |
+
 ## Session Continuity
 
 Last session: 2026-04-24T20:20:30.774Z
