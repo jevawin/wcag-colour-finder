@@ -90,6 +90,19 @@ export function passesAALarge(ratio) { return ratio >= AA_LARGE; }
 /** @param {number} ratio @returns {boolean} */
 export function passesAAALarge(ratio){ return ratio >= AAA_LARGE; }
 
+/**
+ * Threshold-parameterised pass check. Returns true if `ratio` is at or above
+ * the supplied target. Used by variant-search to converge to the active
+ * threshold (4.5 for AA normal, 7.0 for AAA normal). Per D-03 (Phase 7 CONTEXT).
+ *
+ * @param {number} ratio       - Raw contrast ratio float (do not pre-round)
+ * @param {number} targetRatio - 4.5, 7.0, or any custom threshold
+ * @returns {boolean}
+ */
+export function passesThreshold(ratio, targetRatio) {
+  return ratio >= targetRatio;
+}
+
 // --- OKLab conversions (Ottosson matrices) ---
 
 /**
