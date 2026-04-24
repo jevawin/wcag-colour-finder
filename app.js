@@ -314,7 +314,7 @@ if (typeof document !== 'undefined') {
     inputEl.addEventListener('input', (e) => {
       const v = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
       e.target.value = v;
-      if ((v.length === 3 || v.length === 6) && parseHex(v)) setter(v);
+      if (v.length === 6 && parseHex(v)) setter(v);
     });
   }
   wireHexInput(baseText,    setBase);
