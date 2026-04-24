@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish + Fixes
 status: executing
-stopped_at: Completed 07-01-colour-engine-threshold-PLAN.md
-last_updated: "2026-04-24T22:30:44.880Z"
+stopped_at: Completed 07-02-variant-search-refactor-PLAN.md
+last_updated: "2026-04-24T22:36:50.374Z"
 last_activity: 2026-04-24
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 
 Milestone: v1.1 Polish + Fixes
 Phase: 07 (search-correctness-spread) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-24
 
@@ -70,6 +70,7 @@ Last activity: 2026-04-24
 | Phase 06-gap-closure-var05-orphan-cleanup P04 | 5m | 1 tasks | 1 files |
 | Phase 06-gap-closure-var05-orphan-cleanup P07 | 6m | 1 tasks | 1 files |
 | Phase 07 P01 | 4m | 1 tasks | 2 files |
+| Phase 07 P02 | 15m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,8 @@ Recent decisions affecting current work:
 - [Phase 06-gap-closure-var05-orphan-cleanup]: 06-03 confirmed Phase 1 Nyquist flags already true (2026-04-23) — no-op backfill, audit tech-debt #3 closed
 - [Phase 06-gap-closure-var05-orphan-cleanup]: Phase 5 Nyquist backfill run inline (slash command unavailable in nested executor); 87/87 tests green against post-06-01 code with reinstated VAR-05 .alts-empty path in sampled surface
 - [Phase 07]: passesThreshold added to colour-engine alongside passesAA/passesAAA — back-compat per D-03
+- [Phase 07]: findVariantPairs signature: (inputHex, lightBg, darkBg, count=5, targetRatio=4.5); per-seed bucket selection preserves L-spread under top-N slice
+- [Phase 07]: Gamut a/b tolerance widened 0.02 -> 0.05 in searchLForBg to unblock AAA for saturated mid-tones (#2563EB); Phase 4 clamp-direction rule preserved
 
 ### Pending Todos
 
@@ -135,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-24T22:30:44.878Z
-Stopped at: Completed 07-01-colour-engine-threshold-PLAN.md
+Last session: 2026-04-24T22:36:50.372Z
+Stopped at: Completed 07-02-variant-search-refactor-PLAN.md
 Resume file: None

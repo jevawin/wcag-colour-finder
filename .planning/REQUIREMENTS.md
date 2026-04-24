@@ -7,8 +7,8 @@
 ### Search (SEARCH)
 
 - [x] **SEARCH-01**: AAA mode returns variant pairs whenever the colour space permits (fix defect where AAA currently never returns results)
-- [ ] **SEARCH-02**: The 5 returned variant pairs span a wider L-axis range — nearest preserved, furthest extended — so results offer more visual variety
-- [ ] **SEARCH-03**: When the entered colour already passes the active threshold on one background, that background keeps the entered colour; only the failing background gets an alternative searched
+- [x] **SEARCH-02**: The 5 returned variant pairs span a wider L-axis range — nearest preserved, furthest extended — so results offer more visual variety
+- [x] **SEARCH-03**: When the entered colour already passes the active threshold on one background, that background keeps the entered colour; only the failing background gets an alternative searched
 
 ### Input and Interaction (INPUT)
 
@@ -39,8 +39,8 @@ _None captured — carry forward from v1.2 scoping if needed._
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SEARCH-01   | Phase 7 | Complete |
-| SEARCH-02   | Phase 7 | Pending |
-| SEARCH-03   | Phase 7 | Pending |
+| SEARCH-02   | Phase 7 | Complete |
+| SEARCH-03   | Phase 7 | Complete |
 | INPUT-01    | Phase 8 | Pending |
 | INPUT-02    | Phase 8 | Pending |
 | INPUT-03    | Phase 8 | Pending |

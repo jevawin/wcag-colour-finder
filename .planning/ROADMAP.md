@@ -41,7 +41,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   4. Existing AA dual-pair behaviour continues to work for colours that fail on both backgrounds
 **Plans**: 3 plans
 - [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
-- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
+- [x] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
 - [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 
 ### Phase 8: Auto-Find UX
@@ -54,7 +54,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   3. User types a 3-char shorthand hex; the input does not auto-expand mid-typing
   4. "Find 5" button no longer appears in the UI
 **Plans**: 3 plans
-- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
 - [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
 - [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 **UI hint**: yes
