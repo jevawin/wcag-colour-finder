@@ -42,7 +42,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 **Plans**: 3 plans
 - [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
 - [x] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
-- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
+- [x] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 
 ### Phase 8: Auto-Find UX
 **Goal**: Search feels live — triggered by typing and threshold changes, with no explicit action button and no mid-typing hex rewrites
@@ -55,7 +55,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   4. "Find 5" button no longer appears in the UI
 **Plans**: 3 plans
 - [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
-- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
+- [x] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
 - [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 **UI hint**: yes
 
@@ -68,7 +68,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   2. User resizes to narrow viewport widths; the hex input container scales with the viewport and does not push content off-screen
   3. Tool continues to pass WCAG AA at all supported widths (no regression from v1.0 Phase 5)
 **Plans**: 3 plans
-- [ ] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
+- [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
 - [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
 - [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
 **UI hint**: yes

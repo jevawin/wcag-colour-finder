@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish + Fixes
-status: executing
-stopped_at: Completed 07-02-variant-search-refactor-PLAN.md
-last_updated: "2026-04-24T22:36:50.374Z"
+status: verifying
+stopped_at: Completed 07-03-app-integration-PLAN.md
+last_updated: "2026-04-24T22:39:28.980Z"
 last_activity: 2026-04-24
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Milestone: v1.1 Polish + Fixes
 Phase: 07 (search-correctness-spread) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-24
 
 ## Performance Metrics
@@ -71,6 +71,7 @@ Last activity: 2026-04-24
 | Phase 06-gap-closure-var05-orphan-cleanup P07 | 6m | 1 tasks | 1 files |
 | Phase 07 P01 | 4m | 1 tasks | 2 files |
 | Phase 07 P02 | 15m | 2 tasks | 2 files |
+| Phase 07-search-correctness-spread P03 | 8m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -118,6 +119,8 @@ Recent decisions affecting current work:
 - [Phase 07]: passesThreshold added to colour-engine alongside passesAA/passesAAA — back-compat per D-03
 - [Phase 07]: findVariantPairs signature: (inputHex, lightBg, darkBg, count=5, targetRatio=4.5); per-seed bucket selection preserves L-spread under top-N slice
 - [Phase 07]: Gamut a/b tolerance widened 0.02 -> 0.05 in searchLForBg to unblock AAA for saturated mid-tones (#2563EB); Phase 4 clamp-direction rule preserved
+- [Phase 07-search-correctness-spread]: 07-03: post-filter removed from app.js; autoFindAndApply threads targetRatio (4.5/7.0) into findVariantPairs
+- [Phase 07-search-correctness-spread]: 07-03: already-accessible branch announces 'This colour is already accessible on both backgrounds' distinct from no-solution copy (D-12/D-15)
 
 ### Pending Todos
 
@@ -138,6 +141,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-24T22:36:50.372Z
-Stopped at: Completed 07-02-variant-search-refactor-PLAN.md
+Last session: 2026-04-24T22:39:28.978Z
+Stopped at: Completed 07-03-app-integration-PLAN.md
 Resume file: None
