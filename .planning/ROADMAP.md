@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Variant Search** - Find closest accessible colour variants, display as clickable swatches (completed 2026-04-12)
 - [ ] **Phase 4: Modes and Configuration** - Dual-colour mode, custom background inputs, URL sharing
 - [x] **Phase 5: Design and Accessibility** - Monochrome UI polish, tool passes its own WCAG AA standard (completed 2026-04-23)
-- [ ] **Phase 6: Gap Closure — VAR-05 + Orphan Cleanup** - Restore empty-state messaging, remove unused export, backfill Nyquist validation
+- [x] **Phase 6: Gap Closure — VAR-05 + Orphan Cleanup** - Restore empty-state messaging, remove unused export, backfill Nyquist validation (completed 2026-04-24)
 
 ## Phase Details
 
