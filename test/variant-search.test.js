@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { contrastRatio } from '../colour-engine.js';
+import { contrastRatio, srgbToOklab, parseHex } from '../colour-engine.js';
 import { findVariantPairs } from '../variant-search.js';
 
 const HEX_PATTERN = /^#[0-9A-F]{6}$/;
@@ -107,3 +107,132 @@ describe('findVariantPairs — BG parameter honoured', () => {
   });
 });
 
+// --- SEARCH-01: AAA returns pairs when colour space permits ---
+
+describe('findVariantPairs — AAA (targetRatio = 7.0)', () => {
+  it('returns >= 1 pair for #2563EB on default BGs at AAA', () => {
+    const results = findVariantPairs('#2563EB', '#ffffff', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(results), 'should return an array');
+    assert.ok(results.length >= 1, `expected >= 1 AAA pair, got ${results.length}`);
+  });
+
+  it('every lightHex at AAA passes 7.0 on the light BG', () => {
+    const results = findVariantPairs('#2563EB', '#ffffff', '#000000', 5, 7.0);
+    for (const p of results) {
+      const r = contrastRatio(p.lightHex, '#ffffff');
+      assert.ok(r !== null && r >= 7.0,
+        `${p.lightHex} on #ffffff: ${r?.toFixed(3)} fails AAA`);
+    }
+  });
+
+  it('every darkHex at AAA passes 7.0 on the dark BG', () => {
+    const results = findVariantPairs('#2563EB', '#ffffff', '#000000', 5, 7.0);
+    for (const p of results) {
+      const r = contrastRatio(p.darkHex, '#000000');
+      assert.ok(r !== null && r >= 7.0,
+        `${p.darkHex} on #000000: ${r?.toFixed(3)} fails AAA`);
+    }
+  });
+
+  it('default targetRatio remains 4.5 (back-compat)', () => {
+    const aaDefault  = findVariantPairs('#777777', '#ffffff', '#000000');
+    const aaExplicit = findVariantPairs('#777777', '#ffffff', '#000000', 5, 4.5);
+    assert.strictEqual(aaDefault.length, aaExplicit.length);
+  });
+});
+
+// --- SEARCH-02: L-axis spread ---
+
+describe('findVariantPairs — L-axis spread (SEARCH-02)', () => {
+  it('#777777 AA: lightHex L-span across 5 results >= 0.12 in OKLab', () => {
+    const results = findVariantPairs('#777777', '#ffffff', '#000000', 5, 4.5);
+    assert.ok(results.length >= 2, 'need >= 2 results to measure spread');
+    const Ls = results.map(p => {
+      const rgb = parseHex(p.lightHex);
+      return srgbToOklab(rgb.r, rgb.g, rgb.b).L;
+    });
+    const span = Math.max(...Ls) - Math.min(...Ls);
+    assert.ok(span >= 0.12,
+      `expected L-span >= 0.12, got ${span.toFixed(3)} from Ls=${Ls.map(l => l.toFixed(3)).join(',')}`);
+  });
+
+  it('result[0] has the smallest distance (nearest preserved)', () => {
+    const results = findVariantPairs('#777777', '#ffffff', '#000000', 5, 4.5);
+    for (let i = 1; i < results.length; i++) {
+      assert.ok(results[0].distance <= results[i].distance,
+        `result[0].distance (${results[0].distance}) > result[${i}].distance (${results[i].distance})`);
+    }
+  });
+
+  it('all results are distinct by lightHex+darkHex key', () => {
+    const results = findVariantPairs('#777777', '#ffffff', '#000000', 5, 4.5);
+    const keys = new Set(results.map(p => p.lightHex + '|' + p.darkHex));
+    assert.strictEqual(keys.size, results.length, 'duplicate pair(s) found');
+  });
+});
+
+// --- SEARCH-03: Asymmetric + both-pass ---
+
+describe('findVariantPairs — asymmetric search (SEARCH-03)', () => {
+  it('#000000 on #ffffff at AAA: all lightHex equal #000000 (light side locked)', () => {
+    // Black on white = 21:1 — passes AAA on light. Dark side fails; must be searched.
+    const results = findVariantPairs('#000000', '#ffffff', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(results));
+    assert.ok(results.length >= 1, `expected >= 1 result, got ${results.length}`);
+    for (const p of results) {
+      assert.strictEqual(p.lightHex, '#000000',
+        `lightHex should be locked to #000000, got ${p.lightHex}`);
+    }
+  });
+
+  it('#000000 asymmetric case: all darkHex values pass AAA on #000000', () => {
+    const results = findVariantPairs('#000000', '#ffffff', '#000000', 5, 7.0);
+    const darkHexes = new Set(results.map(p => p.darkHex));
+    assert.ok(darkHexes.size >= 1, 'expected at least 1 distinct darkHex');
+    for (const hex of darkHexes) {
+      const r = contrastRatio(hex, '#000000');
+      assert.ok(r !== null && r >= 7.0,
+        `${hex} on #000000: ${r?.toFixed(3)} fails AAA`);
+    }
+  });
+
+  it('#ffffff on #000000 at AAA: all darkHex equal #FFFFFF (dark side locked)', () => {
+    // White on black = 21:1 — passes AAA on dark. Light side fails; must be searched.
+    const results = findVariantPairs('#ffffff', '#ffffff', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(results));
+    assert.ok(results.length >= 1);
+    for (const p of results) {
+      assert.strictEqual(p.darkHex, '#FFFFFF',
+        `darkHex should be locked to #FFFFFF, got ${p.darkHex}`);
+    }
+  });
+
+  it('both-pass case returns [] — input already accessible on both BGs', () => {
+    // #000000 vs #ffffff = 21:1 (passes AA), #000000 vs #888888 = 5.92:1 (passes AA).
+    // Both pass at 4.5 → expect [].
+    const results = findVariantPairs('#000000', '#ffffff', '#888888', 5, 4.5);
+    assert.ok(Array.isArray(results));
+    assert.strictEqual(results.length, 0,
+      `expected [] for both-pass input, got ${results.length} pair(s)`);
+  });
+
+  it('threshold toggle flips lock state', () => {
+    // #2563EB vs #ffffff = 5.17:1 — passes AA (light locked at AA) but fails AAA.
+    // #2563EB vs #000000 = 4.06:1 — fails AA and AAA (dark always searched).
+    // At AA: light side locked; at AAA: light side searched.
+    const aaResults  = findVariantPairs('#2563EB', '#ffffff', '#000000', 5, 4.5);
+    const aaaResults = findVariantPairs('#2563EB', '#ffffff', '#000000', 5, 7.0);
+    // At AA: lightHex should equal normalised input (locked).
+    if (aaResults.length > 0) {
+      for (const p of aaResults) {
+        assert.strictEqual(p.lightHex, '#2563EB',
+          `AA: lightHex should be locked to input, got ${p.lightHex}`);
+      }
+    }
+    // At AAA: at least one lightHex should differ from input (searched).
+    if (aaaResults.length > 0) {
+      const anyDiffers = aaaResults.some(p => p.lightHex !== '#2563EB');
+      assert.ok(anyDiffers, 'AAA: expected at least one searched lightHex different from input');
+    }
+  });
+});

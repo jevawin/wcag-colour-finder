@@ -101,11 +101,17 @@ function searchLForBg(L, a, b, direction, bgHex, targetRatio, seedDelta = 0) {
     const { r, g: gv, b: bv } = oklabToSrgb(mid, a, b);
     const hex = rgbToHex(r, gv, bv);
 
-    // Gamut check: round-trip to OKLab and verify a/b channels haven't shifted.
-    // If out of gamut, move the search interval back toward origin L
-    // (i.e., away from the extreme sRGB boundary that caused clamping).
+    // Gamut check: round-trip to OKLab and verify a/b channels haven't shifted
+    // more than GAMUT_AB_TOLERANCE. If clipped beyond tolerance, push the
+    // search interval back toward origin L (away from the extreme sRGB
+    // boundary that caused clamping — Phase 4 fix).
+    //
+    // Tolerance 0.05 (not 0.02): saturated mid-tones (e.g. #2563EB, b ≈ -0.21)
+    // legitimately lose some chroma when brightened into AAA luminance territory,
+    // and the clipped hex is still in the same colour family. 0.02 was too tight
+    // and blocked all AAA pairs for saturated blues.
     const roundTrip = srgbToOklab(r, gv, bv);
-    if (Math.abs(roundTrip.a - a) > 0.02 || Math.abs(roundTrip.b - b) > 0.02) {
+    if (Math.abs(roundTrip.a - a) > 0.05 || Math.abs(roundTrip.b - b) > 0.05) {
       if (direction === 'darker') lo = mid; // push lo up toward L
       else hi = mid;                         // push hi down toward L
       continue;
@@ -168,7 +174,12 @@ export function findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRat
   if (lightPasses && darkPasses) return []; // D-12
 
   const origin = srgbToOklab(rgb.r, rgb.g, rgb.b);
-  const candidates = new Map(); // key: lightHex+'|'+darkHex → { lightHex, darkHex, distance }
+
+  // Per-seed buckets: each seedDelta index gets its own candidate Map so we
+  // can pick one representative per L-stretch band. Preserves the
+  // nearest-pair guarantee (seed[0]) while delivering visible L-axis spread
+  // across the returned list (SEARCH-02 / D-05 / D-07).
+  const perSeed = L_STRETCH_SEEDS.map(() => new Map());
 
   // Normalise input hex for locked-side output (uppercase, 7-char with '#').
   const inputNorm = normaliseHex(inputHex);
@@ -177,7 +188,10 @@ export function findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRat
     const a = origin.a + aOffset;
     const b = origin.b;
 
-    for (const seedDelta of L_STRETCH_SEEDS) {
+    for (let si = 0; si < L_STRETCH_SEEDS.length; si++) {
+      const seedDelta = L_STRETCH_SEEDS[si];
+      const bucket = perSeed[si];
+
       for (const lDir of ['darker', 'lighter']) {
         // Short-circuit duplicate work when light side is locked.
         if (lightPasses && lDir !== 'darker') continue;
@@ -204,15 +218,54 @@ export function findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRat
           const distance  = Math.max(distLight, distDark);
 
           const key = lightHex + '|' + darkHex;
-          if (!candidates.has(key) || candidates.get(key).distance > distance) {
-            candidates.set(key, { lightHex, darkHex, distance });
+          if (!bucket.has(key) || bucket.get(key).distance > distance) {
+            bucket.set(key, { lightHex, darkHex, distance });
           }
         }
       }
     }
   }
 
-  return [...candidates.values()]
-    .sort((x, y) => x.distance - y.distance)
-    .slice(0, count);
+  // Pick the nearest candidate from each seed bucket, then dedupe across
+  // buckets (adjacent seeds can collapse onto the same sRGB pair).
+  const seen = new Set();
+  const representatives = [];
+  for (const bucket of perSeed) {
+    const sorted = [...bucket.values()].sort((x, y) => x.distance - y.distance);
+    for (const cand of sorted) {
+      const key = cand.lightHex + '|' + cand.darkHex;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      representatives.push(cand);
+      break; // one pick per seed bucket
+    }
+  }
+
+  // Global ordering: nearest first, then progressively further-stretched picks.
+  // Sort stabilises the "result[0] is nearest" invariant (D-06) without
+  // collapsing the spread.
+  representatives.sort((x, y) => x.distance - y.distance);
+
+  // If we have fewer than `count`, top up from leftover candidates across
+  // buckets (ordered by distance) so sparse gamuts still return up to count.
+  if (representatives.length < count) {
+    const leftover = [];
+    for (const bucket of perSeed) {
+      for (const cand of bucket.values()) {
+        const key = cand.lightHex + '|' + cand.darkHex;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        leftover.push(cand);
+      }
+    }
+    leftover.sort((x, y) => x.distance - y.distance);
+    for (const cand of leftover) {
+      if (representatives.length >= count) break;
+      representatives.push(cand);
+    }
+    // Re-sort after top-up so results stay ascending by distance.
+    representatives.sort((x, y) => x.distance - y.distance);
+  }
+
+  return representatives.slice(0, count);
 }
