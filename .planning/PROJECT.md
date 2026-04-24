@@ -35,11 +35,27 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 - ✓ Tool itself passes WCAG AA — v1.0 (Phase 5, axe 0/0 critical/serious)
 - ✓ Editable specimen text with cross-panel mirror — v1.0 (Phase 5.1)
 
-### Active (v1.1 candidates)
+## Current Milestone: v1.1 Polish + Fixes
 
-_Populated when `/gsd:new-milestone` runs._
+**Goal:** Fix v1.0 rough edges — responsive bugs, AAA search defect, variant spread, auto-find UX, smarter single-side search.
 
-- [ ] Hex input 3-char autocomplete fix (already shipped via quick task 260424-tzn — promote when scoping v1.1)
+**Target features:**
+- Auto-find on 6-char hex and AA/AAA toggle (remove "Find 5" button)
+- AAA search bug — fix so AAA finds results when colour space allows
+- Wider variant spread across 5 results (keep nearest, stretch furthest)
+- Asymmetric search: lock accessible side, only search alt for failing BG
+- Responsive fix: badge labels clipping
+- Responsive fix: hex input min-width overflow
+
+### Active (v1.1)
+
+- [ ] Auto-find triggers on valid 6-char hex and on AA/AAA toggle; "Find 5" button removed
+- [ ] AAA mode returns results whenever colour space permits (search defect)
+- [ ] Variant spread — 5 results span wider L-axis range (nearest preserved, furthest extended)
+- [ ] Asymmetric search — input retained on any BG it already passes; alt searched only for failing BG
+- [ ] Responsive: badge labels visible at all supported widths
+- [ ] Responsive: hex input does not push container off-screen at narrow widths
+- [ ] Hex 3-char autocomplete fix promoted from quick task 260424-tzn
 
 ### Out of Scope
 
@@ -91,4 +107,4 @@ _Populated when `/gsd:new-milestone` runs._
 This document evolves at phase transitions and milestone boundaries.
 
 ---
-*Last updated: 2026-04-24 after v1.0 MVP milestone completed*
+*Last updated: 2026-04-24 — v1.1 Polish + Fixes milestone started*
