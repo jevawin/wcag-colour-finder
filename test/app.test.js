@@ -5,6 +5,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildBadgeState, expandHex, formatRatio, buildPillHTML } from '../app.js';
+import { findVariantPairs } from '../variant-search.js';
+import { contrastRatio } from '../colour-engine.js';
 
 describe('buildBadgeState', () => {
   it('returns all true for ratio 8.0 (passes AA, AAA, AA large, AAA large)', () => {
@@ -91,5 +93,38 @@ describe('buildPillHTML', () => {
   it('renders the exact contract string for (AA Large, false)', () => {
     const expected = '<div class="pill-wrap"><span class="pill fail"><span class="glyph" aria-hidden="true">\u2715</span>Fail</span><span class="pill-label">AA Large</span></div>';
     assert.equal(buildPillHTML('AA Large', false), expected);
+  });
+});
+
+// --- Phase 7 integration: autoFindAndApply call shape ---
+// autoFindAndApply is inside the DOMContentLoaded IIFE and not directly
+// exportable. These tests exercise findVariantPairs with the exact 5-arg
+// call pattern app.js now uses, covering the AA/AAA threshold wiring and
+// the already-accessible empty-array contract that the "already accessible"
+// status announcement depends on (D-12).
+
+describe('app.js integration — findVariantPairs call pattern', () => {
+  it('mirrors autoFindAndApply AA call: 5 args with targetRatio=4.5', () => {
+    const result = findVariantPairs('#777777', '#FFFFFF', '#000000', 5, 4.5);
+    assert.ok(Array.isArray(result), 'should return an array for valid input');
+  });
+
+  it('mirrors autoFindAndApply AAA call: 5 args with targetRatio=7.0', () => {
+    const result = findVariantPairs('#2563EB', '#FFFFFF', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(result), 'should return an array for valid input');
+    for (const p of result) {
+      const lr = contrastRatio(p.lightHex, '#FFFFFF');
+      const dr = contrastRatio(p.darkHex,  '#000000');
+      assert.ok(lr !== null && lr >= 7.0, `${p.lightHex} fails AAA on #FFFFFF (ratio ${lr})`);
+      assert.ok(dr !== null && dr >= 7.0, `${p.darkHex} fails AAA on #000000 (ratio ${dr})`);
+    }
+  });
+
+  it('already-accessible inputs return [] — autoFindAndApply surfaces this as a status, not as results', () => {
+    // #000000 passes AA on both #FFFFFF (21:1) and #888888 (5.92:1).
+    const result = findVariantPairs('#000000', '#FFFFFF', '#888888', 5, 4.5);
+    assert.ok(Array.isArray(result));
+    assert.strictEqual(result.length, 0,
+      'already-accessible input must return [] so the app can show already-accessible status');
   });
 });
