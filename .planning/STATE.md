@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: polish-and-fixes
-status: defining-requirements
+status: ready-to-plan
 stopped_at: ""
-last_updated: "2026-04-24T21:36:19.983Z"
+last_updated: "2026-04-24T22:00:00.000Z"
 last_activity: 2026-04-24
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,18 +18,18 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-12)
+See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** v1.1 Polish + Fixes — defining requirements
+**Current focus:** v1.1 Polish + Fixes — Phase 7 (Search Correctness & Spread)
 
 ## Current Position
 
 Milestone: v1.1 Polish + Fixes
-Phase: Not started (defining requirements)
+Phase: 7 — Search Correctness & Spread
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-24 — Milestone v1.1 started
+Status: Ready to plan
+Last activity: 2026-04-24 — Roadmap created for v1.1 (phases 7-9)
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Last activity: 2026-04-24 — Milestone v1.1 started
 ### Roadmap Evolution
 
 - Phase 05.1 inserted after Phase 5: reinstate-editable-specimens (URGENT) — re-add contenteditable on .heading + .para in both previews, restore D-03 focus exception, update Phase 5 G10 closure note + verify block, add DOM test, update PNL-03 wording.
+- v1.1 roadmap created 2026-04-24: phases 7-9 covering 8 requirements (SEARCH-01/02/03, INPUT-01/02/03, RESP-01/02). Small milestone, 3 phases — search correctness grouped with spread and asymmetric search; auto-find UX covers input behaviour shift including shorthand fix; responsive fixes held as own small phase.
 
 ### Decisions
 
@@ -123,6 +124,7 @@ None yet.
 - Phase 1: Wrong linearisation threshold (use 0.04045, not 0.03928) — must be verified in engine tests (deferred; Phase 1 engine was not formally executed)
 - Phase 3: "No variant found" UX needs a design decision before implementation (deferred; current build handles gracefully)
 - Phase 5: RESOLVED — 10 structural gaps (G1–G10) closed via rebuild wave (05-04 through 05-07); a11y re-audit passed 2026-04-23 (0 critical/serious at 4 hex values, all 19 keyboard stops, VoiceOver human-verified).
+- Phase 7 (v1.1): AAA post-filter in app.js (from 05-06) is the likely root cause of SEARCH-01 — fewer AAA results when space is sparse. Plan may revisit the post-filter vs findVariantPairs threshold-parameter trade-off.
 
 ## Quick Tasks Completed
 
@@ -132,6 +134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-24T20:20:30.774Z
-Stopped at: Completed 06-07-validate-phase-5-PLAN.md
+Last session: 2026-04-24T22:00:00.000Z
+Stopped at: Roadmap created for v1.1 (phases 7-9)
 Resume file: None

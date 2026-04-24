@@ -36,4 +36,15 @@ _None captured — carry forward from v1.2 scoping if needed._
 
 ## Traceability
 
-_Empty — populated by roadmapper when phases map to REQ-IDs._
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| SEARCH-01   | Phase 7 | Pending |
+| SEARCH-02   | Phase 7 | Pending |
+| SEARCH-03   | Phase 7 | Pending |
+| INPUT-01    | Phase 8 | Pending |
+| INPUT-02    | Phase 8 | Pending |
+| INPUT-03    | Phase 8 | Pending |
+| RESP-01     | Phase 9 | Pending |
+| RESP-02     | Phase 9 | Pending |
+
+**Coverage:** 8/8 v1.1 requirements mapped ✓
