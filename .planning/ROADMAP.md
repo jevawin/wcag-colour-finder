@@ -140,7 +140,7 @@ Plans:
 Plans:
 - [x] 06-01-empty-state-copy-PLAN.md — VAR-05 empty-state copy: `<p class="alts-empty">` + announce transition
 - [x] 06-02-orphan-cleanup-PLAN.md — Remove DISTANCE_WARNING_THRESHOLD export + test
-- [ ] 06-03-validate-phase-1-PLAN.md — /gsd:validate-phase 1 (Nyquist backfill)
+- [x] 06-03-validate-phase-1-PLAN.md — /gsd:validate-phase 1 (Nyquist backfill)
 - [ ] 06-04-validate-phase-2-PLAN.md — /gsd:validate-phase 2 (Nyquist backfill)
 - [ ] 06-05-validate-phase-3-PLAN.md — /gsd:validate-phase 3 (Nyquist backfill)
 - [ ] 06-06-validate-phase-4-PLAN.md — /gsd:validate-phase 4 (Nyquist backfill)
