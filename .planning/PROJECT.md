@@ -49,13 +49,13 @@ Given any hex colour, find the closest accessible variant(s) that pass WCAG AA c
 
 ### Active (v1.1)
 
-- [ ] Auto-find triggers on valid 6-char hex and on AA/AAA toggle; "Find 5" button removed
+- [x] Auto-find triggers on valid 6-char hex and on AA/AAA toggle; "Find 5" button removed — v1.1 (Phase 8, INPUT-01/02)
 - [x] AAA mode returns results whenever colour space permits — v1.1 (Phase 7, SEARCH-01)
 - [x] Variant spread — 5 results span wider L-axis range (nearest preserved, furthest extended) — v1.1 (Phase 7, SEARCH-02)
 - [x] Asymmetric search — input retained on any BG it already passes; alt searched only for failing BG — v1.1 (Phase 7, SEARCH-03)
 - [ ] Responsive: badge labels visible at all supported widths
 - [ ] Responsive: hex input does not push container off-screen at narrow widths
-- [ ] Hex 3-char autocomplete fix promoted from quick task 260424-tzn
+- [x] Hex 3-char autocomplete fix promoted from quick task 260424-tzn — v1.1 (Phase 8, INPUT-03)
 
 ### Out of Scope
 
