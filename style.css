@@ -515,6 +515,33 @@ h1 {
   .digits { font-size: 30px; }
 }
 
+/* RESP-01 + RESP-02 — narrow-viewport fixes (Phase 9) */
+@media (max-width: 480px) {
+  /* RESP-01: pills relax from 4-col to 2-col so full label text fits */
+  .pills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pill-wrap { min-width: 0; }            /* allow grid cell to shrink and contain wrapping label */
+  .pill {
+    flex-wrap: wrap;                       /* allow glyph + Pass/Fail to wrap if cell is very narrow */
+    padding: 6px 12px;                     /* trim padding so 2-col fits the 320px floor */
+  }
+  .pill-label {
+    overflow-wrap: anywhere;               /* defensive: break long words if they ever appear */
+  }
+
+  /* RESP-02: hex input scales fluidly down to the 320px floor */
+  .row-one { min-width: 0; }
+  .hex-input {
+    min-width: 0;
+    padding: 0 12px;                       /* trim from 16px so 320px viewport fits */
+  }
+  .hex-input input[type="text"],
+  .hex-input .hash {
+    font-size: clamp(16px, 4.5vw, 22px);   /* iOS-safe floor (≥16px avoids Safari focus zoom — D-05) */
+  }
+}
+
 /* --- Unified focus — A11Y-03 --- */
 .topbar-wrap :focus-visible,
 .topbar-wrap .hex-input:focus-within {
