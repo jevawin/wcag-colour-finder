@@ -346,14 +346,23 @@ if (typeof document !== 'undefined') {
   }
 
   /**
-   * Wire a hex text input: sanitise on input and call setter when we have
-   * a valid 3- or 6-char hex.
+   * Wire a hex text input.
+   *  - On input: sanitise (strip non-hex, uppercase, max 6) and call setter
+   *    when length === 6 (D-09 — no mid-typing expansion).
+   *  - On blur: if the trimmed value is a valid 3-char shorthand, expand to
+   *    6-char uppercase and call setter (D-10/D-11 — deferred expansion).
+   *    expandShorthandIfValid returns null for 6-char input, so blur is a
+   *    no-op when the input handler already committed (research Pitfall 4).
    */
   function wireHexInput(inputEl, setter) {
     inputEl.addEventListener('input', (e) => {
       const v = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
       e.target.value = v;
       if (v.length === 6 && parseHex(v)) setter(v);
+    });
+    inputEl.addEventListener('blur', (e) => {
+      const expanded = expandShorthandIfValid(e.target.value);
+      if (expanded) setter(expanded);
     });
   }
   wireHexInput(baseText,    setBase);
