@@ -25,7 +25,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 ### 🚧 v1.1 Polish + Fixes (active)
 
 - [ ] **Phase 7: Search Correctness & Spread** — Fix AAA search defect, widen variant L-axis spread, keep accessible side when only one BG fails
-- [ ] **Phase 8: Auto-Find UX** — Remove "Find 5" button; search runs on valid hex and on AA/AAA toggle; 3-char shorthand no longer auto-expands
+- [x] **Phase 8: Auto-Find UX** — Remove "Find 5" button; search runs on valid hex and on AA/AAA toggle; 3-char shorthand no longer auto-expands (completed 2026-04-25)
 - [ ] **Phase 9: Responsive Fixes** — Badge labels visible at all widths; hex input does not push container off-screen
 
 ## Phase Details
@@ -85,5 +85,5 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 | 5.1. Editable Specimens         | v1.0      | 1/1            | Complete    | 2026-04-23 |
 | 6. Gap Closure                  | v1.0      | 7/7            | Complete    | 2026-04-24 |
 | 7. Search Correctness & Spread  | v1.1      | 0/3            | Planned     | -          |
-| 8. Auto-Find UX                 | v1.1      | 0/3            | Planned     | -          |
+| 8. Auto-Find UX                 | v1.1      | 0/3            | Complete    | 2026-04-25 |
 | 9. Responsive Fixes             | v1.1      | 0/0            | Not started | -          |
