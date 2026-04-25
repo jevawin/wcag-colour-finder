@@ -4,8 +4,8 @@ milestone: v1.1
 milestone_name: Polish + Fixes
 status: verifying
 stopped_at: Completed 07-03-app-integration-PLAN.md
-last_updated: "2026-04-24T22:41:05.887Z"
-last_activity: 2026-04-24
+last_updated: "2026-04-25T18:36:03Z"
+last_activity: 2026-04-25
 progress:
   total_phases: 3
   completed_phases: 1
@@ -138,9 +138,10 @@ None yet.
 | Slug | Date | Summary | Files |
 |------|------|---------|-------|
 | 260424-tzn-disable-hex-input-3-char-autocomplete | 2026-04-24 | Stop hex input auto-expanding 3-char shorthand mid-typing | app.js |
+| 260425-r3v-phase-7-gap-closure-default-dark-bg-disa | 2026-04-25 | Flip DEFAULT_DARK to #000000; disambiguate findVariantPairs return shape (sentinel object vs empty Array) | app.js, index.html, variant-search.js, test/app.test.js, test/variant-search.test.js |
 
 ## Session Continuity
 
-Last session: 2026-04-24T22:39:28.978Z
-Stopped at: Completed 07-03-app-integration-PLAN.md
+Last session: 2026-04-25T18:36:03Z
+Stopped at: Completed quick task 260425-r3v (Phase 7 gap closure)
 Resume file: None
