@@ -18,8 +18,8 @@
 
 ### Responsive UI (RESP)
 
-- [ ] **RESP-01**: Badge labels (AA Normal / AA Large / AAA Normal / AAA Large) remain fully visible at all supported viewport widths — no off-screen clipping
-- [ ] **RESP-02**: Hex input container scales with viewport at narrow widths — no min-width overflow pushing content off-screen
+- [x] **RESP-01**: Badge labels (AA Normal / AA Large / AAA Normal / AAA Large) remain fully visible at all supported viewport widths — no off-screen clipping
+- [x] **RESP-02**: Hex input container scales with viewport at narrow widths — no min-width overflow pushing content off-screen
 
 ## Future Requirements
 
@@ -44,7 +44,7 @@ _None captured — carry forward from v1.2 scoping if needed._
 | INPUT-01    | Phase 8 | Complete |
 | INPUT-02    | Phase 8 | Complete |
 | INPUT-03    | Phase 8 | Complete |
-| RESP-01     | Phase 9 | Pending |
-| RESP-02     | Phase 9 | Pending |
+| RESP-01     | Phase 9 | Complete |
+| RESP-02     | Phase 9 | Complete |
 
 **Coverage:** 8/8 v1.1 requirements mapped ✓

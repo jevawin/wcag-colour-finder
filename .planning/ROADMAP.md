@@ -68,7 +68,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   2. User resizes to narrow viewport widths; the hex input container scales with the viewport and does not push content off-screen
   3. Tool continues to pass WCAG AA at all supported widths (no regression from v1.0 Phase 5)
 **Plans**: 1 plan
-- [ ] 09-01-narrow-viewport-fix-PLAN.md — Add @media (max-width: 480px) block in style.css: pills 4→2 col, min-width:0 on flex chain, clamp() font-size for hex input (RESP-01, RESP-02)
+- [x] 09-01-narrow-viewport-fix-PLAN.md — Add @media (max-width: 480px) block in style.css: pills 4→2 col, min-width:0 on flex chain, clamp() font-size for hex input (RESP-01, RESP-02)
 **UI hint**: yes
 
 ## Progress

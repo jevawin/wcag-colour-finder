@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish + Fixes
 status: verifying
-stopped_at: Phase 9 context gathered
-last_updated: "2026-04-25T19:56:01.745Z"
+stopped_at: Completed 09-01-narrow-viewport-fix-PLAN.md (visual sweep auto-approved, real human UAT pending)
+last_updated: "2026-04-25T20:11:18.880Z"
 last_activity: 2026-04-25
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -20,13 +20,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Given any hex colour, find the closest accessible variant(s) that pass WCAG AA contrast against light and dark backgrounds.
-**Current focus:** Phase 8 — auto-find-ux
+**Current focus:** Phase 09 — responsive-fixes
 
 ## Current Position
 
 Milestone: v1.1 Polish + Fixes
-Phase: 9
-Plan: Not started
+Phase: 09 (responsive-fixes) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-25
 
@@ -75,6 +75,7 @@ Last activity: 2026-04-25
 | Phase 08-auto-find-ux P01 | 1m | 1 tasks | 2 files |
 | Phase 08-auto-find-ux P03 | 2m | 1 tasks | 1 files |
 | Phase 08-auto-find-ux P02 | 1m | 2 tasks | 3 files |
+| Phase 09-responsive-fixes P01 | 25m | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,8 @@ Recent decisions affecting current work:
 - [Phase 08-auto-find-ux]: 08-03: Phase regression test pattern — append describe('Phase N — <name> (REQ-IDs)') with grep-friendly REQ-ID tagging in block + it names
 - [Phase 08-auto-find-ux]: 08-03: Divergence assertion (same input + different param ⇒ different result) added as the regression-lock for targetRatio threading — no other test catches a silent param-drop
 - [Phase 08-auto-find-ux]: 08-02: blur listener inside wireHexInput so all three hex inputs inherit shorthand-expand without per-input duplication
+- [Phase 09-responsive-fixes]: 09-01: clamp(16px, 4.5vw, 22px) on .hex-input + .hash preserves iOS 16px focus-zoom floor (D-05) while allowing fluid scaling above 320px
+- [Phase 09-responsive-fixes]: 09-01: visual sweep checkpoint auto-approved under --auto chain; real human UAT still required before phase closure
 
 ### Pending Todos
 
@@ -148,6 +151,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-25T19:56:01.742Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-responsive-fixes/09-CONTEXT.md
+Last session: 2026-04-25T20:11:12.246Z
+Stopped at: Completed 09-01-narrow-viewport-fix-PLAN.md (visual sweep auto-approved, real human UAT pending)
+Resume file: None
