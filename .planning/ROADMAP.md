@@ -56,7 +56,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 **Plans**: 3 plans
 - [x] 08-01-PLAN.md — Add expandShorthandIfValid pure helper + unit tests (INPUT-03)
 - [ ] 08-02-PLAN.md — Remove Find 5 button surface (HTML/JS/CSS) and wire blur-expand into wireHexInput (INPUT-01, INPUT-03)
-- [ ] 08-03-PLAN.md — Add Phase 8 regression tests for INPUT-01 / INPUT-02
+- [x] 08-03-PLAN.md — Add Phase 8 regression tests for INPUT-01 / INPUT-02
 **UI hint**: yes
 
 ### Phase 9: Responsive Fixes

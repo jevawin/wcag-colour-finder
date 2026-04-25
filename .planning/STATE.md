@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish + Fixes
 status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-04-25T19:46:20.867Z"
+stopped_at: Completed 08-03-PLAN.md
+last_updated: "2026-04-25T19:48:47.059Z"
 last_activity: 2026-04-25
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 
 Milestone: v1.1 Polish + Fixes
 Phase: 8 (auto-find-ux) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-25
 
@@ -73,6 +73,7 @@ Last activity: 2026-04-25
 | Phase 07 P02 | 15m | 2 tasks | 2 files |
 | Phase 07-search-correctness-spread P03 | 8m | 2 tasks | 2 files |
 | Phase 08-auto-find-ux P01 | 1m | 1 tasks | 2 files |
+| Phase 08-auto-find-ux P03 | 2m | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -122,6 +123,8 @@ Recent decisions affecting current work:
 - [Phase 07]: Gamut a/b tolerance widened 0.02 -> 0.05 in searchLForBg to unblock AAA for saturated mid-tones (#2563EB); Phase 4 clamp-direction rule preserved
 - [Phase 07-search-correctness-spread]: 07-03: post-filter removed from app.js; autoFindAndApply threads targetRatio (4.5/7.0) into findVariantPairs
 - [Phase 07-search-correctness-spread]: 07-03: already-accessible branch announces 'This colour is already accessible on both backgrounds' distinct from no-solution copy (D-12/D-15)
+- [Phase 08-auto-find-ux]: 08-03: Phase regression test pattern — append describe('Phase N — <name> (REQ-IDs)') with grep-friendly REQ-ID tagging in block + it names
+- [Phase 08-auto-find-ux]: 08-03: Divergence assertion (same input + different param ⇒ different result) added as the regression-lock for targetRatio threading — no other test catches a silent param-drop
 
 ### Pending Todos
 
@@ -143,6 +146,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-25T19:46:20.865Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-04-25T19:48:47.057Z
+Stopped at: Completed 08-03-PLAN.md
 Resume file: None
