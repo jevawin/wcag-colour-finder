@@ -14,7 +14,7 @@
 
 - [ ] **INPUT-01**: Search runs automatically on valid 6-char hex entry; the "Find 5" button is removed
 - [ ] **INPUT-02**: Toggling AA / AAA re-runs search automatically against the new threshold
-- [ ] **INPUT-03**: Hex input accepts 3-char shorthand without auto-expanding mid-typing (promote quick task 260424-tzn)
+- [x] **INPUT-03**: Hex input accepts 3-char shorthand without auto-expanding mid-typing (promote quick task 260424-tzn)
 
 ### Responsive UI (RESP)
 
@@ -43,7 +43,7 @@ _None captured — carry forward from v1.2 scoping if needed._
 | SEARCH-03   | Phase 7 | Complete |
 | INPUT-01    | Phase 8 | Pending |
 | INPUT-02    | Phase 8 | Pending |
-| INPUT-03    | Phase 8 | Pending |
+| INPUT-03    | Phase 8 | Complete |
 | RESP-01     | Phase 9 | Pending |
 | RESP-02     | Phase 9 | Pending |
 

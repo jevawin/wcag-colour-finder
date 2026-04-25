@@ -54,7 +54,7 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   3. User types a 3-char shorthand hex; the input does not auto-expand mid-typing
   4. "Find 5" button no longer appears in the UI
 **Plans**: 3 plans
-- [ ] 08-01-PLAN.md — Add expandShorthandIfValid pure helper + unit tests (INPUT-03)
+- [x] 08-01-PLAN.md — Add expandShorthandIfValid pure helper + unit tests (INPUT-03)
 - [ ] 08-02-PLAN.md — Remove Find 5 button surface (HTML/JS/CSS) and wire blur-expand into wireHexInput (INPUT-01, INPUT-03)
 - [ ] 08-03-PLAN.md — Add Phase 8 regression tests for INPUT-01 / INPUT-02
 **UI hint**: yes
