@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Polish + Fixes
-status: executing
-stopped_at: Completed 08-03-PLAN.md
-last_updated: "2026-04-25T19:48:47.059Z"
+status: verifying
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-04-25T19:49:20.175Z"
 last_activity: 2026-04-25
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Milestone: v1.1 Polish + Fixes
 Phase: 8 (auto-find-ux) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-25
 
 ## Performance Metrics
@@ -74,6 +74,7 @@ Last activity: 2026-04-25
 | Phase 07-search-correctness-spread P03 | 8m | 2 tasks | 2 files |
 | Phase 08-auto-find-ux P01 | 1m | 1 tasks | 2 files |
 | Phase 08-auto-find-ux P03 | 2m | 1 tasks | 1 files |
+| Phase 08-auto-find-ux P02 | 1m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,7 @@ Recent decisions affecting current work:
 - [Phase 07-search-correctness-spread]: 07-03: already-accessible branch announces 'This colour is already accessible on both backgrounds' distinct from no-solution copy (D-12/D-15)
 - [Phase 08-auto-find-ux]: 08-03: Phase regression test pattern — append describe('Phase N — <name> (REQ-IDs)') with grep-friendly REQ-ID tagging in block + it names
 - [Phase 08-auto-find-ux]: 08-03: Divergence assertion (same input + different param ⇒ different result) added as the regression-lock for targetRatio threading — no other test catches a silent param-drop
+- [Phase 08-auto-find-ux]: 08-02: blur listener inside wireHexInput so all three hex inputs inherit shorthand-expand without per-input duplication
 
 ### Pending Todos
 
@@ -146,6 +148,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-25T19:48:47.057Z
-Stopped at: Completed 08-03-PLAN.md
+Last session: 2026-04-25T19:49:20.173Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: None
