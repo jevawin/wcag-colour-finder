@@ -2,7 +2,7 @@
 phase: 8
 slug: auto-find-ux
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: true
 created: 2026-04-25
 ---
