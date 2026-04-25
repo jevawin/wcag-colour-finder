@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBadgeState, expandHex, formatRatio, buildPillHTML } from '../app.js';
+import { buildBadgeState, expandHex, formatRatio, buildPillHTML, expandShorthandIfValid } from '../app.js';
 import { findVariantPairs } from '../variant-search.js';
 import { contrastRatio } from '../colour-engine.js';
 
@@ -53,6 +53,35 @@ describe('expandHex', () => {
 
   it('expands abc to AABBCC', () => {
     assert.equal(expandHex('abc'), 'AABBCC');
+  });
+});
+
+describe('expandShorthandIfValid', () => {
+  it('expands valid 3-char hex to 6-char uppercase', () => {
+    assert.equal(expandShorthandIfValid('abc'), 'AABBCC');
+  });
+
+  it('strips a leading # before expanding', () => {
+    assert.equal(expandShorthandIfValid('#f0a'), 'FF00AA');
+  });
+
+  it('returns null for 6-char input (no double-expand)', () => {
+    assert.equal(expandShorthandIfValid('AABBCC'), null);
+    assert.equal(expandShorthandIfValid('2563EB'), null);
+  });
+
+  it('returns null for 4 or 5 char input', () => {
+    assert.equal(expandShorthandIfValid('abcd'), null);
+    assert.equal(expandShorthandIfValid('abcde'), null);
+  });
+
+  it('returns null for invalid chars at length 3', () => {
+    assert.equal(expandShorthandIfValid('xyz'), null);
+    assert.equal(expandShorthandIfValid('a1g'), null);
+  });
+
+  it('returns null for empty string', () => {
+    assert.equal(expandShorthandIfValid(''), null);
   });
 });
 
