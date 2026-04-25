@@ -172,3 +172,55 @@ describe('app.js integration — findVariantPairs call pattern', () => {
       `default dark BG must enable >=1 AAA pair for #2563EB, got ${result.length}`);
   });
 });
+
+// --- Phase 8 regression: auto-find UX wiring ---
+// INPUT-01: Search runs on valid 6-char hex (no Find 5 button required).
+//   Verifies the call shape autoFindAndApply uses (app.js:253-259) with
+//   targetRatio=4.5 returns variant pairs for an input that fails on both
+//   default backgrounds. The button-removal half of INPUT-01 is verified by
+//   grep on index.html / app.js / style.css (see 08-02 PLAN acceptance).
+// INPUT-02: AA / AAA toggle re-runs search against the new threshold.
+//   The toggle handler at app.js:366 calls autoFindAndApply with the
+//   updated state.target. These tests prove the targetRatio parameter is
+//   honoured by findVariantPairs — without that, the toggle would be a
+//   no-op and INPUT-02 would silently regress.
+
+describe('Phase 8 — auto-find UX (INPUT-01, INPUT-02)', () => {
+  it('INPUT-01: AA call (targetRatio=4.5) returns Array of variant pairs for a both-fail input', () => {
+    const result = findVariantPairs('#777777', '#FFFFFF', '#000000', 5, 4.5);
+    assert.ok(Array.isArray(result),
+      'AA search must return an Array (not null, not alreadyAccessible sentinel) for a both-fail input');
+    assert.ok(result.length >= 1,
+      'AA search must return at least one variant pair for #777777 on default backgrounds');
+  });
+
+  it('INPUT-02: AAA call (targetRatio=7.0) returns Array of variant pairs for the same input', () => {
+    const result = findVariantPairs('#777777', '#FFFFFF', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(result),
+      'AAA search must return an Array for an input that fails AAA on both BGs');
+    for (const p of result) {
+      const lr = contrastRatio(p.lightHex, '#FFFFFF');
+      const dr = contrastRatio(p.darkHex,  '#000000');
+      assert.ok(lr !== null && lr >= 7.0,
+        `${p.lightHex} fails AAA on #FFFFFF (ratio ${lr})`);
+      assert.ok(dr !== null && dr >= 7.0,
+        `${p.darkHex} fails AAA on #000000 (ratio ${dr})`);
+    }
+  });
+
+  it('INPUT-02: AA and AAA calls for the same input produce different result sets (toggle drives recompute)', () => {
+    const aa  = findVariantPairs('#777777', '#FFFFFF', '#000000', 5, 4.5);
+    const aaa = findVariantPairs('#777777', '#FFFFFF', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(aa) && Array.isArray(aaa),
+      'both calls must succeed for the divergence comparison to be meaningful');
+    // AAA is strictly harder than AA — first variant lightHex MUST differ
+    // OR result lengths MUST differ. If both match, the targetRatio param
+    // is being ignored and INPUT-02 has silently regressed.
+    const sameFirst = aa.length > 0 && aaa.length > 0
+      && aa[0].lightHex === aaa[0].lightHex
+      && aa[0].darkHex === aaa[0].darkHex;
+    const sameLength = aa.length === aaa.length;
+    assert.ok(!(sameFirst && sameLength),
+      'AA and AAA results must differ in either first variant or length — same result set means targetRatio is ignored');
+  });
+});
