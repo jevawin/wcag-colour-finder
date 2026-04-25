@@ -8,9 +8,11 @@
 //
 // Exports:
 //   findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRatio = 4.5)
-//     → Array<{ lightHex, darkHex, distance }> | null
-//     Returns [] (empty array) when input already passes targetRatio on both BGs.
-//     Returns null only for invalid inputHex.
+//     → { alreadyAccessible: true, pairs: [] }      // input passes targetRatio on BOTH BGs (D-12)
+//     | Array<{ lightHex, darkHex, distance }>      // 0..count entries; length 0 = genuine no-solution
+//     | null                                        // invalid inputHex
+//     The sentinel object disambiguates "already accessible" from "no solution"
+//     so callers can announce the correct status without array-emptiness heuristics.
 
 import {
   parseHex,
@@ -146,7 +148,10 @@ function searchLForBg(L, a, b, direction, bgHex, targetRatio, seedDelta = 0) {
  * Per-side gating (D-09/D-10/D-11/D-12):
  *   - If input already passes `targetRatio` on a BG, that side is LOCKED to
  *     the input hex and only the failing side is searched.
- *   - If input passes both sides at `targetRatio`, returns [] (empty array).
+ *   - If input passes both sides at `targetRatio`, returns the discriminated
+ *     sentinel `{ alreadyAccessible: true, pairs: [] }` (D-12) so callers can
+ *     announce "already accessible" without conflating it with a genuine
+ *     no-solution empty array.
  *
  * Distance metric (per 04-RESEARCH.md Open Question 3 + D-13):
  *   `max(distLight, distDark)` where a locked side contributes 0.
@@ -157,9 +162,15 @@ function searchLForBg(L, a, b, direction, bgHex, targetRatio, seedDelta = 0) {
  * @param {string} darkBg       - Dark background hex (e.g. '#000000')
  * @param {number} count        - Maximum pairs to return (default 5)
  * @param {number} targetRatio  - WCAG contrast threshold (default 4.5 = AA normal; use 7.0 for AAA)
- * @returns {Array<{ lightHex: string, darkHex: string, distance: number }> | null}
- *   - Array of pairs (possibly empty if both sides already pass at targetRatio)
- *   - null only for invalid inputHex
+ * @returns {{ alreadyAccessible: true, pairs: [] }
+ *   | Array<{ lightHex: string, darkHex: string, distance: number }>
+ *   | null}
+ *   - Sentinel object when input already passes targetRatio on BOTH BGs (D-12).
+ *     `Array.isArray()` is false for the sentinel — consumers MUST check
+ *     `result.alreadyAccessible === true` before treating result as an array.
+ *   - Plain Array (possibly empty) for the search path. Empty Array = genuine
+ *     no-solution at this targetRatio.
+ *   - null only for invalid inputHex.
  */
 export function findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRatio = 4.5) {
   const rgb = parseHex(inputHex);
@@ -171,7 +182,7 @@ export function findVariantPairs(inputHex, lightBg, darkBg, count = 5, targetRat
   const lightPasses = lightRatio !== null && lightRatio >= targetRatio;
   const darkPasses  = darkRatio  !== null && darkRatio  >= targetRatio;
 
-  if (lightPasses && darkPasses) return []; // D-12
+  if (lightPasses && darkPasses) return { alreadyAccessible: true, pairs: [] }; // D-12
 
   const origin = srgbToOklab(rgb.r, rgb.g, rgb.b);
 

@@ -207,13 +207,30 @@ describe('findVariantPairs — asymmetric search (SEARCH-03)', () => {
     }
   });
 
-  it('both-pass case returns [] — input already accessible on both BGs', () => {
+  it('both-pass case returns { alreadyAccessible: true, pairs: [] } sentinel', () => {
     // #000000 vs #ffffff = 21:1 (passes AA), #000000 vs #888888 = 5.92:1 (passes AA).
-    // Both pass at 4.5 → expect [].
-    const results = findVariantPairs('#000000', '#ffffff', '#888888', 5, 4.5);
-    assert.ok(Array.isArray(results));
-    assert.strictEqual(results.length, 0,
-      `expected [] for both-pass input, got ${results.length} pair(s)`);
+    // Both pass at 4.5 → expect sentinel object, not bare array (D-12).
+    const result = findVariantPairs('#000000', '#ffffff', '#888888', 5, 4.5);
+    assert.strictEqual(Array.isArray(result), false,
+      'sentinel must NOT be an array — guards consumers from treating it as one');
+    assert.strictEqual(result.alreadyAccessible, true,
+      'sentinel must have alreadyAccessible === true');
+    assert.ok(Array.isArray(result.pairs), 'sentinel must expose a pairs array');
+    assert.strictEqual(result.pairs.length, 0, 'pairs array must be empty for sentinel');
+  });
+
+  it('genuine no-solution returns plain empty Array (not sentinel)', () => {
+    // Input hex equals BOTH backgrounds → contrast 1:1 on both sides, neither
+    // already-accessible nor solvable inside the colour family. The both-pass
+    // gate is false (lightPasses=false), so we fall through into the search;
+    // because input == BG on both sides, both fail and the result is a plain
+    // empty array — the genuine no-solution signal (distinct from sentinel).
+    const result = findVariantPairs('#777777', '#777777', '#777777', 5, 7.0);
+    assert.ok(Array.isArray(result),
+      'no-solution case must return a plain Array, not the sentinel');
+    assert.strictEqual(result.length, 0, 'no-solution Array must be empty');
+    assert.strictEqual(result.alreadyAccessible, undefined,
+      'plain Array must not carry the alreadyAccessible flag');
   });
 
   it('threshold toggle flips lock state', () => {
