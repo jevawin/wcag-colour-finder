@@ -91,7 +91,7 @@ if (typeof document !== 'undefined') {
   const URL_DEBOUNCE_MS = 300;
   const DEFAULT_BASE = '2563EB';
   const DEFAULT_LIGHT = 'FFFFFF';
-  const DEFAULT_DARK = '111111';
+  const DEFAULT_DARK = '000000';
 
   // Element cache
   const baseText      = document.getElementById('base-text');
@@ -238,9 +238,15 @@ if (typeof document !== 'undefined') {
    * Run findVariantPairs with the active threshold and apply results to state.
    *
    * Phase 7: search is threshold-aware (D-01 / D-02). No post-filter.
-   * An empty array return from findVariantPairs means the input already
-   * passes targetRatio on both backgrounds (D-12) — surface that as an
-   * "already accessible" status, NOT as "no accessible pair".
+   *
+   * findVariantPairs returns one of three discriminated shapes (D-12):
+   *   - null                                       → invalid base hex
+   *   - { alreadyAccessible: true, pairs: [] }     → input passes on both BGs
+   *   - Array<pair>                                → search result (possibly empty = no solution)
+   *
+   * The sentinel lets us announce "already accessible" only for the both-pass
+   * branch, and "No accessible pair found" only for a genuine empty array —
+   * no array-emptiness heuristic needed.
    */
   function autoFindAndApply() {
     const targetRatio = state.target === 'AAA' ? 7.0 : 4.5;
@@ -252,12 +258,10 @@ if (typeof document !== 'undefined') {
       targetRatio,
     );
 
-    // Distinguish the three outcomes:
-    //   raw === null                            → invalid base hex (shouldn't reach here in practice)
-    //   Array.isArray(raw) && raw.length === 0  → input already accessible on both BGs (D-12)
-    //   non-empty array                         → normal search result
-    const alreadyAccessible = Array.isArray(raw) && raw.length === 0;
-    const pairs = Array.isArray(raw) ? raw : [];
+    if (raw === null) return; // invalid hex — should not normally reach here
+
+    const alreadyAccessible = !Array.isArray(raw) && raw.alreadyAccessible === true;
+    const pairs = Array.isArray(raw) ? raw : raw.pairs;
 
     state.alts = pairs.map(p => ({
       lightHex: p.lightHex.replace(/^#/, '').toUpperCase(),
@@ -275,14 +279,18 @@ if (typeof document !== 'undefined') {
       state.appliedDark  = null;
     }
 
-    // Status announcements — at most one per call, only on transitions.
-    if (alreadyAccessible && prevAltsLen !== 0) {
-      announce('This colour is already accessible on both backgrounds');
-    } else if (!alreadyAccessible && prevAltsLen > 0 && state.alts.length === 0) {
+    // Status announcements driven by the discriminated return shape, not by
+    // array-emptiness. The prevAltsLen guard keeps idempotent re-renders
+    // (same threshold, same input) from re-announcing on every keystroke.
+    if (alreadyAccessible) {
+      // Announce on first-load (sr-status empty) or whenever we transition
+      // from a result list back into already-accessible territory.
+      if (prevAltsLen !== 0 || srStatus.textContent === '') {
+        announce('This colour is already accessible on both backgrounds');
+      }
+    } else if (state.alts.length === 0 && prevAltsLen > 0) {
       announce('No accessible pair found for this colour');
     }
-    // Note: when alreadyAccessible is true and prevAltsLen was already 0,
-    // stay silent — no state change to announce.
     prevAltsLen = state.alts.length;
 
     renderAlts();

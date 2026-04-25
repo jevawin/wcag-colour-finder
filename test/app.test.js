@@ -120,11 +120,26 @@ describe('app.js integration — findVariantPairs call pattern', () => {
     }
   });
 
-  it('already-accessible inputs return [] — autoFindAndApply surfaces this as a status, not as results', () => {
+  it('alreadyAccessible sentinel — autoFindAndApply pattern recognises object shape, not array', () => {
     // #000000 passes AA on both #FFFFFF (21:1) and #888888 (5.92:1).
+    // Post-disambiguation: result is the sentinel object, NOT a bare empty Array.
+    // autoFindAndApply must distinguish this branch from a genuine empty array.
     const result = findVariantPairs('#000000', '#FFFFFF', '#888888', 5, 4.5);
-    assert.ok(Array.isArray(result));
-    assert.strictEqual(result.length, 0,
-      'already-accessible input must return [] so the app can show already-accessible status');
+    assert.strictEqual(Array.isArray(result), false,
+      'sentinel must NOT be an array — guards consumers from treating it as one');
+    assert.strictEqual(result.alreadyAccessible, true,
+      'sentinel must carry alreadyAccessible === true');
+    assert.ok(Array.isArray(result.pairs) && result.pairs.length === 0,
+      'sentinel must expose an empty pairs array');
+  });
+
+  it('Default dark BG #000000 enables AAA pairs for #2563EB on fresh load', () => {
+    // Phase 7 D-10 set the dark default to #000000. With #111111 the search
+    // could not reach AAA inside the gamut tolerance for #2563EB; with
+    // #000000 it can. This test documents that the new default reaches AAA.
+    const result = findVariantPairs('#2563EB', '#FFFFFF', '#000000', 5, 7.0);
+    assert.ok(Array.isArray(result), 'expected Array result for AAA search');
+    assert.ok(result.length >= 1,
+      `default dark BG must enable >=1 AAA pair for #2563EB, got ${result.length}`);
   });
 });
