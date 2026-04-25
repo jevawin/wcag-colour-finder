@@ -55,6 +55,20 @@ function formatRatio(ratio) {
 }
 
 /**
+ * If value (sans #) is exactly 3 hex chars, return the 6-char uppercase
+ * expansion. Otherwise return null. Used by blur-expand for hex text inputs.
+ *
+ * @param {string} value - Raw input value (may include leading #)
+ * @returns {string|null} 6-char uppercase hex, or null if not expandable
+ */
+function expandShorthandIfValid(value) {
+  const v = value.replace(/^#/, '');
+  if (v.length !== 3) return null;
+  if (!/^[0-9a-fA-F]{3}$/.test(v)) return null;
+  return v.split('').map(c => c + c).join('').toUpperCase();
+}
+
+/**
  * Pick a monochrome foreground (#000000 or #ffffff) that meets AA against the
  * supplied user hex used as a background. Black wins when it passes AA (4.5:1)
  * against userHex; otherwise white.
@@ -83,7 +97,7 @@ function buildPillHTML(label, passes) {
 }
 
 // Named exports for testing — pure functions with no DOM dependency
-export { buildBadgeState, expandHex, formatRatio, chooseChromeForeground, buildPillHTML };
+export { buildBadgeState, expandHex, formatRatio, chooseChromeForeground, buildPillHTML, expandShorthandIfValid };
 
 // --- DOM wiring (browser only) ---
 
