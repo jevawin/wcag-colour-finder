@@ -67,10 +67,8 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   1. User resizes to narrow viewport widths; all badge labels (AA Normal / AA Large / AAA Normal / AAA Large) remain fully visible
   2. User resizes to narrow viewport widths; the hex input container scales with the viewport and does not push content off-screen
   3. Tool continues to pass WCAG AA at all supported widths (no regression from v1.0 Phase 5)
-**Plans**: 3 plans
-- [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
-- [ ] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
-- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
+**Plans**: 1 plan
+- [ ] 09-01-narrow-viewport-fix-PLAN.md — Add @media (max-width: 480px) block in style.css: pills 4→2 col, min-width:0 on flex chain, clamp() font-size for hex input (RESP-01, RESP-02)
 **UI hint**: yes
 
 ## Progress
@@ -86,4 +84,4 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 | 6. Gap Closure                  | v1.0      | 7/7            | Complete    | 2026-04-24 |
 | 7. Search Correctness & Spread  | v1.1      | 0/3            | Planned     | -          |
 | 8. Auto-Find UX                 | v1.1      | 0/3            | Complete    | 2026-04-25 |
-| 9. Responsive Fixes             | v1.1      | 0/0            | Not started | -          |
+| 9. Responsive Fixes             | v1.1      | 0/1            | Planned     | -          |
