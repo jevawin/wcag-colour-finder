@@ -54,9 +54,9 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
   3. User types a 3-char shorthand hex; the input does not auto-expand mid-typing
   4. "Find 5" button no longer appears in the UI
 **Plans**: 3 plans
-- [x] 07-01-colour-engine-threshold-PLAN.md — Add passesThreshold helper + tests
-- [x] 07-02-variant-search-refactor-PLAN.md — Threshold-aware search, L-stretch seeds, asymmetric gating
-- [ ] 07-03-app-integration-PLAN.md — Remove post-filter, plumb threshold, already-accessible status
+- [ ] 08-01-PLAN.md — Add expandShorthandIfValid pure helper + unit tests (INPUT-03)
+- [ ] 08-02-PLAN.md — Remove Find 5 button surface (HTML/JS/CSS) and wire blur-expand into wireHexInput (INPUT-01, INPUT-03)
+- [ ] 08-03-PLAN.md — Add Phase 8 regression tests for INPUT-01 / INPUT-02
 **UI hint**: yes
 
 ### Phase 9: Responsive Fixes
@@ -85,5 +85,5 @@ Full details: [.planning/milestones/v1.0-ROADMAP.md](./milestones/v1.0-ROADMAP.m
 | 5.1. Editable Specimens         | v1.0      | 1/1            | Complete    | 2026-04-23 |
 | 6. Gap Closure                  | v1.0      | 7/7            | Complete    | 2026-04-24 |
 | 7. Search Correctness & Spread  | v1.1      | 0/3            | Planned     | -          |
-| 8. Auto-Find UX                 | v1.1      | 0/0            | Not started | -          |
+| 8. Auto-Find UX                 | v1.1      | 0/3            | Planned     | -          |
 | 9. Responsive Fixes             | v1.1      | 0/0            | Not started | -          |
