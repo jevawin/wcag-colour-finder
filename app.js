@@ -114,8 +114,6 @@ if (typeof document !== 'undefined') {
   // the native picker.
   const basePicker    = document.getElementById('base-color');
   const baseSwatch    = document.getElementById('base-swatch');
-  const findBtn       = document.getElementById('find-btn');
-  const findLabel     = document.getElementById('find-btn-label');
   const altsEl        = document.getElementById('alts');
   const srStatus      = document.getElementById('sr-status');
 
@@ -379,20 +377,6 @@ if (typeof document !== 'undefined') {
     state.appliedDark  = null;
     autoFindAndApply();
     announce('Target ' + state.target + ' selected. ' + state.alts.length + ' pairs found.');
-  });
-
-  // Find button — re-roll with "Searching…" label
-  findBtn.addEventListener('click', () => {
-    findBtn.disabled = true;
-    findLabel.textContent = 'Searching\u2026';
-    setTimeout(() => {
-      state.appliedLight = null;
-      state.appliedDark  = null;
-      autoFindAndApply();
-      findBtn.disabled = false;
-      findLabel.textContent = 'Find 5';
-      if (state.alts.length > 0) announce(state.alts.length + ' pairs found.');
-    }, 20);
   });
 
   // Copy buttons — delegated. Reads textContent of #[data-copy-target], strips leading #.
