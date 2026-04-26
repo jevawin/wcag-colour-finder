@@ -31,9 +31,14 @@ const A_OFFSETS = [0, 0.01, -0.01, 0.02, -0.02];
 
 // L-axis stretch seeds. Index 0 = nearest passing (existing behaviour).
 // Indices 1..4 progressively bias the binary-search starting bound away from
-// input L so results span the L axis (D-05, D-07). 0.18 chosen per
-// 07-RESEARCH.md Open Question 1 — ~20-30 JNDs, visible yet in-family.
-const L_STRETCH_SEEDS = [0, 0.05, 0.10, 0.15, 0.18];
+// input L so results span the L axis (D-05, D-07).
+//
+// Range bumped from [0..0.18] to [0..0.60] so the spread reaches past the
+// threshold even when the input L is far from it (e.g. a light input whose
+// just-passes L on white is much darker — previously all 5 picks clustered
+// at the threshold around 4.50-4.54). Seeds that push past the gamut return
+// null and are absorbed by the leftover-fill pass.
+const L_STRETCH_SEEDS = [0, 0.15, 0.30, 0.45, 0.60];
 
 // --- Helpers ---
 
