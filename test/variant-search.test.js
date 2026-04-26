@@ -4,8 +4,8 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { contrastRatio, srgbToOklab, parseHex } from '../colour-engine.js';
-import { findVariantPairs } from '../variant-search.js';
+import { contrastRatio, srgbToOklab, parseHex } from '../public/colour-engine.js';
+import { findVariantPairs } from '../public/variant-search.js';
 
 const HEX_PATTERN = /^#[0-9A-F]{6}$/;
 

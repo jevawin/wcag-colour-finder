@@ -5,7 +5,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { chooseChromeForeground } from '../app.js';
+import { chooseChromeForeground } from '../public/app.js';
 
 describe('chooseChromeForeground', () => {
   it('returns #000000 on pure white background', () => {

@@ -16,7 +16,7 @@ import {
   srgbToOklab,
   oklabToSrgb,
   oklabDistance,
-} from '../colour-engine.js';
+} from '../public/colour-engine.js';
 
 // --- parseHex ---
 

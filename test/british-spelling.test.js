@@ -23,7 +23,7 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
-const TARGETS = ['index.html', 'app.js', 'style.css'];
+const TARGETS = ['public/index.html', 'public/app.js', 'public/style.css'];
 
 // Forbidden American tokens (case-insensitive, word-boundary).
 // `color` is handled separately because it appears in legitimate CSS/JS identifiers.
@@ -98,7 +98,7 @@ function isBareColorProperty(line) {
 
 describe('British spelling audit', () => {
   it('smoke: the word "colour" appears in index.html (confirms file read works)', () => {
-    const html = readFileSync(resolve(ROOT, 'index.html'), 'utf8');
+    const html = readFileSync(resolve(ROOT, 'public/index.html'), 'utf8');
     assert.ok(/\bcolour\b/i.test(html), 'expected "colour" somewhere in index.html');
   });
 

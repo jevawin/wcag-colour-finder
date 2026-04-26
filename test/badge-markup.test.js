@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { buildPillHTML } from '../app.js';
+import { buildPillHTML } from '../public/app.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -50,7 +50,7 @@ describe('buildPillHTML markup', () => {
 
 describe('style.css pill rules present (05-05 ground truth)', () => {
   it('style.css contains .pill.pass and .pill.fail rules', () => {
-    const css = readFileSync(resolve(ROOT, 'style.css'), 'utf8');
+    const css = readFileSync(resolve(ROOT, 'public/style.css'), 'utf8');
     assert.ok(css.includes('.pill.pass'), 'expected .pill.pass selector in style.css');
     assert.ok(css.includes('.pill.fail'), 'expected .pill.fail selector in style.css');
   });

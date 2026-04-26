@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseHashState, buildHashPath } from '../url-state.js';
+import { parseHashState, buildHashPath } from '../public/url-state.js';
 
 // --- parseHashState: valid inputs ---
 

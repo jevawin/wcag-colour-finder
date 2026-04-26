@@ -4,9 +4,9 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBadgeState, expandHex, formatRatio, buildPillHTML, expandShorthandIfValid } from '../app.js';
-import { findVariantPairs } from '../variant-search.js';
-import { contrastRatio } from '../colour-engine.js';
+import { buildBadgeState, expandHex, formatRatio, buildPillHTML, expandShorthandIfValid } from '../public/app.js';
+import { findVariantPairs } from '../public/variant-search.js';
+import { contrastRatio } from '../public/colour-engine.js';
 
 describe('buildBadgeState', () => {
   it('returns all true for ratio 8.0 (passes AA, AAA, AA large, AAA large)', () => {
