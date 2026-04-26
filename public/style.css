@@ -312,8 +312,9 @@ h1 {
 }
 .copy-btn:hover { opacity: 0.65; }
 .copy-btn svg { width: 16px; height: 16px; display: block; }
-.copy-btn.copied svg { display: none; }
-.copy-btn.copied::before { content: "✓"; font-size: 16px; font-weight: 700; line-height: 1; }
+.copy-btn .check-icon { display: none; }
+.copy-btn.copied .copy-icon { display: none; }
+.copy-btn.copied .check-icon { display: block; }
 .bg-tag .label {
   display: none;
 }
