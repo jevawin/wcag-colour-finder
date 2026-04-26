@@ -208,7 +208,14 @@ if (typeof document !== 'undefined') {
     if (state.base === null) {
       const msg = document.createElement('p');
       msg.className = 'alts-empty';
-      msg.textContent = 'Enter a hex colour.';
+      msg.append('Enter a hex colour or use ');
+      const cta = document.createElement('button');
+      cta.type = 'button';
+      cta.className = 'alts-empty__cta';
+      cta.textContent = '#6BD4AC';
+      cta.addEventListener('click', () => setBase('6BD4AC'));
+      msg.appendChild(cta);
+      msg.append('.');
       altsEl.appendChild(msg);
       return;
     }

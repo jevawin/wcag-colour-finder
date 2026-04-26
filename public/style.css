@@ -220,6 +220,24 @@ h1 {
   font-weight: 500;
   opacity: 0.75;
 }
+.alts-empty__cta {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.alts-empty__cta:hover { text-decoration-thickness: 2px; }
+.alts-empty__cta:focus-visible {
+  outline: 2px solid var(--topbar-fg, #111111);
+  outline-offset: 2px;
+}
 
 /* ——— Preview panels — the stem of the T, flex-grow to fill ——— */
 .previews {
@@ -437,7 +455,7 @@ h1 {
 
 @media (max-width: 767px) {
   .topbar { padding: 32px 24px; display: flex; flex-direction: column; }
-  .credit { position: static; margin: 8px 0; font-size: 14px; order: 2; }
+  .credit { position: static; margin: 8px 0; order: 2; }
   .title-row { margin: 0; gap: 0; display: contents; }
   .controls { display: contents; }
   .row-two { display: contents; }
