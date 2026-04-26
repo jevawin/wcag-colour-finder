@@ -8,9 +8,9 @@
 //   - Store hex without # prefix in state; pass `'#' + hex` into contrastRatio.
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check.
 
-import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js?v=3';
-import { findVariantPairs } from './variant-search.js?v=3';
-import { parseHashState, buildHashPath } from './url-state.js?v=3';
+import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js?v=4';
+import { findVariantPairs } from './variant-search.js?v=4';
+import { parseHashState, buildHashPath } from './url-state.js?v=4';
 
 // --- Pure functions (exported for testing) ---
 
@@ -303,7 +303,11 @@ if (typeof document !== 'undefined') {
    * no array-emptiness heuristic needed.
    */
   function autoFindAndApply() {
-    if (state.base === null) return;
+    if (state.base === null) {
+      // No base hex: skip the search but still repaint, so bg changes are visible.
+      renderPreviews();
+      return;
+    }
     const targetRatio = state.target === 'AAA' ? 7.0 : 4.5;
     const raw = findVariantPairs(
       '#' + state.base,
