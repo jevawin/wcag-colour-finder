@@ -399,7 +399,7 @@ h1 {
 }
 .digits {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 34px;
+  font-size: 28px;
   letter-spacing: 0.06em;
   font-weight: 600;
   margin: 0;
@@ -515,7 +515,6 @@ h1 {
   .heading { font-size: 40px; }
   .ratio { font-size: 48px; }
   .para { font-size: 18px; }
-  .digits { font-size: 30px; }
 }
 
 /* RESP-01 + RESP-02 — narrow-viewport fixes (Phase 9) */
