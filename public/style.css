@@ -479,7 +479,6 @@ h1 {
   flex: 1;
   appearance: none;
   border: 0;
-  border-bottom: var(--border-w) solid var(--ink);
   background: var(--light-tab-bg, #FFFFFF);
   color: var(--light-fg, var(--ink));
   font-family: 'Inter', sans-serif;
@@ -491,9 +490,6 @@ h1 {
 .tab-btn[data-tab="dark"] {
   background: var(--dark-tab-bg, #000000);
   color: var(--dark-fg, #FFFFFF);
-}
-.tab-btn.is-active {
-  border-bottom: var(--border-w) solid transparent;
 }
 
 @media (max-width: 767px) {
