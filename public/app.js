@@ -240,14 +240,31 @@ if (typeof document !== 'undefined') {
       el.setAttribute('aria-label', isShade
         ? 'Apply pair: light #' + a.lightHex + ', dark #' + a.darkHex
         : 'Apply single #' + a.lightHex);
-      el.innerHTML =
-        '<div class="chips">' +
-          '<span class="chip light"></span>' +
-          (isShade ? '<span class="chip dark"></span>' : '') +
-        '</div>' +
-        '<div class="hex mono">' +
-          (isShade ? (a.lightHex + ' / ' + a.darkHex) : ('#' + a.lightHex)) +
-        '</div>';
+      el.innerHTML = isShade
+        ? (
+          '<div class="chips">' +
+            '<span class="chip light"></span>' +
+            '<span class="chip dark"></span>' +
+          '</div>' +
+          '<div class="info">' +
+            '<div class="hexes mono">' +
+              '<span>' + a.lightHex + '</span>' +
+              '<span>' + a.darkHex + '</span>' +
+            '</div>' +
+            '<div class="labels">' +
+              '<span>Light</span>' +
+              '<span>Dark</span>' +
+            '</div>' +
+          '</div>'
+        )
+        : (
+          '<div class="chips">' +
+            '<span class="chip light"></span>' +
+          '</div>' +
+          '<div class="info">' +
+            '<div class="hexes mono"><span>#' + a.lightHex + '</span></div>' +
+          '</div>'
+        );
       const isSelected = state.appliedLight === a.lightHex && state.appliedDark === a.darkHex;
       el.setAttribute('aria-pressed', String(isSelected));
       el.addEventListener('click', () => {
@@ -404,6 +421,12 @@ if (typeof document !== 'undefined') {
     });
   }
   wireHexInput(baseText,    setBase, clearBase);
+
+  document.getElementById('base-clear').addEventListener('click', () => {
+    baseText.value = '';
+    clearBase();
+    baseText.focus();
+  });
   wireHexInput(lightBgText, setLightBg);
   wireHexInput(darkBgText,  setDarkBg);
 
