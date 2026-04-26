@@ -27,6 +27,15 @@ Find two shades close to each other — one that works on light backgrounds, one
 - Single-page app
 - All colour calculations done client-side
 
+## Cache busting
+
+Assets are versioned via `?v=N` query strings, paired with `public/_headers` that marks JS/CSS as `immutable`. **Bump `?v=N` on every deploy that changes any JS or CSS file**, otherwise phones will keep serving the cached old version (Cloudflare purge does not clear browser caches).
+
+Bump in all of:
+- `public/index.html` — the `<link>` and `<script>` tags
+- `public/app.js` — the `./colour-engine.js`, `./variant-search.js`, `./url-state.js` imports
+- `public/variant-search.js` — the `./colour-engine.js` import
+
 ## WCAG contrast ratios
 
 - AA normal text: 4.5:1
