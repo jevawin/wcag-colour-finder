@@ -143,14 +143,11 @@ h1 {
   display: inline-flex;
   align-items: stretch;
   height: 72px;
-  border: var(--border-w) solid var(--topbar-fg);
-  border-radius: 6px;
-  background: var(--paper);
 }
 .target-opt {
   appearance: none;
-  border: 0;
-  background: transparent;
+  border: var(--border-w) solid var(--topbar-fg);
+  background: var(--paper);
   color: var(--ink);
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 700;
@@ -160,14 +157,17 @@ h1 {
   cursor: pointer;
   min-width: 64px;
 }
-.target-opt:first-child { border-radius: 4px 0 0 4px; }
-.target-opt:last-child  { border-radius: 0 4px 4px 0; }
-.target-opt + .target-opt {
-  border-left: var(--border-w) solid var(--topbar-fg);
-}
 .target-opt.is-active {
   background: #111111;
   color: #FFFFFF;
+}
+.target-toggle .target-opt:first-child {
+  border-right: 0;
+  border-radius: 6px 0 0 6px;
+}
+.target-toggle .target-opt:last-child {
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
 }
 
 .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
@@ -369,7 +369,7 @@ h1 {
 }
 .hex-input .clear-btn { display: none; }
 .hex-input input[type="text"]:not(:placeholder-shown) ~ .clear-btn { display: inline-flex; }
-.hex-input .clear-btn:hover { opacity: 0.65; }
+.hex-input .clear-btn:hover svg { opacity: 0.65; }
 .hex-input .clear-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
 .hex-input .clear-btn svg { width: 18px; height: 18px; display: block; }
 .copy-btn svg { width: 16px; height: 16px; display: block; }
