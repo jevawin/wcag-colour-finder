@@ -18,6 +18,7 @@ html, body {
   min-height: 100vh;
 }
 body { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; display: flex; flex-direction: column; }
 .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-ligatures: none; }
 
 /* ——— Top bar (the top of the T) ——— */
@@ -152,6 +153,7 @@ h1 {
 .target-opt.is-active {
   background: #111111;
   color: #FFFFFF;
+  border-radius: 5px;
 }
 
 .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
