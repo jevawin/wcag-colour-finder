@@ -150,8 +150,8 @@ h1 {
   border-left: var(--border-w) solid var(--topbar-fg);
 }
 .target-opt.is-active {
-  background: var(--topbar-fg);
-  color: var(--topbar-bg);
+  background: #111111;
+  color: #FFFFFF;
 }
 
 .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }

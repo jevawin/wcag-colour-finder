@@ -336,6 +336,22 @@ if (typeof document !== 'undefined') {
     scheduleUrlSync();
   }
 
+  function clearBase() {
+    state.base = null;
+    state.appliedLight = null;
+    state.appliedDark = null;
+    state.alts = [];
+    prevAltsLen = 0;
+    topbar.style.removeProperty('--topbar-bg');
+    topbar.style.removeProperty('--topbar-fg');
+    baseSwatch.style.background = '#6BD4AC';
+    basePicker.value = '#6BD4AC';
+    if (urlSyncTimer !== null) { clearTimeout(urlSyncTimer); urlSyncTimer = null; }
+    history.replaceState(null, '', window.location.pathname);
+    renderPreviews();
+    renderAlts();
+  }
+
   function setLightBg(hex) {
     const parsed = parseHex(hex);
     if (!parsed) return;
@@ -368,18 +384,19 @@ if (typeof document !== 'undefined') {
    *    expandShorthandIfValid returns null for 6-char input, so blur is a
    *    no-op when the input handler already committed (research Pitfall 4).
    */
-  function wireHexInput(inputEl, setter) {
+  function wireHexInput(inputEl, setter, onEmpty) {
     inputEl.addEventListener('input', (e) => {
       const v = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
       e.target.value = v;
       if (v.length === 6 && parseHex(v)) setter(v);
+      else if (v.length === 0 && typeof onEmpty === 'function') onEmpty();
     });
     inputEl.addEventListener('blur', (e) => {
       const expanded = expandShorthandIfValid(e.target.value);
       if (expanded) setter(expanded);
     });
   }
-  wireHexInput(baseText,    setBase);
+  wireHexInput(baseText,    setBase, clearBase);
   wireHexInput(lightBgText, setLightBg);
   wireHexInput(darkBgText,  setDarkBg);
 
