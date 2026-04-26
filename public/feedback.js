@@ -49,11 +49,8 @@ function buildModal() {
 }
 
 function init() {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'fb-trigger';
-  btn.textContent = 'Feedback';
-  document.body.appendChild(btn);
+  const btn = document.querySelector('.fb-trigger');
+  if (!btn) return;
 
   const modal = buildModal();
   const textarea = modal.querySelector('#fb-message');
