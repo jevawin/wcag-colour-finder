@@ -21,7 +21,7 @@ import {
   contrastRatio,
   passesThreshold,
   oklabDistance,
-} from './colour-engine.js';
+} from './colour-engine.js?v=2';
 
 // --- Constants ---
 

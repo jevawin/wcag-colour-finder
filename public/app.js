@@ -8,9 +8,9 @@
 //   - Store hex without # prefix in state; pass `'#' + hex` into contrastRatio.
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check.
 
-import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js';
-import { findVariantPairs } from './variant-search.js';
-import { parseHashState, buildHashPath } from './url-state.js';
+import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js?v=2';
+import { findVariantPairs } from './variant-search.js?v=2';
+import { parseHashState, buildHashPath } from './url-state.js?v=2';
 
 // --- Pure functions (exported for testing) ---
 
