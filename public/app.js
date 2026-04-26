@@ -103,7 +103,7 @@ export { buildBadgeState, expandHex, formatRatio, chooseChromeForeground, buildP
 
 if (typeof document !== 'undefined') {
   const URL_DEBOUNCE_MS = 300;
-  const DEFAULT_BASE = '2563EB';
+  const DEFAULT_BASE = null;
   const DEFAULT_LIGHT = 'FFFFFF';
   const DEFAULT_DARK = '000000';
 
@@ -185,6 +185,12 @@ if (typeof document !== 'undefined') {
   }
 
   function renderPreviews() {
+    if (state.base === null) {
+      // No user hex yet — render panels with their intrinsic monochrome defaults.
+      renderPanel(previewLight, '000000', state.light, lightRatioEl, lightPillsEl, lightFgHex);
+      renderPanel(previewDark,  'FFFFFF', state.dark,  darkRatioEl,  darkPillsEl,  darkFgHex);
+      return;
+    }
     applyTopbar(state.base);
     baseSwatch.style.background = '#' + state.base;
     basePicker.value = '#' + state.base;
@@ -199,6 +205,13 @@ if (typeof document !== 'undefined') {
 
   function renderAlts() {
     altsEl.innerHTML = '';
+    if (state.base === null) {
+      const msg = document.createElement('p');
+      msg.className = 'alts-empty';
+      msg.textContent = 'Enter a hex colour.';
+      altsEl.appendChild(msg);
+      return;
+    }
     if (state.alts.length === 0) {
       const msg = document.createElement('p');
       msg.className = 'alts-empty';
@@ -261,6 +274,7 @@ if (typeof document !== 'undefined') {
    * no array-emptiness heuristic needed.
    */
   function autoFindAndApply() {
+    if (state.base === null) return;
     const targetRatio = state.target === 'AAA' ? 7.0 : 4.5;
     const raw = findVariantPairs(
       '#' + state.base,
@@ -487,6 +501,7 @@ if (typeof document !== 'undefined') {
 
   // URL hash hydrate + debounced sync
   function scheduleUrlSync() {
+    if (state.base === null) return;
     if (urlSyncTimer !== null) clearTimeout(urlSyncTimer);
     urlSyncTimer = setTimeout(() => {
       const hash = buildHashPath({
@@ -506,10 +521,12 @@ if (typeof document !== 'undefined') {
       state.light = parsed.lightBg.toUpperCase();
       state.dark  = parsed.darkBg.toUpperCase();
     }
-    // Sync visible inputs to state
-    baseText.value      = state.base;
-    basePicker.value     = '#' + state.base;
-    baseSwatch.style.background = '#' + state.base;
+    // Sync visible inputs to state (skip base when no hex entered)
+    if (state.base !== null) {
+      baseText.value      = state.base;
+      basePicker.value     = '#' + state.base;
+      baseSwatch.style.background = '#' + state.base;
+    }
     lightBgText.value   = state.light;
     lightBgPicker.value  = '#' + state.light;
     if (lightBgPicker.parentElement) lightBgPicker.parentElement.style.background = '#' + state.light;
@@ -520,5 +537,10 @@ if (typeof document !== 'undefined') {
 
   // Initial boot
   hydrateFromUrl();
-  autoFindAndApply();
+  if (state.base === null) {
+    renderPreviews();
+    renderAlts();
+  } else {
+    autoFindAndApply();
+  }
 }

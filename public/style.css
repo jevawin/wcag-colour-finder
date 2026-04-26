@@ -22,10 +22,12 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 
 /* ——— Top bar (the top of the T) ——— */
 .topbar-wrap {
-  background: var(--topbar-bg, #6BD4AC);
-  color: var(--topbar-fg, #111111);
+  --topbar-bg: #6BD4AC;
+  --topbar-fg: #111111;
+  background: var(--topbar-bg);
+  color: var(--topbar-fg);
   transition: background 0.2s;
-  border-bottom: var(--border-w) solid var(--topbar-fg, #111111);
+  border-bottom: var(--border-w) solid var(--topbar-fg);
 }
 .topbar {
   padding: 32px 32px 32px;
@@ -210,7 +212,7 @@ h1 {
   grid-column: 1 / -1;
   margin: 0;
   padding: 14px 0;
-  text-align: center;
+  text-align: left;
   color: var(--topbar-fg);
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 16px;
