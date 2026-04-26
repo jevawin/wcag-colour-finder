@@ -30,7 +30,10 @@
               <input type="color" id="base-color" value="#6BD4AC" aria-label="Pick base colour">
             </span>
             <span class="hash mono">#</span>
-            <input id="base-text" type="text" value="" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code">
+            <input id="base-text" type="text" value="" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Hex colour code" placeholder=" ">
+            <button type="button" class="clear-btn" id="base-clear" aria-label="Clear hex code">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+            </button>
           </label>
           <div class="target-toggle" id="target-toggle" role="group" aria-label="Target WCAG level">
             <button type="button" class="target-opt is-active" data-target="AA" aria-pressed="true">AA</button>

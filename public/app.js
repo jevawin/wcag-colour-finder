@@ -421,6 +421,12 @@ if (typeof document !== 'undefined') {
     });
   }
   wireHexInput(baseText,    setBase, clearBase);
+
+  document.getElementById('base-clear').addEventListener('click', () => {
+    baseText.value = '';
+    clearBase();
+    baseText.focus();
+  });
   wireHexInput(lightBgText, setLightBg);
   wireHexInput(darkBgText,  setDarkBg);
 
