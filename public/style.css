@@ -480,7 +480,7 @@ h1 {
   appearance: none;
   border: 0;
   border-bottom: var(--border-w) solid var(--ink);
-  background: #FFFFFF;
+  background: var(--light-tab-bg, #FFFFFF);
   color: var(--light-fg, var(--ink));
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -489,7 +489,7 @@ h1 {
   cursor: pointer;
 }
 .tab-btn[data-tab="dark"] {
-  background: var(--ink);
+  background: var(--dark-tab-bg, #000000);
   color: var(--dark-fg, #FFFFFF);
 }
 .tab-btn.is-active {
