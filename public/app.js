@@ -8,9 +8,9 @@
 //   - Store hex without # prefix in state; pass `'#' + hex` into contrastRatio.
 //   - Pass raw contrastRatio float to passesAA etc — never round before threshold check.
 
-import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js?v=2';
-import { findVariantPairs } from './variant-search.js?v=2';
-import { parseHashState, buildHashPath } from './url-state.js?v=2';
+import { parseHex, contrastRatio, passesAA, passesAAA, passesAALarge, passesAAALarge } from './colour-engine.js?v=5';
+import { findVariantPairs } from './variant-search.js?v=5';
+import { parseHashState, buildHashPath } from './url-state.js?v=5';
 
 // --- Pure functions (exported for testing) ---
 
@@ -185,6 +185,11 @@ if (typeof document !== 'undefined') {
   }
 
   function renderPreviews() {
+    // Mobile tab buttons share the panel backgrounds via CSS vars so they
+    // never drift from the panel they represent.
+    document.body.style.setProperty('--light-tab-bg', '#' + state.light);
+    document.body.style.setProperty('--dark-tab-bg',  '#' + state.dark);
+
     if (state.base === null) {
       // No user hex yet — render panels with their intrinsic monochrome defaults.
       renderPanel(previewLight, '000000', state.light, lightRatioEl, lightPillsEl, lightFgHex);
@@ -298,7 +303,11 @@ if (typeof document !== 'undefined') {
    * no array-emptiness heuristic needed.
    */
   function autoFindAndApply() {
-    if (state.base === null) return;
+    if (state.base === null) {
+      // No base hex: skip the search but still repaint, so bg changes are visible.
+      renderPreviews();
+      return;
+    }
     const targetRatio = state.target === 'AAA' ? 7.0 : 4.5;
     const raw = findVariantPairs(
       '#' + state.base,
